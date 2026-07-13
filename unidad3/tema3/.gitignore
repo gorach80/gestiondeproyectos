@@ -1,0 +1,13 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+*.log
+.zscripts/
+db/
+download/
+worklog.md
+agent-ctx/
