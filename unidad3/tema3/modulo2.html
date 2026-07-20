@@ -1,0 +1,2182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Web Educativo Interactivo: Estudio Técnico de Proyectos Industriales</title>
+    <style>
+/*=== STYLE.CSS — ESTILOS SPACE DARK + GLASSMORPHISM ===*/
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg-dark: #090d16;
+    --bg-deep: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.55);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --primary: #6366f1;      /* Indigo → estructura */
+    --secondary: #a855f7;    /* Púrpura → conceptos */
+    --accent: #10b981;       /* Verde → éxito/correcto */
+    --danger: #f43f5e;       /* Rosa → error/peligro */
+    --warning: #f59e0b;      /* Ámbar → avisos/resultados */
+    
+    --font-title: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --border-radius: 20px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* Skip link para accesibilidad */
+.skip-link {
+    position: absolute;
+    top: -60px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    z-index: 1000;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 10px;
+    outline: none;
+}
+
+/* Header & Navigation */
+header {
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(9, 13, 22, 0.8);
+    border-bottom: 1px solid var(--card-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--text-primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo span {
+    font-size: 0.75rem;
+    background: var(--primary);
+    color: #fff;
+    padding: 0.2rem 0.6rem;
+    border-radius: 50px;
+    -webkit-text-fill-color: initial;
+    font-family: var(--font-body);
+    font-weight: 700;
+}
+
+/* Tab Navigation */
+nav[role="tablist"] {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+}
+
+nav[role="tablist"] button {
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+nav[role="tablist"] button:hover,
+nav[role="tablist"] button[aria-selected="true"] {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: inset 0 0 0 1px var(--card-border);
+}
+
+nav[role="tablist"] button[aria-selected="true"] {
+    border-bottom: 2px solid var(--primary);
+    background: rgba(99, 102, 241, 0.08);
+}
+
+/* Layout */
+.container {
+    max-width: 1400px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+}
+
+/* Sidebar Navigation */
+.sidebar {
+    position: sticky;
+    top: 90px;
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.sidebar h3 {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--card-border);
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.sidebar-menu {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.sidebar-menu a {
+    display: block;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.88rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    transition: var(--transition);
+    border-left: 2px solid transparent;
+}
+
+.sidebar-menu a:hover, .sidebar-menu li.active a {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+    border-left-color: var(--secondary);
+}
+
+/* Main Content panel view */
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Tab panel show/hide rules */
+section[role="tabpanel"] {
+    display: none;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+section[role="tabpanel"].active {
+    display: flex;
+}
+
+/* Content Cards */
+.hero-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(9, 13, 22, 0.95));
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.hero-subtitle {
+    color: var(--secondary);
+    font-family: var(--font-title);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+}
+
+.hero-title {
+    font-family: var(--font-title);
+    font-size: 2.8rem;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #fff, var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 800px;
+}
+
+.section-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.section-card h2 {
+    font-family: var(--font-title);
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 1.25rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--card-border);
+    padding-bottom: 0.75rem;
+}
+
+.section-card h3 {
+    font-family: var(--font-title);
+    font-size: 1.3rem;
+    margin: 1.5rem 0 0.75rem 0;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.section-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+/* Highlight lists */
+.section-card ul {
+    list-style-type: none;
+    margin-bottom: 1.25rem;
+    padding-left: 0.5rem;
+}
+
+.section-card li {
+    color: var(--text-secondary);
+    font-size: 0.93rem;
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.section-card li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+/* Case study boxes (Visual cards) */
+.case-study-block {
+    background: rgba(16, 185, 129, 0.04);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px 12px 12px 4px;
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: inset 0 0 12px rgba(16, 185, 129, 0.01);
+}
+
+.case-study-title {
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Alert Boxes */
+.alert-box {
+    background: rgba(244, 63, 94, 0.04);
+    border-left: 4px solid var(--danger);
+    border-radius: 4px 12px 12px 4px;
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.alert-box.info {
+    background: rgba(99, 102, 241, 0.04);
+    border-left-color: var(--primary);
+}
+
+.alert-title {
+    font-family: var(--font-title);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+
+/* Interactive Widgets Sizing */
+.simulator-container {
+    margin-top: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.sim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.sim-title {
+    font-family: var(--font-title);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.grid-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.input-group input, .input-group select {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.input-group input:focus, .input-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 10px rgba(99, 102, 241, 0.25);
+}
+
+.sim-btn {
+    background: linear-gradient(135deg, var(--primary), #4f46e5);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-family: var(--font-title);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+}
+
+.sim-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+/* Results panel */
+.results-panel {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.results-panel h4 {
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0.5rem;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.result-row .label {
+    color: var(--text-secondary);
+}
+
+.result-row .value {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.result-row.highlight .value {
+    color: var(--warning);
+}
+
+/* SVG Vector Diagrams styling */
+.svg-diagram {
+    max-width: 100%;
+    height: auto;
+    margin: 1.5rem 0;
+    background: rgba(15, 23, 42, 0.3);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.svg-node {
+    fill: var(--bg-deep);
+    stroke: var(--primary);
+    stroke-width: 2;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.svg-node:hover {
+    fill: rgba(99, 102, 241, 0.2);
+    stroke: var(--secondary);
+    filter: drop-shadow(0 0 8px var(--secondary));
+}
+
+.svg-text {
+    font-family: var(--font-title);
+    font-size: 11px;
+    fill: var(--text-primary);
+    font-weight: 600;
+    text-anchor: middle;
+    pointer-events: none;
+}
+
+.svg-link {
+    fill: none;
+    stroke: var(--card-border);
+    stroke-width: 1.5;
+    stroke-dasharray: 4, 4;
+}
+
+/* 2D Canvas Sizing Chart */
+#lange-chart {
+    background: rgba(9, 13, 22, 0.5);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 480px;
+    display: block;
+}
+
+/* 3D Stack Visualizer */
+.scene-3d {
+    perspective: 800px;
+    width: 100%;
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+}
+
+.stack-3d {
+    position: relative;
+    width: 220px;
+    height: 200px;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rotate-x, -20deg)) rotateY(var(--rotate-y, 30deg));
+    transition: transform 0.1s ease;
+}
+
+.layer-3d {
+    position: absolute;
+    width: 220px;
+    height: 38px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.4));
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-title);
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.3s var(--transition), background 0.3s;
+    transform-style: preserve-3d;
+}
+
+.layer-3d::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateZ(-2px);
+    pointer-events: none;
+}
+
+.layer-3d:hover {
+    background: linear-gradient(135deg, var(--secondary), var(--accent));
+    transform: translateZ(15px) scale(1.05);
+}
+
+.layer-3d.active {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    transform: translateZ(25px) scale(1.08);
+}
+
+/* Accordion of Exercises */
+.ex-accordion {
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.ex-header {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    font-family: var(--font-title);
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: var(--transition);
+}
+
+.ex-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ex-content {
+    display: none;
+    padding: 1.5rem;
+    border-top: 1px solid var(--card-border);
+    background: rgba(15, 23, 42, 0.4);
+}
+
+/* Focus indicator for visible items */
+:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Footer styling */
+footer {
+    margin-top: 4rem;
+    border-top: 1px solid var(--card-border);
+    background: rgba(9, 13, 22, 0.95);
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    color: var(--text-secondary);
+    font-size: 0.88rem;
+}
+
+/* Print layout rules */
+@media print {
+    body {
+        background: #fff !important;
+        color: #000 !important;
+    }
+    .sidebar, header, nav[role="tablist"] {
+        display: none !important;
+    }
+    .container {
+        grid-template-columns: 1fr !important;
+    }
+    .section-card {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        page-break-inside: avoid;
+    }
+}
+
+</style>
+    
+    <!-- Configuración MathJax para LaTeX -->
+    <script>
+    window.MathJax = {
+        tex: {
+            inlineMath: [['\\(', '\\)']],
+            displayMath: [['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' },
+        startup: {
+            ready: () => {
+                MathJax.startup.defaultReady();
+            }
+        }
+    };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+    <!-- Skip link para accesibilidad WCAG -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">UPSE <span>Estudio Técnico</span></div>
+            <nav role="tablist" aria-label="Pestañas del panel educativo">
+                <button role="tab" aria-selected="true" aria-controls="intro" id="tab-btn-1" tabindex="0">Intro & Lab</button>
+                <button role="tab" aria-selected="false" aria-controls="classif" id="tab-btn-2" tabindex="-1">Clasificación</button>
+                <button role="tab" aria-selected="false" aria-controls="props" id="tab-btn-3" tabindex="-1">Propiedades</button>
+                <button role="tab" aria-selected="false" aria-controls="elems" id="tab-btn-4" tabindex="-1">Elementos</button>
+                <button role="tab" aria-selected="false" aria-controls="practice" id="tab-btn-5" tabindex="-1">Caso Práctico</button>
+                <button role="tab" aria-selected="false" aria-controls="ex-active" id="tab-btn-6" tabindex="-1">12 Ejercicios Interactivos</button>
+                <button role="tab" aria-selected="false" aria-controls="ex-proposed" id="tab-btn-7" tabindex="-1">12 Ejercicios Propuestos</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Panel de Control</h3>
+            <ul class="sidebar-menu">
+                <li class="active"><a href="#intro" onclick="activateTab(document.getElementById('tab-btn-1'))">Mapeo Cognitivo</a></li>
+                <li><a href="#classif" onclick="activateTab(document.getElementById('tab-btn-2'))">Tipos de Procesos</a></li>
+                <li><a href="#props" onclick="activateTab(document.getElementById('tab-btn-3'))">Teoremas y Fórmulas</a></li>
+                <li><a href="#elems" onclick="activateTab(document.getElementById('tab-btn-4'))">Distribución & Layout</a></li>
+                <li><a href="#practice" onclick="activateTab(document.getElementById('tab-btn-5'))">Planta de Mermelada</a></li>
+                <li><a href="#ex-active" onclick="activateTab(document.getElementById('tab-btn-6'))">Práctica Guiada</a></li>
+                <li><a href="#ex-proposed" onclick="activateTab(document.getElementById('tab-btn-7'))">Autoevaluación</a></li>
+            </ul>
+        </aside>
+
+        <main id="main-content">
+            
+            <!-- PESTAÑA 1: INTRO & LAB -->
+            <section role="tabpanel" id="intro" aria-labelledby="tab-btn-1" class="active">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 1: ACTIVACIÓN</div>
+                    <h1 class="hero-title">Estudio Técnico de Proyectos</h1>
+                    <p class="hero-desc">
+                        Aprende a diseñar y dimensionar una planta industrial. Utiliza los laboratorios interactivos y comprueba cómo cambian los costos y el tamaño de planta según las variables clave de ingeniería.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <h2>Laboratorio de Dimensionamiento (Sizing)</h2>
+                    <p>
+                        Modifica los parámetros para graficar la curva del Costo Anual Equivalente (CAE) mediante el Método de Lange y encontrar la capacidad de producción óptima.
+                    </p>
+                    
+                    <div class="simulator-container">
+                        <div class="sim-header">
+                            <div class="sim-title">Simulador Método de Lange</div>
+                        </div>
+                        <div class="grid-inputs">
+                            <div class="input-group">
+                                <label for="inv">Inversión Fija Base ($)</label>
+                                <input type="number" id="inv" value="150000" oninput="calculateLange()">
+                            </div>
+                            <div class="input-group">
+                                <label for="op_cost">Costo de Operación Base ($)</label>
+                                <input type="number" id="op_cost" value="45000" oninput="calculateLange()">
+                            </div>
+                            <div class="input-group">
+                                <label for="rate">Tasa de Descuento (%)</label>
+                                <input type="number" id="rate" value="12" step="0.5" oninput="calculateLange()">
+                            </div>
+                            <div class="input-group">
+                                <label for="years">Vida Útil (Años)</label>
+                                <input type="number" id="years" value="10" oninput="calculateLange()">
+                            </div>
+                        </div>
+
+                        <div class="results-panel" id="lange-results">
+                            <div style="display:flex; justify-content:space-between; gap:2rem; flex-wrap:wrap;">
+                                <div style="flex:1; min-width:200px;">
+                                    <h4>Resultados Financieros</h4>
+                                    <div class="result-row">
+                                        <span class="label">Inversión Inicial ($I_0$):</span>
+                                        <span class="value" id="res-inv">$150,000.00</span>
+                                    </div>
+                                    <div class="result-row">
+                                        <span class="label">Costo Operativo Anual ($C$):</span>
+                                        <span class="value" id="res-op">$45,000.00</span>
+                                    </div>
+                                    <div class="result-row highlight">
+                                        <span class="label">Costo Anual Equivalente (CAE):</span>
+                                        <span class="value" id="res-total">$71,547.00</span>
+                                    </div>
+                                    <div class="chart-bar-container" style="height:10px; background:rgba(255,255,255,0.05); border-radius:5px; overflow:hidden; margin-top:1rem;">
+                                        <div class="chart-bar-fill" id="lange-bar" style="height:100%; background:var(--accent); width:50%;"></div>
+                                    </div>
+                                </div>
+                                <div style="flex:1; min-width:250px; display:flex; flex-direction:column; align-items:center;">
+                                    <span style="font-size:0.8rem; font-weight:600; color:var(--secondary); margin-bottom:0.5rem;">Curva de Costos en Función del Tamaño</span>
+                                    <canvas id="lange-chart" width="400" height="250" role="img" aria-label="Gráfica de costo mínimo de Lange"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>Laboratorio de Integración SCM (Supply Chain)</h2>
+                    <p>
+                        Usa la pila interactiva para simular el flujo del software logístico y administrativo que gobierna la planta envasadora de mermelada.
+                    </p>
+                    
+                    <div class="simulator-container">
+                        <div style="display:flex; justify-content:center; gap:2rem; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap;">
+                            <div class="scene-3d">
+                                <div class="stack-3d" id="software-stack">
+                                    <div class="layer-3d active" style="transform: translate3d(0, 0px, 0);" onclick="select3DLayer('erp', 0)">ERP (Central)</div>
+                                    <div class="layer-3d" style="transform: translate3d(0, 45px, 0);" onclick="select3DLayer('mrp', 1)">MRP / MRP II</div>
+                                    <div class="layer-3d" style="transform: translate3d(0, 90px, 0);" onclick="select3DLayer('wms', 2)">WMS (Bodega)</div>
+                                    <div class="layer-3d" style="transform: translate3d(0, 135px, 0);" onclick="select3DLayer('tms', 3)">TMS (Distribución)</div>
+                                </div>
+                            </div>
+                            <div class="input-group" style="width:100%; max-width:200px;">
+                                <label for="rot-x">Rotación X: <span id="val-x">-20</span>°</label>
+                                <input type="range" id="rot-x" min="-60" max="60" value="-20">
+                                
+                                <label for="rot-y" style="margin-top:1rem;">Rotación Y: <span id="val-y">30</span>°</label>
+                                <input type="range" id="rot-y" min="-60" max="60" value="30">
+                            </div>
+                        </div>
+                        <div class="results-panel" id="panel-3d-details">
+                            <h4 id="title-3d">Enterprise Resources Planning (ERP)</h4>
+                            <p id="desc-3d" style="font-size:0.9rem;">Software de planificación global que integra la base contable, presupuestaria y de personal de la planta. Permite la toma de decisiones estratégicas.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 2: CLASIFICACIÓN -->
+            <section role="tabpanel" id="classif" aria-labelledby="tab-btn-2">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 2: COMPRENDER</div>
+                    <h1 class="hero-title">Clasificación de Sistemas Industriales</h1>
+                    <p class="hero-desc">
+                        Aprende a diferenciar los tipos de distribución en planta, los flujos logísticos y las jerarquías de sistemas de control en ingeniería industrial.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <h2>Taxonomía de Distribución en Planta (Layout)</h2>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1rem; margin-top:1rem;">
+                        <div class="simulator-container" style="margin-top:0;">
+                            <span style="font-weight:700; color:var(--secondary); display:block; margin-bottom:0.5rem;">Distribución por Proceso (Funcional)</span>
+                            <p style="font-size:0.85rem; color:var(--text-secondary);">
+                                Agrupa máquinas de la misma función en un departamento. Útil para alta variedad de productos y volúmenes bajos (ej. talleres mecánicos).
+                            </p>
+                        </div>
+                        <div class="simulator-container" style="margin-top:0;">
+                            <span style="font-weight:700; color:var(--secondary); display:block; margin-bottom:0.5rem;">Distribución por Producto (Línea)</span>
+                            <p style="font-size:0.85rem; color:var(--text-secondary);">
+                                Organiza las estaciones en secuencia según el flujo de manufactura. Óptima para producción en masa (ej. la línea de envasado de mermelada).
+                            </p>
+                        </div>
+                        <div class="simulator-container" style="margin-top:0;">
+                            <span style="font-weight:700; color:var(--secondary); display:block; margin-bottom:0.5rem;">Distribución de Posición Fija</span>
+                            <p style="font-size:0.85rem; color:var(--text-secondary);">
+                                El producto principal permanece inmóvil por su peso o tamaño, y las herramientas y trabajadores se trasladan a él (ej. construcción de barcos).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 3: PROPIEDADES -->
+            <section role="tabpanel" id="props" aria-labelledby="tab-btn-3">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 3: APLICAR</div>
+                    <h1 class="hero-title">Leyes y Modelos Matemáticos</h1>
+                    <p class="hero-desc">
+                        La formulación matemática rigurosa detrás de la optimización industrial. Conoce las leyes físicas y financieras que gobiernan la planta.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <h2>Ecuación Fundamental del Sizing de Lange</h2>
+                    <p>
+                        El balance óptimo de Lange minimiza el Costo Anual Equivalente (CAE), definiendo que la escala óptima de planta se logra en el punto de equilibrio donde el costo marginal anualizado de inversión iguala al ahorro marginal operativo.
+                    </p>
+                    \[ \frac{dI(y)}{dy} \cdot \text{FRC}(i, n) = - \frac{dC(y)}{dy} \]
+                    
+                    <h3 style="margin-top:1.5rem;">Superficie de Guerchet</h3>
+                    <p>
+                        La metodología de Guerchet calcula el área total de producción sumando la superficie estática, la gravitacional y la de evolución:
+                    </p>
+                    \[ S_t = S_s + S_g + S_e \]
+                    \[ S_g = S_s \times n \]
+                    \[ S_e = (S_s + S_g) \times k \]
+                </div>
+            </section>
+
+            <!-- PESTAÑA 4: ELEMENTOS -->
+            <section role="tabpanel" id="elems" aria-labelledby="tab-btn-4">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 4: ANALIZAR</div>
+                    <h1 class="hero-title">Anatomía de la Distribución de Planta</h1>
+                    <p class="hero-desc">
+                        Analiza las interacciones físicas y espaciales del área de manufactura y oficinas aplicando la planeación sistemática.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <h2>Diagrama de Relación de Actividades (SLP)</h2>
+                    <p>
+                        Haz clic en los nodos circulares del diagrama para ver las interacciones espaciales de la fábrica y su nivel de cercanía según el código de Muther.
+                    </p>
+                    
+                    <!-- Inlined SLP Vector SVG -->
+                    <div style="text-align:center; margin:1.5rem 0;">
+                        <svg class="svg-diagram" viewBox="0 0 600 300" width="100%">
+                            <line x1="80" y1="150" x2="220" y2="100" style="stroke:#ef4444; stroke-width:4;" />
+                            <line x1="80" y1="150" x2="220" y2="100" style="stroke:#fff; stroke-width:1; stroke-dasharray:4,4;" />
+                            <line x1="220" y1="100" x2="380" y2="150" style="stroke:#ef4444; stroke-width:4;" />
+                            <line x1="500" y1="150" x2="300" y2="220" style="stroke:#10b981; stroke-width:2;" />
+                            <line x1="220" y1="100" x2="140" y2="220" style="stroke:#f59e0b; stroke-width:3;" />
+                            <line x1="140" y1="220" x2="500" y2="150" style="stroke:#78350f; stroke-width:2; stroke-dasharray:4,4;" />
+
+                            <circle cx="80" cy="150" r="30" class="svg-node" onclick="showSlpDetails('Bodega de Materias Primas', 'Relación A (Absolutamente Importante) con Producción. Ubicado estratégicamente cerca de la zona de descarga.')" />
+                            <text x="80" y="154" class="svg-text" style="font-size:8px;">Bodega MP</text>
+
+                            <circle cx="220" cy="100" r="30" class="svg-node" onclick="showSlpDetails('Línea de Envasado y Concentrado', 'El corazón tecnológico de la planta. Conectado directamente a las bodegas de materias primas y caldera.')" />
+                            <text x="220" y="104" class="svg-text" style="font-size:8px;">Producción</text>
+
+                            <circle cx="380" cy="150" r="30" class="svg-node" onclick="showSlpDetails('Almacén de Producto Terminado', 'Bodega de despacho de los frascos terminados y etiquetados de mermelada.')" />
+                            <text x="380" y="154" class="svg-text" style="font-size:8px;">Bodega PT</text>
+
+                            <circle cx="500" cy="150" r="30" class="svg-node" onclick="showSlpDetails('Oficinas Administrativas', 'Área de gerencia y contabilidad. Alejada de la caldera por ruido y calor (Relación X - Indeseable).')" />
+                            <text x="500" y="154" class="svg-text" style="font-size:8px;">Oficinas</text>
+
+                            <circle cx="140" cy="220" r="30" class="svg-node" onclick="showSlpDetails('Sala de Caldera (15 HP)', 'Generación de calor para las camisas de vapor. Debe estar cerca del concentrador de mermelada.')" />
+                            <text x="140" y="224" class="svg-text" style="font-size:8px;">Caldera</text>
+
+                            <circle cx="300" cy="220" r="30" class="svg-node" onclick="showSlpDetails('Control de Calidad', 'Laboratorio de microbiología y acidez para asegurar los grados Brix de la mermelada.')" />
+                            <text x="300" y="224" class="svg-text" style="font-size:8px;">C. Calidad</text>
+                        </svg>
+                    </div>
+
+                    <div class="results-panel" id="slp-panel" style="display:none;">
+                        <h4 id="slp-title-ui">Área Seleccionada</h4>
+                        <p id="slp-desc-ui" style="font-size:0.9rem; margin-bottom:0; color:var(--text-primary);"></p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>Calculadora de Áreas de Guerchet</h2>
+                    <div class="simulator-container">
+                        <div class="grid-inputs">
+                            <div class="input-group">
+                                <label for="g-l">Largo del Equipo (m)</label>
+                                <input type="number" id="g-l" value="1.5" step="0.1" oninput="calculateGuerchet()">
+                            </div>
+                            <div class="input-group">
+                                <label for="g-w">Ancho del Equipo (m)</label>
+                                <input type="number" id="g-w" value="1.5" step="0.1" oninput="calculateGuerchet()">
+                            </div>
+                            <div class="input-group">
+                                <label for="g-n">Lados de Acceso (n)</label>
+                                <select id="g-n" onchange="calculateGuerchet()">
+                                    <option value="1">1 lado</option>
+                                    <option value="2" selected>2 lados</option>
+                                    <option value="3">3 lados</option>
+                                    <option value="4">4 lados</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="g-k">Coeficiente k (Altura)</label>
+                                <input type="number" id="g-k" value="0.75" step="0.05" oninput="calculateGuerchet()">
+                            </div>
+                        </div>
+
+                        <div class="results-panel" id="guerchet-results">
+                            <h4>Superficies de Planta</h4>
+                            <div class="result-row">
+                                <span class="label">Superficie Estática (\(S_s\)):</span>
+                                <span class="value" id="val-ss">2.25 m²</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Superficie de Gravitación (\(S_g\)):</span>
+                                <span class="value" id="val-sg">4.50 m²</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Superficie de Evolución (\(S_e\)):</span>
+                                <span class="value" id="val-se">5.06 m²</span>
+                            </div>
+                            <div class="result-row highlight">
+                                <span class="label">Superficie Total por Equipo (\(S_t\)):</span>
+                                <span class="value" id="val-st">11.81 m²</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 5: CASO PRÁCTICO -->
+            <section role="tabpanel" id="practice" aria-labelledby="tab-btn-5">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 5: EVALUAR</div>
+                    <h1 class="hero-title">Caso Práctico: Planta de Mermelada</h1>
+                    <p class="hero-desc">
+                        Estudio técnico completo de la microempresa agroindustrial. Analiza el balance de materia y mano de obra requerida para procesar mermelada de fresa.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <h2>Flujograma del Proceso ASME</h2>
+                    <p>Haz clic en las figuras del flujograma de producción de la fresa para ver la descripción técnica:</p>
+                    
+                    <!-- ASME flow SVG -->
+                    <div style="text-align:center; margin:1.5rem 0;">
+                        <svg class="svg-diagram" viewBox="0 0 600 200" width="100%">
+                            <path d="M 75 100 L 125 100 M 175 100 L 225 100 M 275 100 L 325 100 M 375 100 L 425 100 M 475 100 L 525 100" class="svg-link" style="stroke:var(--primary); stroke-width:3; stroke-dasharray:none;" />
+                            
+                            <polygon points="50,80 25,120 75,120" class="svg-node" onclick="showAsmeDetails('Bodega de Materia Prima', 'Almacén refrigerado de fresa fresca a 4°C.')" />
+                            <text x="50" y="135" class="svg-text" style="font-size:8px;">1. Bodega MP</text>
+
+                            <circle cx="150" cy="100" r="25" class="svg-node" onclick="showAsmeDetails('Lavado y Mondado', 'Separación de hojas y pedúnculo. Pérdida del 10% del peso en merma orgánica.')" />
+                            <text x="150" y="140" class="svg-text" style="font-size:8px;">2. Mondado</text>
+
+                            <rect x="225" y="75" width="50" height="50" rx="4" class="svg-node" onclick="showAsmeDetails('Inspección de Control', 'Verificación de fruta madura o defectuosa antes de ingresar a escaldado.')" />
+                            <text x="250" y="140" class="svg-text" style="font-size:8px;">3. Inspección</text>
+
+                            <circle cx="350" cy="100" r="25" class="svg-node" onclick="showAsmeDetails('Cocción y Concentración', 'Mezclado con azúcar en relación 1:1. Concentración a 65° Brix en tanques Jerza.')" />
+                            <text x="350" y="140" class="svg-text" style="font-size:8px;">4. Cocción</text>
+
+                            <path d="M 430,75 L 450,75 A 25,25 0 0,1 450,125 L 430,125 Z" class="svg-node" onclick="showAsmeDetails('Enfriado de Frascos', 'Espera de 30 minutos a temperatura ambiente para evitar quiebre de vidrio.')" />
+                            <text x="450" y="140" class="svg-text" style="font-size:8px;">5. Enfriado</text>
+
+                            <polygon points="550,80 525,120 575,120" class="svg-node" onclick="showAsmeDetails('Bodega de Producto Terminado', 'Almacenamiento de cajas con frascos etiquetados listos para distribución.')" />
+                            <text x="550" y="135" class="svg-text" style="font-size:8px;">6. Bodega PT</text>
+                        </svg>
+                    </div>
+                    
+                    <div class="results-panel" id="asme-panel" style="display:none;">
+                        <h4 id="asme-title-ui">Operación ASME</h4>
+                        <p id="asme-desc-ui" style="font-size:0.9rem; margin-bottom:0; color:var(--text-primary);"></p>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <h2>Balance de Masa Interactivo</h2>
+                    <div class="simulator-container">
+                        <div class="grid-inputs">
+                            <div class="input-group">
+                                <label for="fresa-in">Fresa Inicial (kg)</label>
+                                <input type="number" id="fresa-in" value="100" oninput="calculateMassBalance()">
+                            </div>
+                            <div class="input-group">
+                                <label for="sugar-ratio">Azúcar Añadido (%)</label>
+                                <input type="number" id="sugar-ratio" value="100" oninput="calculateMassBalance()">
+                            </div>
+                            <div class="input-group">
+                                <label for="loss-mondado">Merma Mondado (%)</label>
+                                <input type="number" id="loss-mondado" value="10" step="0.5" oninput="calculateMassBalance()">
+                            </div>
+                        </div>
+
+                        <div class="results-panel" id="mass-results">
+                            <h4>Rendimiento del Proceso</h4>
+                            <div class="result-row">
+                                <span class="label">Pulpa resultante:</span>
+                                <span class="value" id="res-pulpa">90.00 kg</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Azúcar incorporada:</span>
+                                <span class="value" id="res-azucar">90.00 kg</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Agua evaporada (35%):</span>
+                                <span class="value" id="res-evap">63.00 kg</span>
+                            </div>
+                            <div class="result-row highlight">
+                                <span class="label">Mermelada final (65° Brix):</span>
+                                <span class="value" id="res-mermelada">117.00 kg</span>
+                            </div>
+                            <div class="result-row">
+                                <span class="label">Total frascos (250g):</span>
+                                <span class="value" id="res-jars">468 frascos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 6: 12 EJERCICIOS INTERACTIVOS -->
+            <section role="tabpanel" id="ex-active" aria-labelledby="tab-btn-6">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 6: CREAR (PRÁCTICA)</div>
+                    <h1 class="hero-title">12 Ejercicios Resueltos Paso a Paso</h1>
+                    <p class="hero-desc">
+                        Aprende la resolución matemática de problemas de dimensionamiento, localización, fletes, balances de masa y métricas de control (OEE).
+                    </p>
+                </div>
+
+                <!-- 12 accordions -->
+                <div id="exercises-container">
+                    <!-- Dynamic code fills the accordions here or statically placed below for ease of indexing -->
+                    
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="1" aria-expanded="false">
+                            <span>Ejercicio 1: Factor de Recuperación de Capital de la Caldera</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule el Factor de Recuperación de Capital (FRC) de una caldera de vapor de 15 HP con valor de $15,000, vida útil de 10 años y una tasa de interés del 12%.</p>
+                            <p>Paso 1: Variables: \\(i = 12\\% = 0.12\\), \\(n = 10\\) años.</p>
+                            <p>Paso 2: Aplicar la fórmula: \\[\\text{FRC} = \\frac{0.12(1+0.12)^{10}}{(1+0.12)^{10} - 1}\\]</p>
+                            <p>Paso 3: Resultado: \\[\\text{FRC} \\approx 0.1770\\]</p>
+                            <canvas id="canvas-ex-1" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="2" aria-expanded="false">
+                            <span>Ejercicio 2: Área de la Báscula de Recibo</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule Ss y Sg de una báscula Baunken de 1.5 tons (1.5m x 2.0m, con acceso por 2 lados).</p>
+                            <p>Paso 1: Superficie Estática: \\[S_s = 1.5 \\times 2.0 = 3.0 \\text{ m}^2\\]</p>
+                            <p>Paso 2: Superficie de Gravitación: \\[S_g = 3.0 \\times 2 = 6.0 \\text{ m}^2\\]</p>
+                            <canvas id="canvas-ex-2" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="3" aria-expanded="false">
+                            <span>Ejercicio 3: Merma en Pelado de Fresa</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Si ingresan 213 kg de fresa fresca por lote y la merma del mondado es del 6.2%. ¿Cuánta pulpa limpia se obtiene?</p>
+                            <p>Paso 1: Masa de la merma: \\[\\text{Merma} = 213 \\times 0.062 = 13.21 \\text{ kg}\\]</p>
+                            <p>Paso 2: Pulpa limpia: \\[\\text{Pulpa} = 213 - 13.21 = 199.79 \\text{ kg}\\]</p>
+                            <canvas id="canvas-ex-3" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="4" aria-expanded="false">
+                            <span>Ejercicio 4: Disponibilidad de la Tapadora</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">En una jornada de 480 minutos, la tapadora sufrió paros por 45 minutos. Calcule la disponibilidad.</p>
+                            <p>Paso 1: Tiempo real: \\[T_{op} = 480 - 45 = 435 \\text{ min}\\]</p>
+                            <p>Paso 2: Disponibilidad: \\[D = \\frac{435}{480} = 90.63\\%\\]</p>
+                            <canvas id="canvas-ex-4" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="5" aria-expanded="false">
+                            <span>Ejercicio 5: CAE del Tanque de Escalde Jerza</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule el CAE para una inversión de $45,000 en el tanque, costo de operación de $8,000/año y FRC de 0.1770.</p>
+                            <p>Paso 1: Inversión anualizada: \\[I = 45,000 \\times 0.1770 = 7,965 \\text{ USD}\\]</p>
+                            <p>Paso 2: CAE total: \\[\\text{CAE} = 7,965 + 8,000 = 15,965 \\text{ USD}\\]</p>
+                            <canvas id="canvas-ex-5" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="6" aria-expanded="false">
+                            <span>Ejercicio 6: Localización por Puntos Ponderados</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule el puntaje total del Terreno A: Cercanía de materia prima (peso 60%, nota 9), Infraestructura (peso 40%, nota 7).</p>
+                            <p>Paso 1: Puntuación materia prima: \\[0.60 \\times 9 = 5.40\\]</p>
+                            <p>Paso 2: Puntuación infraestructura: \\[0.40 \\times 7 = 2.80\\]</p>
+                            <p>Paso 3: Total: \\[5.40 + 2.80 = 8.20\\]</p>
+                            <canvas id="canvas-ex-6" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="7" aria-expanded="false">
+                            <span>Ejercicio 7: Cantidad de Personal de Envasado</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Si se deben envasar 7,000 frascos por día y un obrero envasa 600 frascos por turno. ¿Cuántos obreros se necesitan?</p>
+                            <p>Paso 1: Calcular la relación: \\[N = \\frac{7000}{600} \\approx 11.67\\]</p>
+                            <p>Paso 2: Redondear al superior: \\[N = 12 \\text{ obreros}\\]</p>
+                            <canvas id="canvas-ex-7" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="8" aria-expanded="false">
+                            <span>Ejercicio 8: OEE de la Envasadora</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule el OEE si Disponibilidad = 90.63%, Rendimiento = 92% y Calidad = 98.8%.</p>
+                            <p>Paso 1: Multiplicar tasas: \\[\\text{OEE} = 0.9063 \\times 0.92 \\times 0.988 \\approx 82.38\\%\\]</p>
+                            <canvas id="canvas-ex-8" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="9" aria-expanded="false">
+                            <span>Ejercicio 9: Layout Guerchet Completo</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Envasadora de l=2.4m, w=1.2m, n=2 lados, k=0.75. Calcule la superficie total St.</p>
+                            <p>Paso 1: \\[S_s = 2.4 \\times 1.2 = 2.88 \\text{ m}^2\\]</p>
+                            <p>Paso 2: \\[S_g = 2.88 \\times 2 = 5.76 \\text{ m}^2\\]</p>
+                            <p>Paso 3: \\[S_e = (2.88 + 5.76) \\times 0.75 = 6.48 \\text{ m}^2\\]</p>
+                            <p>Paso 4: \\[S_t = 2.88 + 5.76 + 6.48 = 15.12 \\text{ m}^2\\]</p>
+                            <canvas id="canvas-ex-9" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="10" aria-expanded="false">
+                            <span>Ejercicio 10: Penalización de Vogel</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Calcule la penalización de flete para la Planta A si los fletes unitarios mínimos son $3 y $5.</p>
+                            <p>Paso 1: \\[\\text{Penalización} = 5 - 3 = 2 \\text{ USD}\\]</p>
+                            <canvas id="canvas-ex-10" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="11" aria-expanded="false">
+                            <span>Ejercicio 11: Balance de Concentración</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Masa de mezcla de 399.6 kg de pulpa y azúcar. Si se evapora el 35% de agua, ¿cuánta mermelada se obtiene?</p>
+                            <p>Paso 1: Agua evaporada: \\[399.6 \\times 0.35 = 139.86 \\text{ kg}\\]</p>
+                            <p>Paso 2: Mermelada final: \\[399.6 - 139.86 = 259.74 \\text{ kg}\\]</p>
+                            <canvas id="canvas-ex-11" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="ex-accordion">
+                        <div class="ex-header" data-ex="12" aria-expanded="false">
+                            <span>Ejercicio 12: MTBF y MTTR de Caldera</span>
+                            <span>▲</span>
+                        </div>
+                        <div class="ex-content">
+                            <p style="margin-bottom:1rem; font-weight:600; color:#fff;">Caldera operó 200 horas, con 4 fallas y 8 horas de reparación total. Calcule MTBF y MTTR.</p>
+                            <p>Paso 1: MTBF: \\[\\text{MTBF} = \\frac{200 - 8}{4} = 48 \\text{ horas/falla}\\]</p>
+                            <p>Paso 2: MTTR: \\[\\text{MTTR} = \\frac{8}{4} = 2 \\text{ horas/reparación}\\]</p>
+                            <canvas id="canvas-ex-12" width="360" height="150" style="margin-top:1rem;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 7: 12 EJERCICIOS PROPUESTOS -->
+            <section role="tabpanel" id="ex-proposed" aria-labelledby="tab-btn-7">
+                <div class="hero-card">
+                    <div class="hero-subtitle">NIVEL 7: CREAR (AUTOEVALUACIÓN)</div>
+                    <h1 class="hero-title">12 Ejercicios para Resolver</h1>
+                    <p class="hero-desc">
+                        Pon a prueba tus conocimientos de ingeniería. Escribe la respuesta correcta para cada problema y haz clic en "Verificar" para validar.
+                    </p>
+                </div>
+
+                <div class="section-card">
+                    <!-- Proposed exercises with input fields -->
+                    <div style="display:flex; flex-direction:column; gap:1.5rem;">
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E1: FRC con tasa del 8% y vida útil de 8 años</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule el FRC (redondeado a 4 decimales):</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex1" step="0.0001" placeholder="0.1740" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(1, 0.1740)">Verificar</button>
+                                <span id="ans-ex1" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E2: Área estática de envasadora l=3.1m y w=1.4m</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule Ss en m²:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex2" step="0.01" placeholder="4.34" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(2, 4.34)">Verificar</button>
+                                <span id="ans-ex2" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E3: Merma del 10% en lote de 350 kg de fresa</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule pulpa útil en kg:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex3" step="0.1" placeholder="315" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(3, 315)">Verificar</button>
+                                <span id="ans-ex3" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E4: Disponibilidad con paros de 30 min en turno de 480 min</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule disponibilidad en %:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex4" step="0.01" placeholder="93.75" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(4, 93.75)">Verificar</button>
+                                <span id="ans-ex4" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E5: CAE de envasadora con inversión $32,000, costo operación $5,000/año y FRC 0.1770</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule CAE en USD:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex5" step="1" placeholder="10664" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(5, 10664)">Verificar</button>
+                                <span id="ans-ex5" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E6: Puntos de Terreno B: Materia prima (peso 40%, nota 8), Cercanía mercado (peso 60%, nota 9)</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule puntuación ponderada:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex6" step="0.1" placeholder="8.6" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(6, 8.6)">Verificar</button>
+                                <span id="ans-ex6" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E7: MOD para envasar 6,000 frascos si un obrero envasa 500 frascos/turno</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule obreros requeridos:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex7" step="1" placeholder="12" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(7, 12)">Verificar</button>
+                                <span id="ans-ex7" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E8: OEE con Disponibilidad 93.75%, Rendimiento 90% y Calidad 99%</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule OEE en % (2 decimales):</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex8" step="0.01" placeholder="83.53" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(8, 83.53)">Verificar</button>
+                                <span id="ans-ex8" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E9: Guerchet de lavadora l=3.0m, w=0.8m, n=1 lado, k=0.75</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule superficie total St en m²:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex9" step="0.1" placeholder="8.4" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(9, 8.4)">Verificar</button>
+                                <span id="ans-ex9" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E10: Penalización de Vogel si los fletes mínimos son $4 y $7</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule penalización:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex10" step="1" placeholder="3" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(10, 3)">Verificar</button>
+                                <span id="ans-ex10" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E11: Mermelada final obtenida de 300 kg de fresa (10% merma, azúcar 1:1, 35% evaporación)</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule peso final de mermelada en kg:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex11" step="0.1" placeholder="351" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(11, 351)">Verificar</button>
+                                <span id="ans-ex11" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+
+                        <div class="simulator-container" style="margin-top:0;">
+                            <h4 style="color:#fff; font-size:1rem; margin-bottom:0.5rem;">E12: MTTR para caldera con 10 horas de reparación por 5 fallas</h4>
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:1rem;">Calcule MTTR en horas/reparación:</p>
+                            <div style="display:flex; gap:1rem; align-items:center;">
+                                <input type="number" id="p-ex12" step="1" placeholder="2" style="width:120px; padding:0.5rem; background:rgba(0,0,0,0.3); border:1px solid var(--card-border); color:#fff; border-radius:6px;">
+                                <button class="sim-btn" onclick="checkProposed(12, 2)">Verificar</button>
+                                <span id="ans-ex12" style="font-weight:700; font-size:0.9rem;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>UPSE - Facultad de Ingeniería Industrial - Carrera de Ingeniería Industrial</p>
+            <p>Asignatura: Gestión de Proyectos Industriales</p>
+        </div>
+    </footer>
+
+    <script>
+/*=== CORE/ESTUDIO_TECNICO.JS — NÚCLEO MATEMÁTICO PURO ===*/
+
+/**
+ * Valida si un valor es número finito
+ * @param {*} x - Valor a validar
+ * @returns {boolean}
+ */
+function isValidNumber(x) {
+    return typeof x === 'number' && Number.isFinite(x);
+}
+
+/**
+ * Convierte a número finito con fallback
+ * @param {*} x - Valor a convertir
+ * @param {number} fallback - Valor por defecto
+ * @returns {number}
+ */
+function toFiniteNumber(x, fallback = 0) {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+/**
+ * Calcula el Factor de Recuperación de Capital (FRC)
+ */
+function calcularFRC(i, n) {
+    const rate = toFiniteNumber(i);
+    const years = toFiniteNumber(n);
+    if (rate <= 0 || years <= 0) return 0;
+    const r = rate / 100;
+    return (r * Math.pow(1 + r, years)) / (Math.pow(1 + r, years) - 1);
+}
+
+/**
+ * Calcula el Costo Anual Equivalente (CAE) de Lange
+ */
+function calcularCAE(inv, op, i, n) {
+    const investment = toFiniteNumber(inv);
+    const operating = toFiniteNumber(op);
+    const frc = calcularFRC(i, n);
+    if (investment < 0 || operating < 0 || frc <= 0) return 0;
+    return (investment * frc) + operating;
+}
+
+/**
+ * Calcula el área total de Guerchet
+ */
+function calcularGuerchet(l, w, n, k) {
+    const length = toFiniteNumber(l);
+    const width = toFiniteNumber(w);
+    const access = toFiniteNumber(n, 1);
+    const evolution = toFiniteNumber(k);
+    
+    if (length <= 0 || width <= 0 || access <= 0 || evolution < 0) {
+        return { ss: 0, sg: 0, se: 0, st: 0 };
+    }
+    
+    const ss = length * width;
+    const sg = ss * access;
+    const se = (ss + sg) * evolution;
+    const st = ss + sg + se;
+    
+    return { ss, sg, se, st };
+}
+
+/**
+ * Calcula la localización por puntos ponderados para un estado dado
+ */
+function calcularPuntosPonderados(pesos, puntuaciones) {
+    if (!Array.isArray(pesos) || !Array.isArray(puntuaciones) || pesos.length !== puntuaciones.length) {
+        return 0;
+    }
+    let total = 0;
+    let sumWeights = 0;
+    for (let i = 0; i < pesos.length; i++) {
+        const w = toFiniteNumber(pesos[i]);
+        const s = toFiniteNumber(puntuaciones[i]);
+        total += (w / 100) * s;
+        sumWeights += w;
+    }
+    return total;
+}
+
+/**
+ * Calcula el balance de masa para el envasado de mermelada
+ */
+function calcularBalanceMasa(fresaIn, sugarRatio, lossMondado) {
+    const rawFresa = toFiniteNumber(fresaIn);
+    const sugarPct = toFiniteNumber(sugarRatio) / 100;
+    const lossPct = toFiniteNumber(lossMondado) / 100;
+    
+    if (rawFresa <= 0 || lossPct < 0 || sugarPct < 0) {
+        return { pulpa: 0, azucar: 0, evap: 0, mermelada: 0, jars: 0 };
+    }
+    
+    const pulpa = rawFresa * (1 - lossPct);
+    const azucar = pulpa * sugarPct;
+    const mix = pulpa + azucar;
+    // Evaporation: around 35% of the total mix weight is lost as steam
+    const evap = mix * 0.35;
+    const mermelada = mix - evap;
+    const jars = mermelada / 0.25; // 250g jars
+    
+    return { pulpa, azucar, evap, mermelada, jars };
+}
+
+/**
+ * Calcula el número de obreros requeridos (Mano de Obra Directa - MOD)
+ */
+function calcularObrerosMOD(tiempoLoteMin, lotesDia, tiempoTurnoHrs) {
+    const timePerBatch = toFiniteNumber(tiempoLoteMin);
+    const batches = toFiniteNumber(lotesDia);
+    const shiftHrs = toFiniteNumber(tiempoTurnoHrs);
+    
+    if (timePerBatch <= 0 || batches <= 0 || shiftHrs <= 0) return 0;
+    
+    const totalTimeRequired = timePerBatch * batches;
+    const totalAvailableTimePerWorker = shiftHrs * 60;
+    
+    return Math.ceil(totalTimeRequired / totalAvailableTimePerWorker);
+}
+
+/**
+ * Calcula la Eficiencia Global de Equipos (OEE)
+ */
+function calcularOEE(programadoMin, parosMin, velocidadTarget, prodTotal, defectuosos) {
+    const totalTime = toFiniteNumber(programadoMin);
+    const downTime = toFiniteNumber(parosMin);
+    const targetRate = toFiniteNumber(velocidadTarget);
+    const totalProd = toFiniteNumber(prodTotal);
+    const defects = toFiniteNumber(defectuosos);
+    
+    if (totalTime <= 0 || targetRate <= 0) {
+        return { disp: 0, perf: 0, qual: 0, oee: 0 };
+    }
+    
+    const operatingTime = totalTime - downTime;
+    const disp = totalTime > 0 ? (operatingTime / totalTime) * 100 : 0;
+    
+    const idealProd = operatingTime * targetRate;
+    const perf = idealProd > 0 ? (totalProd / idealProd) * 100 : 0;
+    
+    const goodProd = totalProd - defects;
+    const qual = totalProd > 0 ? (goodProd / totalProd) * 100 : 0;
+    
+    const oee = (disp / 100) * (perf / 100) * (qual / 100) * 100;
+    
+    return {
+        disp: Math.max(0, Math.min(100, disp)),
+        perf: Math.max(0, Math.min(100, perf)),
+        qual: Math.max(0, Math.min(100, qual)),
+        oee: Math.max(0, Math.min(100, oee))
+    };
+}
+
+
+/*=== APP.JS — LÓGICA DE INTERFAZ E INTERACTIVIDAD ===*/
+
+
+
+// Prevenir loops inactivos
+window.canvasDrawers = {};
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTabs();
+    initSimulators();
+    initAccordion();
+    initKeyboardNav();
+    
+    // Simple routing based on page name
+    const path = window.location.pathname;
+    if (path.includes('modulo2.html')) {
+        const tab = document.getElementById('tab-btn-4'); // Elementos (Guerchet/SLP)
+        if (tab) activateTab(tab);
+    } else if (path.includes('modulo3.html')) {
+        const tab = document.getElementById('tab-btn-5'); // Caso Práctico (ASME/Mass Balance)
+        if (tab) activateTab(tab);
+    } else {
+        triggerTabDraw('intro');
+    }
+});
+
+/*=== TAB NAVIGATION ===*/
+function initTabs() {
+    const tabs = document.querySelectorAll('nav[role="tablist"] button');
+    const panels = document.querySelectorAll('section[role="tabpanel"]');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            activateTab(tab);
+        });
+    });
+}
+
+function activateTab(tab) {
+    if (!tab) return;
+    const tabs = document.querySelectorAll('nav[role="tablist"] button');
+    const panels = document.querySelectorAll('section[role="tabpanel"]');
+    const tabName = tab.getAttribute('aria-controls');
+    
+    tabs.forEach(t => {
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+    });
+    tab.setAttribute('aria-selected', 'true');
+    tab.setAttribute('tabindex', '0');
+    
+    panels.forEach(p => {
+        p.classList.remove('active');
+    });
+    const activePanel = document.getElementById(tabName);
+    if (activePanel) {
+        activePanel.classList.add('active');
+    }
+    
+    // Sync sidebar active class
+    const sidebarItems = document.querySelectorAll('.sidebar-menu li');
+    sidebarItems.forEach(li => li.classList.remove('active'));
+    
+    const activeLink = document.querySelector(`.sidebar-menu a[href="#${tabName}"]`);
+    if (activeLink && activeLink.parentElement) {
+        activeLink.parentElement.classList.add('active');
+    }
+    
+    // Trigger Canvas Draw for the new active tab
+    triggerTabDraw(tabName);
+}
+
+// Expose globally
+window.activateTab = activateTab;
+
+function triggerTabDraw(tabName) {
+    if (window.canvasDrawers && window.canvasDrawers[tabName]) {
+        setTimeout(() => {
+            window.canvasDrawers[tabName]();
+        }, 80);
+    }
+}
+
+/*=== KEYBOARD NAVIGATION ===*/
+function initKeyboardNav() {
+    const tabs = document.querySelectorAll('nav[role="tablist"] button');
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('keydown', (e) => {
+            let newIndex = index;
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabs.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabs.length) % tabs.length;
+            } else if (e.key === 'Home') {
+                newIndex = 0;
+            } else if (e.key === 'End') {
+                newIndex = tabs.length - 1;
+            } else {
+                return;
+            }
+            e.preventDefault();
+            activateTab(tabs[newIndex]);
+        });
+    });
+}
+
+/*=== ACCORDION OF EXERCISES ===*/
+function initAccordion() {
+    const headers = document.querySelectorAll('.ex-header');
+    headers.forEach(h => {
+        h.addEventListener('click', () => {
+            const content = h.nextElementSibling;
+            const exId = h.getAttribute('data-ex');
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                h.setAttribute('aria-expanded', 'false');
+                stopExAnimation(exId);
+            } else {
+                content.style.display = 'block';
+                h.setAttribute('aria-expanded', 'true');
+                drawExerciseCanvas(exId, 1);
+            }
+        });
+    });
+}
+
+/*=== CANVAS HIGHDPI SCALING ===*/
+function getScaledContext(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const displayWidth = rect.width || parseInt(canvas.getAttribute('width')) || 400;
+    const displayHeight = rect.height || parseInt(canvas.getAttribute('height')) || 250;
+    const dpr = window.devicePixelRatio || 1;
+    
+    if (canvas.width !== Math.floor(displayWidth * dpr) || 
+        canvas.height !== Math.floor(displayHeight * dpr)) {
+        canvas.width = displayWidth * dpr;
+        canvas.height = displayHeight * dpr;
+        canvas.style.width = `${displayWidth}px`;
+        canvas.style.height = `${displayHeight}px`;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+    return ctx;
+}
+
+function drawGrid(ctx, width, height, size = 40) {
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.02)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += size) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+    }
+    for (let y = 0; y < height; y += size) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+    }
+}
+
+/*=== 12 EXERCISES DATABASE ===*/
+const exercisesDb = {
+    1: {
+        title: "Ejercicio 1: FRC de la Caldera",
+        statement: "Calcule el Factor de Recuperación de Capital (FRC) para la caldera de 15 HP de la planta de mermelada, sabiendo que tiene un costo de inversión de $15,000, vida útil de 10 años y una tasa de descuento del 12% anual.",
+        steps: [
+            "Paso 1: Identificar las variables financieras. Tasa \(i = 12\% = 0.12\), vida útil \(n = 10\) años.",
+            "Paso 2: Aplicar la fórmula del FRC: \[\text{FRC} = \frac{0.12 \cdot (1+0.12)^{10}}{(1+0.12)^{10} - 1}\]",
+            "Paso 3: Calcular el resultado final: \[\text{FRC} \approx 0.1770\] (es decir, el 17.70% de la inversión se recupera anualmente)."
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(50, 50, 80, 150); // Caldera shape
+            ctx.fillStyle = '#fff';
+            ctx.font = '12px Outfit';
+            ctx.fillText("Caldera 15 HP", 60, 40);
+            ctx.fillText(`FRC: 0.1770`, 160, 120);
+        }
+    },
+    2: {
+        title: "Ejercicio 2: Área de la Báscula de Recibo",
+        statement: "Calcule la superficie estática (Ss) y gravitacional (Sg) de la báscula de recibo marca Baunken de 1.5 toneladas, la cual mide 1.5m de ancho por 2.0m de largo, con acceso por 2 de sus lados.",
+        steps: [
+            "Paso 1: Superficie Estática: \[S_s = l \times w = 1.5 \times 2.0 = 3.00 \text{ m}^2\]",
+            "Paso 2: Superficie de Gravitación: \[S_g = S_s \times n = 3.00 \times 2 = 6.00 \text{ m}^2\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.strokeStyle = '#a855f7';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(80, 60, 100, 120); // Static area
+            ctx.fillStyle = 'rgba(168, 85, 247, 0.1)';
+            ctx.fillRect(80, 60, 100, 120);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Ss = 3.0 m²", 100, 120);
+        }
+    },
+    3: {
+        title: "Ejercicio 3: Merma en Pelado de Fresa",
+        statement: "Un lote de producción inicial tiene 213 kg de fresa fresca. Si la merma del mondado (remoción de pedúnculo y hojas) es del 6.2%, calcule la pulpa de fresa útil resultante.",
+        steps: [
+            "Paso 1: Calcular los kilogramos de merma: \[\text{Merma} = 213 \times 0.062 = 13.206 \text{ kg}\]",
+            "Paso 2: Calcular la pulpa limpia: \[\text{Pulpa Útil} = 213 - 13.206 = 199.794 \text{ kg}\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#f43f5e';
+            ctx.beginPath();
+            ctx.arc(80, 120, 35, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Fresa: 213 kg", 50, 70);
+            ctx.fillText("Merma 6.2%", 160, 120);
+        }
+    },
+    4: {
+        title: "Ejercicio 4: Disponibilidad de la Tapadora",
+        statement: "En una jornada laboral de 480 minutos, la máquina tapadora automática sufre fallas y reparaciones que suman 45 minutos de inactividad técnica. Calcule la disponibilidad de la máquina.",
+        steps: [
+            "Paso 1: Calcular el tiempo de operación real: \[T_{op} = 480 - 45 = 435 \text{ min}\]",
+            "Paso 2: Calcular la disponibilidad técnica: \[D = \frac{435}{480} \times 100 = 90.63\%\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(60, 80, 200, 25);
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(260, 80, 30, 25); // Down time
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Operación: 435 min", 70, 70);
+            ctx.fillText("Paro: 45 min", 250, 130);
+        }
+    },
+    5: {
+        title: "Ejercicio 5: CAE del Tanque de Escalde",
+        statement: "Un tanque de escalde Jerza tiene un costo de inversión de $45,000, costo de operación anual de $8,000, tasa de interés del 12% y vida útil de 10 años. Calcule el Costo Anual Equivalente (CAE).",
+        steps: [
+            "Paso 1: Usar el FRC de 0.1770 (calculado en Ejercicio 1).",
+            "Paso 2: Calcular el costo anual de la inversión: \[I_{anual} = 45,000 \times 0.1770 = 7,965 \text{ USD/año}\]",
+            "Paso 3: Sumar el costo operativo para obtener el CAE: \[\text{CAE} = 7,965 + 8,000 = 15,965 \text{ USD/año}\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(80, 60, 120, 100); // Tank shape
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Tanque Escalde", 90, 50);
+            ctx.fillText("CAE: $15,965", 95, 120);
+        }
+    },
+    6: {
+        title: "Ejercicio 6: Evaluación de Terrenos (Puntos Ponderados)",
+        statement: "Compare dos alternativas de terrenos. Terreno A: Cercanía de materia prima (peso 60%, nota 9), Infraestructura (peso 40%, nota 7). Calcule la calificación ponderada total.",
+        steps: [
+            "Paso 1: Puntuación factor materia prima: \[0.60 \times 9 = 5.40\]",
+            "Paso 2: Puntuación factor infraestructura: \[0.40 \times 7 = 2.80\]",
+            "Paso 3: Sumar para obtener la calificación total del Terreno A: \[5.40 + 2.80 = 8.20 / 10\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(60, 60, 100, 100);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Terreno A", 80, 50);
+            ctx.fillText("Puntaje: 8.20", 75, 110);
+        }
+    },
+    7: {
+        title: "Ejercicio 7: Personal de Envasado",
+        statement: "Se deben envasar 7,000 frascos de mermelada por día. Si un operario envasa a mano 600 frascos en un turno de 8 horas, ¿cuántos obreros se necesitan para cumplir la meta?",
+        steps: [
+            "Paso 1: Calcular la cantidad nominal de operarios: \[N = \frac{7,000}{600} \approx 11.67\]",
+            "Paso 2: Redondear al entero superior para asegurar la producción: \[\text{Obreros Requeridos} = 12\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#a855f7';
+            for (let i = 0; i < 12; i++) {
+                const x = 50 + (i % 4) * 50;
+                const y = 60 + Math.floor(i / 4) * 50;
+                ctx.fillRect(x, y, 30, 30); // Worker representation
+            }
+        }
+    },
+    8: {
+        title: "Ejercicio 8: OEE de la Envasadora",
+        statement: "Calcule el OEE de la envasadora automática de frascos si su Disponibilidad es del 90.63%, su Rendimiento es del 92.00% y su Tasa de Calidad es del 98.80%.",
+        steps: [
+            "Paso 1: Aplicar la fórmula general de OEE: \[\text{OEE} = \text{Disponibilidad} \times \text{Rendimiento} \times \text{Calidad}\]",
+            "Paso 2: Multiplicar los valores decimales correspondientes: \[\text{OEE} = 0.9063 \times 0.9200 \times 0.9880 \approx 0.8238\]",
+            "Paso 3: Convertir a porcentaje: \[\text{OEE} \approx 82.38\%\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#10b981';
+            ctx.beginPath();
+            ctx.arc(150, 100, 45, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.fillText("OEE: 82.38%", 120, 105);
+        }
+    },
+    9: {
+        title: "Ejercicio 9: Layout Guerchet Completo",
+        statement: "Determine la superficie total de Guerchet para la envasadora comercial de mermelada (largo = 2.4 m, ancho = 1.2 m, acceso por 2 lados y factor de evolución k = 0.75).",
+        steps: [
+            "Paso 1: Área estática (Ss): \[S_s = 2.4 \times 1.2 = 2.88 \text{ m}^2\]",
+            "Paso 2: Área de gravitación (Sg): \[S_g = S_s \times n = 2.88 \times 2 = 5.76 \text{ m}^2\]",
+            "Paso 3: Área de evolución (Se): \[S_e = (S_s + S_g) \times k = (2.88 + 5.76) \times 0.75 = 6.48 \text{ m}^2\]",
+            "Paso 4: Área total (St): \[S_t = 2.88 + 5.76 + 6.48 = 15.12 \text{ m}^2\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.strokeStyle = '#f59e0b';
+            ctx.strokeRect(60, 60, 180, 100); // Ss + Sg + Se visual representation
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.1)';
+            ctx.fillRect(60, 60, 180, 100);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("St = 15.12 m²", 110, 115);
+        }
+    },
+    10: {
+        title: "Ejercicio 10: Penalización de Vogel",
+        statement: "Calcule la penalización de fletes para la Planta A si los dos costos unitarios más bajos de envío a los destinos X e Y son $3.00 y $5.00 respectivamente.",
+        steps: [
+            "Paso 1: Aplicar la regla de penalizaciones de Vogel (diferencia de los dos costos mínimos).",
+            "Paso 2: Restar los dos fletes menores: \[\text{Penalización} = 5.00 - 3.00 = 2.00 \text{ USD}\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.strokeStyle = '#6366f1';
+            ctx.strokeRect(60, 80, 100, 60);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Planta A", 80, 70);
+            ctx.fillText("Penalización: $2", 180, 115);
+        }
+    },
+    11: {
+        title: "Ejercicio 11: Balance de Concentración",
+        statement: "En el concentrador de mermelada Jerza ingresan 199.8 kg de pulpa de fresa y 199.8 kg de azúcar. Si se evapora el 35% del peso total en forma de vapor de agua, calcule el rendimiento final de mermelada y los frascos de 250g obtenidos.",
+        steps: [
+            "Paso 1: Masa de la mezcla inicial: \[M_{mix} = 199.8 + 199.8 = 399.60 \text{ kg}\]",
+            "Paso 2: Calcular el agua evaporada: \[M_{evap} = 399.60 \times 0.35 = 139.86 \text{ kg}\]",
+            "Paso 3: Calcular la mermelada final: \[M_{mermelada} = 399.60 - 139.86 = 259.74 \text{ kg}\]",
+            "Paso 4: Calcular frascos de 250g: \[\text{Frascos} = \frac{259.74}{0.25} \approx 1039 \text{ unidades}\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(80, 60, 100, 100);
+            ctx.fillStyle = '#fff';
+            ctx.fillText("Mezcla: 399.6 kg", 90, 50);
+            ctx.fillText("Vapor: 139.8 kg", 200, 80);
+        }
+    },
+    12: {
+        title: "Ejercicio 12: Confiabilidad de la Caldera (MTBF y MTTR)",
+        statement: "Durante 200 horas de operación, la caldera de la planta de mermeladas sufrió 4 paradas por avería, las cuales demoraron 8 horas en total en ser reparadas. Calcule el MTBF y MTTR.",
+        steps: [
+            "Paso 1: Calcular el tiempo de operación real: \[T_{op} = 200 - 8 = 192 \text{ horas}\]",
+            "Paso 2: Calcular el MTBF (Tiempo medio entre fallas): \[\text{MTBF} = \frac{192}{4} = 48.00 \text{ horas/falla}\]",
+            "Paso 3: Calcular el MTTR (Tiempo medio para reparar): \[\text{MTTR} = \frac{8}{4} = 2.00 \text{ horas/reparación}\]"
+        ],
+        draw: (ctx, w, h, step) => {
+            drawGrid(ctx, w, h);
+            ctx.fillStyle = '#10b981';
+            ctx.fillRect(50, 80, 200, 20); // MTBF
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(250, 80, 40, 20); // MTTR
+            ctx.fillStyle = '#fff';
+            ctx.fillText("MTBF: 48 horas", 80, 70);
+            ctx.fillText("MTTR: 2 horas", 240, 120);
+        }
+    }
+};
+
+function drawExerciseCanvas(exId, step) {
+    const canvas = document.getElementById(`canvas-ex-${exId}`);
+    if (!canvas) return;
+    
+    const ctx = getScaledContext(canvas);
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+    
+    ctx.clearRect(0, 0, w, h);
+    
+    const ex = exercisesDb[exId];
+    if (ex && ex.draw) {
+        ex.draw(ctx, w, h, step);
+    }
+}
+
+function stopExAnimation(exId) {
+    // Left empty since our exercises drawings are static 2D vector illustrations
+}
+
+/*=== SIMULATORS LOGIC ===*/
+function initSimulators() {
+    // 3D software stack rotation
+    const rotX = document.getElementById('rot-x');
+    const rotY = document.getElementById('rot-y');
+    if (rotX && rotY) {
+        rotX.addEventListener('input', rotateStack);
+        rotY.addEventListener('input', rotateStack);
+    }
+    
+    // Register the Lange sizing draw method in window.canvasDrawers
+    window.canvasDrawers['tema5'] = () => {
+        calculateLange();
+    };
+    
+    // SLP diagram hover details is inlined in HTML as showSlpDetails()
+}
+
+function rotateStack() {
+    const rx = document.getElementById('rot-x').value;
+    const ry = document.getElementById('rot-y').value;
+    
+    const valX = document.getElementById('val-x');
+    const valY = document.getElementById('val-y');
+    if (valX) valX.innerText = rx;
+    if (valY) valY.innerText = ry;
+    
+    const stack = document.getElementById('software-stack');
+    if (stack) {
+        stack.style.setProperty('--rotate-x', rx + 'deg');
+        stack.style.setProperty('--rotate-y', ry + 'deg');
+    }
+}
+
+// Lange Sizing draw canvas logic
+function calculateLange() {
+    const inv = parseFloat(document.getElementById('inv').value) || 0;
+    const op = parseFloat(document.getElementById('op_cost').value) || 0;
+    const r = (parseFloat(document.getElementById('rate').value) || 0) / 100;
+    const n = parseInt(document.getElementById('years').value) || 1;
+
+    if (r <= 0 || n <= 0) return;
+
+    const crf = (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    const cae = (inv * crf) + op;
+
+    const resInv = document.getElementById('res-inv');
+    const resOp = document.getElementById('res-op');
+    const resTotal = document.getElementById('res-total');
+    
+    if (resInv) resInv.innerText = '$' + inv.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if (resOp) resOp.innerText = '$' + op.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    if (resTotal) resTotal.innerText = '$' + cae.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+    const resultsPanel = document.getElementById('lange-results');
+    if (resultsPanel) resultsPanel.style.display = 'block';
+
+    const barFill = document.getElementById('lange-bar');
+    if (barFill) {
+        barFill.style.width = '0%';
+        setTimeout(() => {
+            const percentage = Math.min((cae / (inv + op)) * 100, 100);
+            barFill.style.width = percentage + '%';
+        }, 50);
+    }
+
+    drawLangeChart(inv, op, crf);
+}
+
+function drawLangeChart(invBase, opBase, crf) {
+    const canvas = document.getElementById('lange-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const margin = { top: 30, right: 30, bottom: 40, left: 50 };
+    const width = canvas.width - margin.left - margin.right;
+    const height = canvas.height - margin.top - margin.bottom;
+
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(margin.left, margin.top);
+    ctx.lineTo(margin.left, canvas.height - margin.bottom);
+    ctx.lineTo(canvas.width - margin.right, canvas.height - margin.bottom);
+    ctx.stroke();
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = '10px Outfit';
+    ctx.textAlign = 'center';
+    ctx.fillText('Capacidad de Planta (Lotes/Día)', margin.left + width / 2, canvas.height - 10);
+    
+    ctx.save();
+    ctx.translate(15, margin.top + height / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Costo Anual ($)', 0, 0);
+    ctx.restore();
+
+    const points = [];
+    let minCAE = Infinity;
+    let optX = 0;
+    let optY = 0;
+
+    for (let x = 0.5; x <= 2.5; x += 0.05) {
+        const inv = invBase * Math.pow(x, 0.6);
+        const op = opBase / Math.sqrt(x);
+        const caeVal = (inv * crf) + op;
+        points.push({ xVal: x, invCAE: inv * crf, opCAE: op, totalCAE: caeVal });
+
+        if (caeVal < minCAE) {
+            minCAE = caeVal;
+            optX = x;
+            optY = caeVal;
+        }
+    }
+
+    const getXPixel = (x) => margin.left + ((x - 0.5) / 2.0) * width;
+    const getMaxY = () => {
+        let max = 0;
+        points.forEach(p => {
+            if (p.totalCAE > max) max = p.totalCAE;
+        });
+        return max * 1.1;
+    };
+    const maxY = getMaxY();
+    const getYPixel = (y) => (canvas.height - margin.bottom) - (y / maxY) * height;
+
+    // 1. Inversion Fija Curve (Blue)
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(getXPixel(points[0].xVal), getYPixel(points[0].invCAE));
+    for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(getXPixel(points[i].xVal), getYPixel(points[i].invCAE));
+    }
+    ctx.stroke();
+
+    // 2. Costo Operativo Curve (Orange)
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(getXPixel(points[0].xVal), getYPixel(points[0].opCAE));
+    for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(getXPixel(points[i].xVal), getYPixel(points[i].opCAE));
+    }
+    ctx.stroke();
+
+    // 3. Total Cost Curve (Cyan)
+    ctx.strokeStyle = '#06b6d4';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(getXPixel(points[0].xVal), getYPixel(points[0].totalCAE));
+    for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(getXPixel(points[i].xVal), getYPixel(points[i].totalCAE));
+    }
+    ctx.stroke();
+
+    // Dotted lines to optimal point
+    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(getXPixel(optX), getYPixel(optY));
+    ctx.lineTo(getXPixel(optX), canvas.height - margin.bottom);
+    ctx.moveTo(getXPixel(optX), getYPixel(optY));
+    ctx.lineTo(margin.left, getYPixel(optY));
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Glowing optimal dot
+    ctx.fillStyle = '#10b981';
+    ctx.beginPath();
+    ctx.arc(getXPixel(optX), getYPixel(optY), 6, 0, 2 * Math.PI);
+    ctx.fill();
+    
+    ctx.font = 'bold 8px Outfit';
+    ctx.fillStyle = '#10b981';
+    ctx.textAlign = 'left';
+    ctx.fillText('Óptimo', getXPixel(optX) + 8, getYPixel(optY) - 4);
+}
+
+</script>
+    <script>
+        // Inline layout detail view helper functions
+        function showSlpDetails(title, desc) {
+            const panel = document.getElementById('slp-panel');
+            document.getElementById('slp-title-ui').innerText = title;
+            document.getElementById('slp-desc-ui').innerText = desc;
+            panel.style.display = 'block';
+        }
+
+        function showAsmeDetails(title, desc) {
+            const panel = document.getElementById('asme-panel');
+            document.getElementById('asme-title-ui').innerText = title;
+            document.getElementById('asme-desc-ui').innerText = desc;
+            panel.style.display = 'block';
+        }
+
+        function checkProposed(id, correctVal) {
+            const input = document.getElementById(`p-ex${id}`);
+            const ans = document.getElementById(`ans-ex${id}`);
+            const val = parseFloat(input.value) || 0;
+            
+            if (Math.abs(val - correctVal) < 0.005) {
+                ans.innerText = '¡Correcto! 🟢';
+                ans.style.color = 'var(--accent)';
+            } else {
+                ans.innerText = 'Incorrecto 🔴';
+                ans.style.color = 'var(--danger)';
+            }
+        }
+    </script>
+</body>
+</html>
