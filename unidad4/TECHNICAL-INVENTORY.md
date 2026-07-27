@@ -44,7 +44,7 @@ All mathematical core functions are strictly pure, fail-safe (return `0` on inva
 | 4 | **4. Elementos** | Analyze | Projections table updating dynamically based on Q, P, CV, and CF parameters. |
 | 5 | **5. Evaluación** | Evaluate | NPV profile canvas graphing NPV vs Discount rate, showing WACC and IRR crossings. |
 | 6 | **6. Ejercicios** | Create | 12 guided exercises with step-by-step canvas diagrams. |
-| 7 | **7. Autoevaluación** | Create | 12 proposed multiple-choice questions with accordion feedback in LaTeX. |
+| 7 | **7. Autoevaluación** | Create | 12 proposed multiple-choice questions in a sequential single-card layout with LaTeX feedback. |
 
 ## 4. Technical Debt & Analysis of Case Study Typo
 

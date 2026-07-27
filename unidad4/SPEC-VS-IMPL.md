@@ -17,7 +17,7 @@ This document provides a comparative analysis of the requirements specified in t
 | **Canvas Graphics** | Visual dynamic canvas drawings for elements. | Implemented: 1. Capital structure pie chart; 2. NPV profile curve; 3. Exercise diagrams. | ✅ Cumplido |
 | **WCAG 2.1 AA** | Keyboard navigation, ARIA tags, Skip link. | Validated in `index.html` (tablist roles) & `app.js` (Arrow navigation). | ✅ Cumplido |
 | **12 Solved Exercises** | E1 to E12 with step-by-step canvas. | Full database implemented in `app.js` with dynamic step rendering. | ✅ Cumplido |
-| **12 Proposed Exercises** | E13 to E24 with accordion & LaTeX. | Full database implemented in `app.js` with expandable answers & MathJax. | ✅ Cumplido |
+| **12 Proposed Exercises** | E13 to E24 in a sequential quiz card with LaTeX. | Full database implemented in `app.js` as a sequential single-card quiz with MathJax feedback. | ✅ Cumplido |
 | **Single Bundle Embed** | `google_sites_embed.html` < 500KB | Compiled via `build_embed.py`. Final size: **116.72 KB**. | ✅ Cumplido |
 | **Test Coverage** | 100% Core functionality coverage. | Completed using Node test runner in `tests/`. All 10 tests pass. | ✅ Cumplido |
 
