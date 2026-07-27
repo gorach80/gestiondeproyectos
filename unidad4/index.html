@@ -418,11 +418,37 @@
                 <div class="content-card">
                     <h2>Autoevaluación: 12 Ejercicios Propuestos</h2>
                     <p style="margin-bottom: 24px;">
-                        Mide tus conocimientos resolviendo los siguientes 12 problemas de opción múltiple. Una vez selecciones tu respuesta, podrás validar tu resultado y abrir la retroalimentación detallada con fórmulas en LaTeX.
+                        Resuelve los siguientes 12 problemas de opción múltiple de forma secuencial. Selecciona tu respuesta, valídala para obtener retroalimentación en tiempo real y avanza al siguiente ejercicio.
                     </p>
 
-                    <div id="proposed-accordion-container">
-                        <!-- Inyectado dinámicamente por JS (Acordeones de ejercicios 13 a 24) -->
+                    <!-- Tarjeta Única del Quiz Secuencial -->
+                    <div id="proposed-quiz-container" class="step-box" style="border-color: var(--secondary); margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px;">
+                            <h3 id="proposed-quiz-title" style="color: var(--secondary); font-size: 1.25rem;">Pregunta 1 de 12</h3>
+                            <span id="proposed-quiz-progress" style="font-weight: 700; color: var(--text-muted); font-size: 0.9rem;">Ejercicio 13 de 24</span>
+                        </div>
+                        
+                        <p id="proposed-quiz-statement" style="margin-bottom: 20px; font-weight: 500; font-size: 1.1rem; line-height: 1.5;"></p>
+                        
+                        <div id="proposed-quiz-options" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                            <!-- Opciones inyectadas dinámicamente -->
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 20px;">
+                            <button class="btn-nav" id="btn-proposed-validate" style="padding: 10px 20px;">Validar Respuesta</button>
+                            <span id="proposed-validation-status" style="font-weight: bold; font-size: 0.95rem;"></span>
+                        </div>
+
+                        <div class="alert-box" style="display: none; margin-top: 15px;" id="proposed-solution-box">
+                            <h4 style="color: var(--secondary); margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap"></i> Retroalimentación Detallada</h4>
+                            <p id="proposed-solution-content" style="font-size: 0.95rem; line-height: 1.6;"></p>
+                        </div>
+                    </div>
+
+                    <div class="step-nav-row" style="margin-top: 20px;">
+                        <button class="btn-nav" id="btn-proposed-prev"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                        <span style="font-weight: 700;" id="proposed-quiz-counter">Pregunta 1 de 12</span>
+                        <button class="btn-nav" id="btn-proposed-next">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                 </div>
             </section>

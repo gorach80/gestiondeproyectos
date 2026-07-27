@@ -30,6 +30,10 @@ const state = {
     solved: {
         currentExId: 1,
         currentStep: 0
+    },
+    proposed: {
+        currentQId: 13,
+        userAnswers: {}
     }
 };
 
@@ -1460,130 +1464,149 @@ const proposedExercisesDB = {
 };
 
 function initProposedExercises() {
-    const container = document.getElementById('proposed-accordion-container');
+    const container = document.getElementById('proposed-quiz-container');
     if (!container) return;
 
-    for (const [id, ex] of Object.entries(proposedExercisesDB)) {
-        const accordion = document.createElement('div');
-        accordion.className = 'accordion';
-        accordion.id = `proposed-ex-${id}`;
+    const quizTitle = document.getElementById('proposed-quiz-title');
+    const quizProgress = document.getElementById('proposed-quiz-progress');
+    const quizStatement = document.getElementById('proposed-quiz-statement');
+    const quizOptions = document.getElementById('proposed-quiz-options');
+    const btnValidate = document.getElementById('btn-proposed-validate');
+    const validationStatus = document.getElementById('proposed-validation-status');
+    const solutionBox = document.getElementById('proposed-solution-box');
+    const solutionContent = document.getElementById('proposed-solution-content');
 
-        accordion.innerHTML = `
-            <div class="accordion-header" tabindex="0" role="button" aria-expanded="false" aria-controls="acc-body-${id}">
-                <span>${ex.title}</span>
-                <i class="fa-solid fa-chevron-down accordion-icon"></i>
-            </div>
-            <div class="accordion-content" id="acc-body-${id}" role="region">
-                <p style="margin-bottom: 15px; font-weight: 500;">${ex.statement}</p>
-                
-                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;" id="options-group-${id}">
-                    ${ex.options.map((opt, i) => `
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
-                            <input type="radio" name="radio-ex-${id}" value="${i}">
-                            <span>${opt}</span>
-                        </label>
-                    `).join('')}
-                </div>
+    const btnPrev = document.getElementById('btn-proposed-prev');
+    const btnNext = document.getElementById('btn-proposed-next');
+    const quizCounter = document.getElementById('proposed-quiz-counter');
 
-                <button class="btn-nav" style="padding: 6px 12px; font-size: 0.85rem;" id="btn-validate-${id}">Validar Respuesta</button>
+    function renderQuestion() {
+        const id = state.proposed.currentQId;
+        const ex = proposedExercisesDB[id];
+        if (!ex) return;
 
-                <div class="alert-box" style="display: none; margin-top: 15px;" id="solution-box-${id}">
-                    <h4 style="color: var(--secondary); margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap"></i> Retroalimentación Detallada</h4>
-                    <p>${ex.solution}</p>
-                </div>
-            </div>
-        `;
+        // Reset elements
+        validationStatus.textContent = '';
+        validationStatus.className = '';
+        solutionBox.style.display = 'none';
+        btnValidate.disabled = false;
 
-        container.appendChild(accordion);
+        // Set title and progress
+        quizTitle.textContent = `Pregunta ${id - 12} de 12`;
+        quizProgress.textContent = `Ejercicio ${id} de 24`;
+        quizCounter.textContent = `Pregunta ${id - 12} de 12`;
+        quizStatement.textContent = ex.statement;
 
-        // Bind events
-        const header = accordion.querySelector('.accordion-header');
-        header.addEventListener('click', () => toggleAccordion(accordion, header));
-        header.addEventListener('keydown', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') {
-                e.preventDefault();
-                toggleAccordion(accordion, header);
+        // Set navigation state
+        btnPrev.disabled = id === 13;
+        btnNext.disabled = id === 24;
+
+        // Render options
+        quizOptions.innerHTML = ex.options.map((opt, i) => `
+            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01); transition: all var(--transition-speed) ease;" id="opt-label-${i}">
+                <input type="radio" name="proposed-option" value="${i}" style="cursor: pointer;">
+                <span>${opt}</span>
+            </label>
+        `).join('');
+
+        // Restore answered state if user already answered this question
+        const savedAnswer = state.proposed.userAnswers[id];
+        if (savedAnswer) {
+            const radio = quizOptions.querySelector(`input[value="${savedAnswer.selectedIndex}"]`);
+            if (radio) {
+                radio.checked = true;
             }
-        });
+            showValidationFeedback(id, ex, savedAnswer.selectedIndex);
+        }
 
-        const validateBtn = accordion.querySelector(`#btn-validate-${id}`);
-        validateBtn.addEventListener('click', () => validateProposedAnswer(id, ex));
-    }
-
-    function toggleAccordion(accordion, header) {
-        const content = accordion.querySelector('.accordion-content');
-        const isOpen = accordion.classList.contains('open');
-
-        if (isOpen) {
-            accordion.classList.remove('open');
-            header.setAttribute('aria-expanded', 'false');
-            content.style.maxHeight = '0';
-        } else {
-            // Close other accordions first
-            document.querySelectorAll('.accordion').forEach(acc => {
-                acc.classList.remove('open');
-                acc.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
-                acc.querySelector('.accordion-content').style.maxHeight = '0';
-            });
-
-            accordion.classList.add('open');
-            header.setAttribute('aria-expanded', 'true');
-            
-            // Allow time for DOM calculation
-            setTimeout(() => {
-                content.style.maxHeight = content.scrollHeight + 100 + 'px';
-                // Trigger LaTeX rendering inside active accordion
-                if (window.MathJax) {
-                    MathJax.typesetPromise([content]);
-                }
-            }, 50);
+        // Render LaTeX equations in MathJax
+        if (window.MathJax) {
+            MathJax.typesetPromise([quizStatement, quizOptions, solutionContent]);
         }
     }
 
-    function validateProposedAnswer(id, ex) {
-        const selected = document.querySelector(`input[name="radio-ex-${id}"]:checked`);
-        const solutionBox = document.getElementById(`solution-box-${id}`);
-        const content = document.getElementById(`acc-body-${id}`);
-        const optionsGroup = document.getElementById(`options-group-${id}`);
-
-        if (!selected) {
-            alert("Por favor selecciona una respuesta.");
-            return;
-        }
-
-        const answerIndex = parseInt(selected.value);
-        
-        // Remove old success/error colors from options
-        optionsGroup.querySelectorAll('label').forEach(lbl => {
+    function showValidationFeedback(id, ex, selectedIndex) {
+        const labels = quizOptions.querySelectorAll('label');
+        labels.forEach(lbl => {
             lbl.style.borderColor = 'rgba(255,255,255,0.05)';
             lbl.style.background = 'rgba(255,255,255,0.01)';
         });
 
-        const selectedLabel = selected.parentElement;
+        const selectedLabel = document.getElementById(`opt-label-${selectedIndex}`);
+        const isCorrect = selectedIndex === ex.correctIndex;
 
-        if (answerIndex === ex.correctIndex) {
-            selectedLabel.style.borderColor = 'var(--accent)';
-            selectedLabel.style.background = 'rgba(16, 185, 129, 0.1)';
+        if (isCorrect) {
+            if (selectedLabel) {
+                selectedLabel.style.borderColor = 'var(--accent)';
+                selectedLabel.style.background = 'rgba(16, 185, 129, 0.1)';
+            }
+            validationStatus.textContent = '¡Correcto!';
+            validationStatus.style.color = 'var(--accent)';
         } else {
-            selectedLabel.style.borderColor = 'var(--danger)';
-            selectedLabel.style.background = 'rgba(244, 63, 94, 0.1)';
-            
-            // Mark correct answer subtly
-            const correctInput = optionsGroup.querySelector(`input[value="${ex.correctIndex}"]`);
-            if (correctInput) {
-                const correctLabel = correctInput.parentElement;
+            if (selectedLabel) {
+                selectedLabel.style.borderColor = 'var(--danger)';
+                selectedLabel.style.background = 'rgba(244, 63, 94, 0.1)';
+            }
+            // Highlight the correct one
+            const correctLabel = document.getElementById(`opt-label-${ex.correctIndex}`);
+            if (correctLabel) {
                 correctLabel.style.borderColor = 'var(--accent)';
                 correctLabel.style.background = 'rgba(16, 185, 129, 0.05)';
             }
+            validationStatus.textContent = 'Incorrecto. Revisa la retroalimentación.';
+            validationStatus.style.color = 'var(--danger)';
         }
 
-        // Show solution and update accordion height
+        solutionContent.innerHTML = ex.solution;
         solutionBox.style.display = 'block';
-        content.style.maxHeight = content.scrollHeight + 150 + 'px';
+        btnValidate.disabled = true;
 
-        // Re-render LaTeX
         if (window.MathJax) {
-            MathJax.typesetPromise([solutionBox]);
+            MathJax.typesetPromise([solutionContent]);
         }
     }
+
+    btnValidate.addEventListener('click', () => {
+        const id = state.proposed.currentQId;
+        const ex = proposedExercisesDB[id];
+        const selected = quizOptions.querySelector('input[name="proposed-option"]:checked');
+
+        if (!selected) {
+            alert("Por favor, selecciona una respuesta antes de validar.");
+            return;
+        }
+
+        const selectedIndex = parseInt(selected.value);
+        const isCorrect = selectedIndex === ex.correctIndex;
+
+        // Save in state
+        state.proposed.userAnswers[id] = {
+            selectedIndex: selectedIndex,
+            isCorrect: isCorrect
+        };
+
+        showValidationFeedback(id, ex, selectedIndex);
+    });
+
+    btnPrev.addEventListener('click', () => {
+        if (state.proposed.currentQId > 13) {
+            state.proposed.currentQId--;
+            renderQuestion();
+        }
+    });
+
+    btnNext.addEventListener('click', () => {
+        if (state.proposed.currentQId < 24) {
+            state.proposed.currentQId++;
+            renderQuestion();
+        }
+    });
+
+    // Make active tab draw trigger quiz rendering
+    window.canvasDrawers['propuestos'] = () => {
+        renderQuestion();
+    };
+
+    // Initial render
+    renderQuestion();
 }
