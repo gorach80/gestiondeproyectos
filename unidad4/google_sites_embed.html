@@ -1,0 +1,2880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Educativo: Análisis Económico y Financiero de Proyectos</title>
+    
+    <!-- Handoff & SEO Metadata -->
+    <meta name="description" content="Panel interactivo de ingeniería industrial sobre análisis económico y financiero para evaluación de proyectos de inversión.">
+    <meta name="keywords" content="CapEx, OpEx, WACC, VAN, TIR, Punto de Equilibrio, Capital de Trabajo, Ingeniería Industrial, Gestión de Proyectos">
+    <meta name="author" content="Antigravity Web Agent">
+    
+    <!-- CDNs: Font Awesome & MathJax Configuration -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+/* style.css — DISEÑO DEL PANEL WEB INTERACTIVO (SPACE DARK) */
+
+/* Importación de tipografías premium de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+/*=== VARIABLE SYSTEM ===*/
+:root {
+    --bg-dark: #090d16;
+    --bg-deep: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.55);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --primary: #6366f1;       /* Indigo -> Estructura principal */
+    --secondary: #a855f7;     /* Púrpura -> Conceptos secundarios */
+    --accent: #10b981;        /* Verde -> Éxito/Correcto */
+    --danger: #f43f5e;        /* Rosa -> Error/Peligro/Costos */
+    --warning: #f59e0b;       /* Ámbar -> Avisos/Resultados críticos */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --transition-speed: 0.3s;
+}
+
+/*=== RESET & ACCESSIBILITY BASE ===*/
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-bottom: 2rem;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Skip link para lectores de pantalla */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 9999;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 10px;
+}
+
+/* Navegación por teclado visible */
+:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 4px;
+}
+
+/*=== STRUCTURAL LAYOUT ===*/
+.app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+header.app-header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+header.app-header h1 {
+    font-size: 2.8rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #10b981 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+header.app-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/*=== TABLIST NAVIGATION ===*/
+.tabs-navigation {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 6px;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    margin-bottom: 32px;
+    scrollbar-width: none; /* Firefox */
+}
+.tabs-navigation::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 130px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all var(--transition-speed) ease;
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tab-btn[aria-selected="true"] {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.35);
+}
+
+/*=== GLASSMORPHIC CARDS ===*/
+.content-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+    padding: 32px;
+    margin-bottom: 24px;
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+.tab-panel {
+    display: none;
+}
+.tab-panel.active {
+    display: block;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/*=== FORM CONTROLS & LAB INPUTS ===*/
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.control-group {
+    background: rgba(15, 23, 42, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.control-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    display: flex;
+    justify-content: space-between;
+}
+
+.control-group label span.val-display {
+    color: var(--secondary);
+    font-weight: 700;
+}
+
+.input-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+.input-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+    transition: transform 0.1s ease;
+}
+.input-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.input-field {
+    background: rgba(9, 13, 22, 0.6);
+    border: 1px solid var(--card-border);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    width: 100%;
+}
+.input-field:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/*=== METRICS DASHBOARD ===*/
+.metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.metric-card {
+    background: rgba(9, 13, 22, 0.4);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 16px;
+    text-align: center;
+}
+
+.metric-card .metric-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.metric-card .metric-value {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+.metric-card.accent-card .metric-value {
+    color: var(--accent);
+}
+.metric-card.secondary-card .metric-value {
+    color: var(--secondary);
+}
+.metric-card.warning-card .metric-value {
+    color: var(--warning);
+}
+.metric-card.danger-card .metric-value {
+    color: var(--danger);
+}
+
+/*=== CANVAS & VISUALIZATION ===*/
+.viz-container {
+    background: rgba(9, 13, 22, 0.5);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    margin-top: 16px;
+    min-height: 350px;
+}
+
+.viz-canvas {
+    width: 100%;
+    max-width: 100%;
+    height: 320px;
+    display: block;
+}
+
+/*=== DRAG AND DROP / CLASSIFICATION ===*/
+.dnd-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 24px;
+}
+@media (max-width: 768px) {
+    .dnd-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.dnd-pool {
+    background: rgba(9, 13, 22, 0.4);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 150px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-content: flex-start;
+}
+
+.dnd-item {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background var(--transition-speed);
+}
+.dnd-item:active {
+    cursor: grabbing;
+}
+
+.dnd-zone {
+    background: rgba(9, 13, 22, 0.4);
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color var(--transition-speed);
+}
+.dnd-zone.drag-over {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.dnd-zone h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/*=== TABLE DESIGN ===*/
+.table-responsive {
+    overflow-x: auto;
+    margin-top: 16px;
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th, .data-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.data-table th {
+    background: rgba(15, 23, 42, 0.8);
+    color: var(--text-primary);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/*=== EXERCISES SECTION (STEP-BY-STEP & ACCORDIONS) ===*/
+.exercise-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.btn-exercise {
+    background: rgba(9, 13, 22, 0.4);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-speed);
+}
+.btn-exercise:hover {
+    border-color: var(--primary);
+    color: white;
+}
+.btn-exercise.active {
+    background: var(--secondary);
+    border-color: var(--secondary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.35);
+}
+
+.exercise-body-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 1024px) {
+    .exercise-body-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.step-box {
+    background: rgba(9, 13, 22, 0.4);
+    border-left: 4px solid var(--primary);
+    border-radius: 4px 16px 16px 4px;
+    padding: 20px;
+    margin-bottom: 16px;
+}
+
+.step-header {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.step-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+}
+
+.btn-nav {
+    background: var(--primary);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.25);
+    transition: transform var(--transition-speed), background var(--transition-speed);
+}
+.btn-nav:hover {
+    transform: translateY(-2px);
+    background: #4f46e5;
+}
+.btn-nav:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    opacity: 0.5;
+}
+
+/* Accordion for proposed exercises */
+.accordion {
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.accordion-header {
+    background: rgba(15, 23, 42, 0.4);
+    padding: 18px 24px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.05rem;
+    font-family: var(--font-heading);
+    transition: background var(--transition-speed);
+}
+.accordion-header:hover {
+    background: rgba(15, 23, 42, 0.7);
+}
+
+.accordion-icon {
+    transition: transform var(--transition-speed);
+}
+
+.accordion.open .accordion-icon {
+    transform: rotate(180deg);
+}
+
+.accordion-content {
+    background: rgba(9, 13, 22, 0.2);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease;
+    padding: 0 24px;
+}
+
+.accordion.open .accordion-content {
+    padding: 20px 24px;
+}
+
+/* Validation colors */
+.bg-correct {
+    border-color: var(--accent) !important;
+    background: rgba(16, 185, 129, 0.1) !important;
+}
+
+.bg-incorrect {
+    border-color: var(--danger) !important;
+    background: rgba(244, 63, 94, 0.1) !important;
+}
+
+/* Alerts and math display adjustments */
+.alert-box {
+    background: rgba(99, 102, 241, 0.08);
+    border: 1px dashed var(--primary);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 0.95rem;
+}
+
+/*=== PRINT MEDIA QUERIES ===*/
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    .app-container {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    .tabs-navigation, .control-grid, .btn-exercise, .step-nav-row, .btn-nav {
+        display: none !important;
+    }
+    .content-card {
+        background: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-bottom: 2cm !important;
+        display: block !important;
+    }
+    .tab-panel {
+        display: block !important;
+        opacity: 1 !important;
+    }
+}
+
+/*=== FORCED COLORS FOR HIGH CONTRAST ===*/
+@media (forced-colors: active) {
+    .content-card {
+        border: 2px solid CanvasText;
+    }
+    .tab-btn[aria-selected="true"] {
+        outline: 3px solid Highlight;
+    }
+}
+
+</style>
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+    <!-- Skip Link para Accesibilidad WCAG -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <div class="app-container">
+        
+        <!-- CABECERA PRINCIPAL -->
+        <header class="app-header">
+            <h1>ANÁLISIS ECONÓMICO Y FINANCIERO</h1>
+            <p>Gestión de Proyectos Industriales — Ingeniería Industrial</p>
+        </header>
+
+        <!-- NAVEGACIÓN SEMÁNTICA POR PESTAÑAS (ARIA COMPLIANT) -->
+        <nav role="tablist" aria-label="Nivel de Aprendizaje (Taxonomía de Bloom)" class="tabs-navigation">
+            <button role="tab" aria-selected="true" aria-controls="panel-intro" id="tab-intro" class="tab-btn" tabindex="0">
+                <i class="fa-solid fa-flask"></i> 1. Intro & Lab
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-clasificacion" id="tab-clasificacion" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-sitemap"></i> 2. Clasificación
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-propiedades" id="tab-propiedades" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-calculator"></i> 3. Propiedades
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-elementos" id="tab-elementos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-chart-line"></i> 4. Elementos
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-practica" id="tab-practica" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-industry"></i> 5. Evaluación
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-interactivos" id="tab-interactivos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-graduation-cap"></i> 6. Ejercicios
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-propuestos" id="tab-propuestos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-clipboard-question"></i> 7. Autoevaluación
+            </button>
+        </nav>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main id="main-content">
+
+            <!-- PESTAÑA 1: INTRO & LAB -->
+            <section role="tabpanel" id="panel-intro" aria-labelledby="tab-intro" class="tab-panel active">
+                <div class="content-card">
+                    <h2>Fundamentos Económico-Financieros</h2>
+                    <p style="margin-bottom: 20px;">
+                        El análisis económico y financiero traduce la viabilidad técnica de un proyecto a variables monetarias.
+                        Esta sección te permite explorar la estructura de capital y los requerimientos iniciales mediante simulaciones interactivas.
+                    </p>
+                    
+                    <div class="control-grid">
+                        <!-- Capital de Trabajo -->
+                        <div class="control-group">
+                            <label for="lab-opcosts">Costos Operativos Anuales (USD)
+                                <span class="val-display" id="lab-opcosts-val">$325,000</span>
+                            </label>
+                            <input type="range" id="lab-opcosts" min="50000" max="1000000" step="10000" value="325000" class="input-slider" aria-valuemin="50000" aria-valuemax="1000000" aria-valuenow="325000">
+                            
+                            <label for="lab-cycle" style="margin-top: 10px;">Ciclo de Caja (Días)
+                                <span class="val-display" id="lab-cycle-val">34 días</span>
+                            </label>
+                            <input type="range" id="lab-cycle" min="10" max="180" step="1" value="34" class="input-slider" aria-valuemin="10" aria-valuemax="180" aria-valuenow="34">
+                        </div>
+
+                        <!-- Estructura de Capital -->
+                        <div class="control-group">
+                            <label for="lab-equity">Capital Propio (E - USD)
+                                <span class="val-display" id="lab-equity-val">$150,000</span>
+                            </label>
+                            <input type="range" id="lab-equity" min="20000" max="500000" step="5000" value="150000" class="input-slider">
+
+                            <label for="lab-debt" style="margin-top: 10px;">Deuda (D - USD)
+                                <span class="val-display" id="lab-debt-val">$130,000</span>
+                            </label>
+                            <input type="range" id="lab-debt" min="0" max="500000" step="5000" value="130000" class="input-slider">
+                        </div>
+
+                        <!-- Tasas del WACC -->
+                        <div class="control-group">
+                            <label for="lab-ke">Costo Capital Propio (Re)
+                                <span class="val-display" id="lab-ke-val">15.0%</span>
+                            </label>
+                            <input type="range" id="lab-ke" min="5" max="30" step="0.5" value="15" class="input-slider">
+
+                            <label for="lab-kd" style="margin-top: 10px;">Tasa Interés Deuda (Rd)
+                                <span class="val-display" id="lab-kd-val">8.0%</span>
+                            </label>
+                            <input type="range" id="lab-kd" min="2" max="25" step="0.5" value="8" class="input-slider">
+
+                            <label for="lab-tax" style="margin-top: 10px;">Tasa Impositiva (T)
+                                <span class="val-display" id="lab-tax-val">25.0%</span>
+                            </label>
+                            <input type="range" id="lab-tax" min="0" max="50" step="1" value="25" class="input-slider">
+                        </div>
+                    </div>
+
+                    <div class="metrics-row">
+                        <div class="metric-card secondary-card">
+                            <div class="metric-label">Capital de Trabajo</div>
+                            <div class="metric-value" id="metric-work-cap">$30,274</div>
+                        </div>
+                        <div class="metric-card accent-card">
+                            <div class="metric-value" id="metric-wacc">11.79%</div>
+                            <div class="metric-label">WACC Calculado</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Capital Total (V)</div>
+                            <div class="metric-value" id="metric-total-capital">$280,000</div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas de Estructura de Capital -->
+                    <div class="viz-container">
+                        <canvas id="canvas-capital" class="viz-canvas" role="img" aria-label="Diagrama circular de la estructura de capital (Deuda vs Capital Propio)"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 2: CLASIFICACIÓN -->
+            <section role="tabpanel" id="panel-clasificacion" aria-labelledby="tab-clasificacion" class="tab-panel">
+                <div class="content-card">
+                    <h2>Clasificación de Egresos Industriales</h2>
+                    <p style="margin-bottom: 20px;">
+                        Es vital separar los egresos entre inversiones permanentes de capital (**CapEx**) y gastos/costos operativos (**OpEx**). Clasifica los siguientes conceptos arrastrándolos o haciendo clic en ellos:
+                    </p>
+
+                    <div class="dnd-container">
+                        <!-- Banco de Elementos -->
+                        <div>
+                            <h3>Conceptos por Clasificar</h3>
+                            <div class="dnd-pool" id="dnd-pool">
+                                <div class="dnd-item" draggable="true" id="item-obras" data-type="capex">Obras Civiles / Edificios</div>
+                                <div class="dnd-item" draggable="true" id="item-patente" data-type="capex">Patentes & Licencias</div>
+                                <div class="dnd-item" draggable="true" id="item-maquinaria" data-type="capex">Maquinaria de Proceso</div>
+                                <div class="dnd-item" draggable="true" id="item-mpd" data-type="opex">Materia Prima Directa</div>
+                                <div class="dnd-item" draggable="true" id="item-maint" data-type="opex">Mantenimiento de Planta</div>
+                                <div class="dnd-item" draggable="true" id="item-depr" data-type="opex">Depreciación de Maquinaria</div>
+                                <div class="dnd-item" draggable="true" id="item-constitucion" data-type="capex">Gastos de Constitución</div>
+                                <div class="dnd-item" draggable="true" id="item-servicios" data-type="opex">Servicios Auxiliares (Agua, Luz)</div>
+                                <div class="dnd-item" draggable="true" id="item-mod" data-type="opex">Mano de Obra Directa</div>
+                            </div>
+                        </div>
+
+                        <!-- Zonas de Destino -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="dnd-zone" id="zone-capex" data-zone="capex">
+                                <h3><i class="fa-solid fa-building-columns" style="color: var(--primary);"></i> Inversión Fija (CapEx)</h3>
+                            </div>
+                            <div class="dnd-zone" id="zone-opex" data-zone="opex">
+                                <h3><i class="fa-solid fa-gears" style="color: var(--secondary);"></i> Costos Operativos (OpEx)</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="dnd-feedback" class="alert-box" style="display:none; text-align: center; font-weight: bold;"></div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 3: PROPIEDADES -->
+            <section role="tabpanel" id="panel-propiedades" aria-labelledby="tab-propiedades" class="tab-panel">
+                <div class="content-card">
+                    <h2>Modelos Matemáticos: WACC y Depreciación</h2>
+                    <p style="margin-bottom: 24px;">
+                        Las dos herramientas clave para estructurar la inversión y la reducción contable son el **WACC** (Costo Promedio Ponderado del Capital) y la **Depreciación Lineal**.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <!-- Bloque WACC -->
+                        <div class="step-box" style="border-color: var(--secondary); margin-bottom: 0;">
+                            <h3>Costo de Capital (WACC)</h3>
+                            <div style="margin: 15px 0;">
+                                \[\text{WACC} = \left( \frac{E}{V} \times R_e \right) + \left( \frac{D}{V} \times R_d \times (1 - T) \right)\]
+                            </div>
+                            <p style="font-size: 0.9rem; margin-bottom: 16px;">
+                                Representa la tasa mínima de rendimiento que el proyecto debe generar para satisfacer a inversionistas (capital propio) y acreedores (bancos/deuda), considerando el beneficio tributario del escudo fiscal.
+                            </p>
+                            
+                            <!-- Mini calculador WACC -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(9,13,22,0.3); padding: 12px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>E/V (%)</span>
+                                    <input type="number" id="prop-ev" value="53.57" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Re (%)</span>
+                                    <input type="number" id="prop-re" value="15.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Rd (%)</span>
+                                    <input type="number" id="prop-rd" value="8.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Impuesto T (%)</span>
+                                    <input type="number" id="prop-t" value="25.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="font-weight: bold; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 5px; display: flex; justify-content: space-between;">
+                                    <span>WACC = </span>
+                                    <span id="prop-wacc-res" style="color: var(--accent);">11.79%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloque Depreciación -->
+                        <div class="step-box" style="border-color: var(--accent); margin-bottom: 0;">
+                            <h3>Depreciación en Línea Recta</h3>
+                            <div style="margin: 15px 0;">
+                                \[D_k = \frac{V_0 - V_s}{n}\]
+                            </div>
+                            <p style="font-size: 0.9rem; margin-bottom: 16px;">
+                                Distribuye uniformemente el costo neto de adquisición de un activo fijo a lo largo de su vida útil fiscal o técnica, actuando como egreso no desembolsable que reduce los impuestos.
+                            </p>
+                            
+                            <!-- Mini calculador Depreciación -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(9,13,22,0.3); padding: 12px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Valor Inicial (V0)</span>
+                                    <input type="number" id="prop-v0" value="250000" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Valor Salvamento (Vs)</span>
+                                    <input type="number" id="prop-vs" value="0" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Vida Útil (n)</span>
+                                    <input type="number" id="prop-n" value="5" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="font-weight: bold; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 15px; display: flex; justify-content: space-between;">
+                                    <span>Depreciación Anual = </span>
+                                    <span id="prop-dep-res" style="color: var(--accent);">$50,000 / año</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 4: ELEMENTOS -->
+            <section role="tabpanel" id="panel-elementos" aria-labelledby="tab-elementos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Estructura del Flujo de Caja Libre del Proyecto (FCLP)</h2>
+                    <p style="margin-bottom: 20px;">
+                        El Flujo de Caja Libre del Proyecto evalúa la rentabilidad del proyecto con independencia de cómo se financie. Modifica los parámetros de operación a continuación para ver el impacto inmediato en la proyección del flujo:
+                    </p>
+
+                    <div class="control-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 20px;">
+                        <div class="control-group">
+                            <label for="elem-quantity">Producción Anual (Q)
+                                <span class="val-display" id="elem-quantity-val">50,000 u</span>
+                            </label>
+                            <input type="range" id="elem-quantity" min="10000" max="100000" step="2000" value="50000" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-price">Precio Unitario (Pu)
+                                <span class="val-display" id="elem-price-val">$12.00</span>
+                            </label>
+                            <input type="range" id="elem-price" min="5" max="30" step="0.5" value="12" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-vc">Costo Var. Unitario (CVu)
+                                <span class="val-display" id="elem-vc-val">$6.50</span>
+                            </label>
+                            <input type="range" id="elem-vc" min="2" max="20" step="0.1" value="6.5" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-fc">Costos Fijos Totales (CF)
+                                <span class="val-display" id="elem-fc-val">$110,000</span>
+                            </label>
+                            <input type="range" id="elem-fc" min="50000" max="250000" step="5000" value="110000" class="input-slider">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="flow-table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto (USD)</th>
+                                    <th>Año 0</th>
+                                    <th>Año 1</th>
+                                    <th>Año 2</th>
+                                    <th>Año 3</th>
+                                    <th>Año 4</th>
+                                    <th>Año 5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Inyectado dinámicamente por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 5: EVALUACIÓN -->
+            <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" class="tab-panel">
+                <div class="content-card">
+                    <h2>Indicadores de Evaluación de Proyectos (VAN y TIR)</h2>
+                    <p style="margin-bottom: 24px;">
+                        Evaluación monetaria y rentabilidad utilizando indicadores financieros clave. El **VAN** descuenta los flujos al WACC, y la **TIR** determina la rentabilidad interna.
+                    </p>
+
+                    <div class="metrics-row" style="margin-bottom: 24px;">
+                        <div class="metric-card accent-card">
+                            <div class="metric-label">Valor Actual Neto (VAN)</div>
+                            <div class="metric-value" id="eval-van">$363,353</div>
+                        </div>
+                        <div class="metric-card secondary-card">
+                            <div class="metric-label">Tasa Interna de Retorno (TIR)</div>
+                            <div class="metric-value" id="eval-tir">55.98%</div>
+                        </div>
+                        <div class="metric-card warning-card">
+                            <div class="metric-label">Punto de Equilibrio (Qpe)</div>
+                            <div class="metric-value" id="eval-qpe">20,000 u</div>
+                        </div>
+                        <div class="metric-card danger-card">
+                            <div class="metric-label">Margen Utilidad Unitario (MUu)</div>
+                            <div class="metric-value" id="eval-muu">$3.30</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="step-box" style="border-color: var(--primary); display: flex; flex-direction: column; justify-content: center; margin-bottom: 0;">
+                            <h3>Criterio de Decisión Financiera</h3>
+                            <p style="margin: 10px 0; font-size: 0.95rem;">
+                                Con un WACC del <strong id="eval-wacc-show">12.0%</strong>, el proyecto tiene un <strong>VAN positivo</strong>, lo que indica que cubre el costo de oportunidad del capital y genera valor adicional de <strong><span id="eval-van-show">$363,353</span> USD</strong> para la empresa.
+                            </p>
+                            <p style="font-size: 0.95rem;">
+                                La <strong>TIR (55.98%)</strong> es significativamente mayor que el WACC, confirmando que el proyecto es altamente rentable y robusto financieramente.
+                            </p>
+                            <div class="alert-box" id="eval-decision-box" style="margin-top: 15px;">
+                                <i class="fa-solid fa-circle-check" style="color: var(--accent); margin-right: 8px;"></i>
+                                <strong>ESTADO:</strong> APROBAR PROYECTO.
+                            </div>
+                        </div>
+                        
+                        <!-- Curva del Perfil del VAN -->
+                        <div class="viz-container" style="min-height: 300px; padding: 10px;">
+                            <canvas id="canvas-npv-profile" class="viz-canvas" role="img" aria-label="Curva del perfil del VAN vs Tasa de Descuento"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 6: EJERCICIOS INTERACTIVOS -->
+            <section role="tabpanel" id="panel-interactivos" aria-labelledby="tab-interactivos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Ejercicios Resueltos Paso a Paso</h2>
+                    <p style="margin-bottom: 20px;">
+                        Practica con 12 ejercicios estructurados que cubren desde el cálculo básico de depreciación hasta la evaluación del WACC y flujos complejos. Selecciona un ejercicio para resolverlo de forma guiada:
+                    </p>
+
+                    <!-- Selector de ejercicio -->
+                    <div class="exercise-selector" id="solved-selector">
+                        <!-- Inyectado dinámicamente -->
+                    </div>
+
+                    <div class="exercise-body-layout">
+                        <!-- Lado Izquierdo: Pasos del ejercicio -->
+                        <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h3 id="solved-ex-title" style="margin-bottom: 12px; color: var(--secondary);">Ejercicio 1</h3>
+                                <p id="solved-ex-statement" style="margin-bottom: 20px; font-weight: 500; font-size: 1.05rem;"></p>
+                                
+                                <div class="step-box" id="solved-step-container">
+                                    <div class="step-header" id="solved-step-header">Paso 1: Datos iniciales</div>
+                                    <div id="solved-step-content" style="font-size: 0.95rem;"></div>
+                                </div>
+                            </div>
+
+                            <div class="step-nav-row">
+                                <button class="btn-nav" id="btn-prev-step"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                                <span style="font-weight: 700;" id="solved-step-counter">Paso 1 de 3</span>
+                                <button class="btn-nav" id="btn-next-step">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Lado Derecho: Visualización de Canvas -->
+                        <div class="viz-container">
+                            <canvas id="canvas-exercise" class="viz-canvas" role="img" aria-label="Demostración visual viva del ejercicio seleccionado"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 7: EJERCICIOS PROPUESTOS -->
+            <section role="tabpanel" id="panel-propuestos" aria-labelledby="tab-propuestos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Autoevaluación: 12 Ejercicios Propuestos</h2>
+                    <p style="margin-bottom: 24px;">
+                        Mide tus conocimientos resolviendo los siguientes 12 problemas de opción múltiple. Una vez selecciones tu respuesta, podrás validar tu resultado y abrir la retroalimentación detallada con fórmulas en LaTeX.
+                    </p>
+
+                    <div id="proposed-accordion-container">
+                        <!-- Inyectado dinámicamente por JS (Acordeones de ejercicios 13 a 24) -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Carga de la lógica de aplicación -->
+    <script>
+/*=== NUCLEO MATEMATICO ===*/
+/**
+ * core/analisis_economico.js
+ * 
+ * NÚCLEO MATEMÁTICO DE ANÁLISIS ECONÓMICO Y FINANCIERO
+ * SIN DOM, SIN CANVAS, SIN MATHJAX — SOLO FUNCIONES PURAS CON FAIL-SAFE
+ */
+
+/**
+ * Valida si un valor es un número finito.
+ * @param {*} x - Valor a validar.
+ * @returns {boolean}
+ */
+function isValidNumber(x) {
+    return typeof x === 'number' && Number.isFinite(x);
+}
+
+/**
+ * Convierte un valor a número finito con un valor por defecto.
+ * @param {*} x - Valor a convertir.
+ * @param {number} fallback - Valor por defecto (default: 0).
+ * @returns {number}
+ */
+function toFiniteNumber(x, fallback = 0) {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : fallback;
+}
+
+/**
+ * Calcula el Capital de Trabajo necesario para la operación.
+ * Fórmula: Capital de Trabajo = (Costos Operativos Anuales / 365) * Días del Ciclo de Caja
+ * 
+ * @param {number} annualOperatingCosts - Costos operativos anuales.
+ * @param {number} cashCycleDays - Días del ciclo de caja.
+ * @returns {number}
+ */
+function calculateWorkingCapital(annualOperatingCosts, cashCycleDays) {
+    const costs = Number(annualOperatingCosts);
+    const days = Number(cashCycleDays);
+    if (!Number.isFinite(costs) || !Number.isFinite(days)) return 0;
+    if (costs <= 0 || days <= 0) return 0;
+    return (costs / 365) * days;
+}
+
+/**
+ * Calcula el Costo Promedio Ponderado de Capital (WACC).
+ * Fórmula: WACC = (E/V * Re) + (D/V * Rd * (1 - T))
+ * Donde V = E + D
+ * 
+ * @param {number} equity - Capital propio (E).
+ * @param {number} debt - Deuda (D).
+ * @param {number} costOfEquity - Costo de capital propio (Re) en decimal (ej. 0.12).
+ * @param {number} costOfDebt - Costo de deuda (Rd) en decimal (ej. 0.08).
+ * @param {number} taxRate - Tasa impositiva (T) en decimal (ej. 0.25).
+ * @returns {number} WACC en decimal (ej. 0.098).
+ */
+function calculateWACC(equity, debt, costOfEquity, costOfDebt, taxRate) {
+    const E = Number(equity);
+    const D = Number(debt);
+    const Re = Number(costOfEquity);
+    const Rd = Number(costOfDebt);
+    const T = Number(taxRate);
+
+    if (!Number.isFinite(E) || !Number.isFinite(D) || !Number.isFinite(Re) || !Number.isFinite(Rd) || !Number.isFinite(T)) {
+        return 0;
+    }
+    if (E < 0 || D < 0 || Re < 0 || Rd < 0 || T < 0) return 0;
+    const V = E + D;
+    if (V <= 0) return 0;
+
+    return (E / V) * Re + (D / V) * Rd * (1 - T);
+}
+
+/**
+ * Calcula la depreciación anual por el método de línea recta.
+ * Fórmula: Dk = (V0 - Vs) / n
+ * 
+ * @param {number} initialValue - Valor inicial (V0).
+ * @param {number} salvageValue - Valor de salvamento (Vs).
+ * @param {number} lifespan - Vida útil en años (n).
+ * @returns {number} Depreciación anual.
+ */
+function calculateDepreciationLinear(initialValue, salvageValue, lifespan) {
+    const V0 = Number(initialValue);
+    const Vs = Number(salvageValue);
+    const n = Number(lifespan);
+
+    if (!Number.isFinite(V0) || !Number.isFinite(Vs) || !Number.isFinite(n)) return 0;
+    if (V0 <= 0 || n <= 0) return 0;
+    if (V0 < Vs) return 0;
+
+    return (V0 - Vs) / n;
+}
+
+/**
+ * Calcula el margen de contribución unitario.
+ * Fórmula: MCu = Pu - CVu
+ * 
+ * @param {number} price - Precio unitario (Pu).
+ * @param {number} variableCost - Costo variable unitario (CVu).
+ * @returns {number} Margen de contribución unitario.
+ */
+function calculateMarginalContribution(price, variableCost) {
+    const Pu = Number(price);
+    const CVu = Number(variableCost);
+    if (!Number.isFinite(Pu) || !Number.isFinite(CVu)) return 0;
+    if (Pu < 0 || CVu < 0 || Pu < CVu) return 0;
+    return Pu - CVu;
+}
+
+/**
+ * Calcula el punto de equilibrio operativo en unidades.
+ * Fórmula: Q_PE = CF_Total / MCu
+ * 
+ * @param {number} fixedCosts - Costos fijos totales (CF).
+ * @param {number} marginalContribution - Margen de contribución unitario (MCu).
+ * @returns {number} Cantidad de equilibrio (unidades).
+ */
+function calculateBreakEven(fixedCosts, marginalContribution) {
+    const CF = Number(fixedCosts);
+    const MCu = Number(marginalContribution);
+    if (!Number.isFinite(CF) || !Number.isFinite(MCu)) return 0;
+    if (CF <= 0 || MCu <= 0) return 0;
+    return CF / MCu;
+}
+
+/**
+ * Calcula el margen de utilidad unitario al nivel de producción.
+ * Fórmula: MUu = Pu - CTu
+ * Donde CTu = CVu + (CF_Total / Q)
+ * 
+ * @param {number} price - Precio unitario (Pu).
+ * @param {number} variableCost - Costo variable unitario (CVu).
+ * @param {number} fixedCosts - Costos fijos totales (CF).
+ * @param {number} quantity - Cantidad producida/estimada (Q).
+ * @returns {number} Margen de utilidad unitario.
+ */
+function calculateUnitProfit(price, variableCost, fixedCosts, quantity) {
+    const Pu = Number(price);
+    const CVu = Number(variableCost);
+    const CF = Number(fixedCosts);
+    const Q = Number(quantity);
+
+    if (!Number.isFinite(Pu) || !Number.isFinite(CVu) || !Number.isFinite(CF) || !Number.isFinite(Q)) return 0;
+    if (Pu < 0 || CVu < 0 || CF < 0 || Q <= 0) return 0;
+    return Pu - (CVu + CF / Q);
+}
+
+/**
+ * Calcula el Valor Actual Neto (VAN / NPV).
+ * Fórmula: VAN = -I0 + sum_{t=1}^N (FCLPt / (1 + k)^t)
+ * 
+ * @param {number} initialInvestment - Inversión inicial total (I0).
+ * @param {Array<number>} cashFlows - Flujos de caja neto por año.
+ * @param {number} discountRate - Tasa de descuento (k) en decimal.
+ * @returns {number} Valor Actual Neto.
+ */
+function calculateNPV(initialInvestment, cashFlows, discountRate) {
+    const I0 = Number(initialInvestment);
+    const k = Number(discountRate);
+    if (!Number.isFinite(I0) || !Number.isFinite(k)) return 0;
+    if (!Array.isArray(cashFlows) || cashFlows.length === 0) return -I0;
+
+    let sum = 0;
+    for (let t = 0; t < cashFlows.length; t++) {
+        const val = Number(cashFlows[t]);
+        if (!Number.isFinite(val)) return 0;
+        sum += val / Math.pow(1 + k, t + 1);
+    }
+    return -I0 + sum;
+}
+
+/**
+ * Calcula la Tasa Interna de Retorno (TIR / IRR) usando el método de Newton-Raphson.
+ * 
+ * @param {number} initialInvestment - Inversión inicial total (I0).
+ * @param {Array<number>} cashFlows - Flujos de caja neto por año.
+ * @returns {number} TIR en decimal (ej. 0.542 para 54.2%), o 0 si falla.
+ */
+function calculateIRR(initialInvestment, cashFlows) {
+    const I0 = Number(initialInvestment);
+    if (!Number.isFinite(I0) || I0 <= 0) return 0;
+    if (!Array.isArray(cashFlows) || cashFlows.length === 0) return 0;
+
+    // Verificar si hay cambios de signo (regla de Descartes)
+    let hasPositive = false;
+    let hasNegative = true; // Inversión inicial es egreso (-)
+
+    for (let t = 0; t < cashFlows.length; t++) {
+        const val = Number(cashFlows[t]);
+        if (!Number.isFinite(val)) return 0;
+        if (val > 0) hasPositive = true;
+        if (val < 0) hasNegative = true;
+    }
+    if (!hasPositive || !hasNegative) return 0;
+
+    // Método de Newton-Raphson
+    let r = 0.1; 
+    const maxIterations = 100;
+    const tolerance = 1e-7;
+
+    for (let i = 0; i < maxIterations; i++) {
+        let npv = -I0;
+        let dNpv = 0;
+
+        for (let t = 0; t < cashFlows.length; t++) {
+            const f = Number(cashFlows[t]);
+            const period = t + 1;
+            const factor = Math.pow(1 + r, period);
+            npv += f / factor;
+            dNpv -= (period * f) / (factor * (1 + r));
+        }
+
+        if (Math.abs(dNpv) < tolerance) {
+            break;
+        }
+
+        const nextR = r - npv / dNpv;
+        
+        if (!Number.isFinite(nextR) || nextR < -0.99 || nextR > 50.0) {
+            break;
+        }
+
+        if (Math.abs(nextR - r) < tolerance) {
+            return nextR;
+        }
+        r = nextR;
+    }
+
+    // Fallback: Método de Bisección
+    let low = -0.99;
+    let high = 10.0;
+    let mid = 0;
+    for (let i = 0; i < 50; i++) {
+        mid = (low + high) / 2;
+        let npv = -I0;
+        for (let t = 0; t < cashFlows.length; t++) {
+            npv += Number(cashFlows[t]) / Math.pow(1 + mid, t + 1);
+        }
+        if (Math.abs(npv) < 1e-5) {
+            return mid;
+        }
+        if (npv > 0) {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+
+    return mid;
+}
+
+
+/*=== INTERACTIVIDAD Y APLICACION ===*/
+
+
+/*=== GLOBAL APPLICATION STATE ===*/
+const state = {
+    activeTab: 'intro',
+    lab: {
+        opCosts: 325000,
+        cycle: 34,
+        equity: 150000,
+        debt: 130000,
+        ke: 0.15,
+        kd: 0.08,
+        tax: 0.25
+    },
+    flowParams: {
+        quantity: 50000,
+        price: 12.00,
+        vc: 6.50,
+        fc: 110000
+    },
+    solved: {
+        currentExId: 1,
+        currentStep: 0
+    }
+};
+
+// Canvas references
+window.canvasDrawers = {};
+
+/*=== INITIALIZATION ===*/
+document.addEventListener('DOMContentLoaded', () => {
+    initTabs();
+    initLab();
+    initClassificationGame();
+    initPropertiesCalculators();
+    initFlowCalculator();
+    initEvaluationTab();
+    initSolvedExercises();
+    initProposedExercises();
+    
+    // Draw initial active tab canvas
+    triggerTabDraw('intro');
+});
+
+/*=== TAB NAVIGATION LOGIC (WCAG AA) ===*/
+function initTabs() {
+    const tabs = document.querySelectorAll('[role="tab"]');
+    const panels = document.querySelectorAll('[role="tabpanel"]');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            activateTab(tab);
+        });
+
+        tab.addEventListener('keydown', (e) => {
+            const tabsArray = Array.from(tabs);
+            const index = tabsArray.indexOf(tab);
+            let newIndex = index;
+
+            if (e.key === 'ArrowRight') {
+                newIndex = (index + 1) % tabsArray.length;
+            } else if (e.key === 'ArrowLeft') {
+                newIndex = (index - 1 + tabsArray.length) % tabsArray.length;
+            } else if (e.key === 'Home') {
+                newIndex = 0;
+            } else if (e.key === 'End') {
+                newIndex = tabsArray.length - 1;
+            } else {
+                return;
+            }
+            e.preventDefault();
+            tabsArray[newIndex].focus();
+            activateTab(tabsArray[newIndex]);
+        });
+    });
+
+    function activateTab(activeTab) {
+        tabs.forEach(t => {
+            t.setAttribute('aria-selected', 'false');
+            t.setAttribute('tabindex', '-1');
+        });
+        panels.forEach(p => {
+            p.classList.remove('active');
+        });
+
+        activeTab.setAttribute('aria-selected', 'true');
+        activeTab.setAttribute('tabindex', '0');
+
+        const panelId = activeTab.getAttribute('aria-controls');
+        const targetPanel = document.getElementById(panelId);
+        targetPanel.classList.add('active');
+
+        // Set active tab in state
+        const tabName = panelId.replace('panel-', '');
+        state.activeTab = tabName;
+
+        // Trigger dynamic Canvas rendering for the active tab
+        triggerTabDraw(tabName);
+
+        // Re-render LaTeX math
+        if (window.MathJax) {
+            MathJax.typesetPromise([targetPanel]);
+        }
+    }
+}
+
+function triggerTabDraw(tabName) {
+    if (window.canvasDrawers && window.canvasDrawers[tabName]) {
+        setTimeout(() => {
+            window.canvasDrawers[tabName]();
+        }, 80);
+    }
+}
+
+/*=== HIGH DPI CANVAS UTILITY ===*/
+function getScaledContext(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    const displayWidth = rect.width || canvas.width || 500;
+    const displayHeight = rect.height || canvas.height || 320;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    canvas.style.width = `${displayWidth}px`;
+    canvas.style.height = `${displayHeight}px`;
+
+    const ctx = canvas.getContext('2d');
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+    return ctx;
+}
+
+function drawGrid(ctx, width, height, size = 40) {
+    ctx.strokeStyle = '#121926';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < width; x += size) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+    }
+    for (let y = 0; y < height; y += size) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+    }
+}
+
+/*=== TAB 1: INTRO & LAB LOGIC ===*/
+function initLab() {
+    const opCostsSlider = document.getElementById('lab-opcosts');
+    const cycleSlider = document.getElementById('lab-cycle');
+    const equitySlider = document.getElementById('lab-equity');
+    const debtSlider = document.getElementById('lab-debt');
+    const keSlider = document.getElementById('lab-ke');
+    const kdSlider = document.getElementById('lab-kd');
+    const taxSlider = document.getElementById('lab-tax');
+
+    const opCostsVal = document.getElementById('lab-opcosts-val');
+    const cycleVal = document.getElementById('lab-cycle-val');
+    const equityVal = document.getElementById('lab-equity-val');
+    const debtVal = document.getElementById('lab-debt-val');
+    const keVal = document.getElementById('lab-ke-val');
+    const kdVal = document.getElementById('lab-kd-val');
+    const taxVal = document.getElementById('lab-tax-val');
+
+    const metricWorkCap = document.getElementById('metric-work-cap');
+    const metricWacc = document.getElementById('metric-wacc');
+    const metricTotalCapital = document.getElementById('metric-total-capital');
+
+    function updateLab() {
+        state.lab.opCosts = Number(opCostsSlider.value);
+        state.lab.cycle = Number(cycleSlider.value);
+        state.lab.equity = Number(equitySlider.value);
+        state.lab.debt = Number(debtSlider.value);
+        state.lab.ke = Number(keSlider.value) / 100;
+        state.lab.kd = Number(kdSlider.value) / 100;
+        state.lab.tax = Number(taxSlider.value) / 100;
+
+        // Label update
+        opCostsVal.textContent = `$${state.lab.opCosts.toLocaleString()}`;
+        cycleVal.textContent = `${state.lab.cycle} días`;
+        equityVal.textContent = `$${state.lab.equity.toLocaleString()}`;
+        debtVal.textContent = `$${state.lab.debt.toLocaleString()}`;
+        keVal.textContent = `${(state.lab.ke * 100).toFixed(1)}%`;
+        kdVal.textContent = `${(state.lab.kd * 100).toFixed(1)}%`;
+        taxVal.textContent = `${(state.lab.tax * 100).toFixed(1)}%`;
+
+        // Mathematical Core calculations
+        const workingCapital = calculateWorkingCapital(state.lab.opCosts, state.lab.cycle);
+        const totalCapital = state.lab.equity + state.lab.debt;
+        const wacc = calculateWACC(state.lab.equity, state.lab.debt, state.lab.ke, state.lab.kd, state.lab.tax);
+
+        // Update displays
+        metricWorkCap.textContent = `$${Math.round(workingCapital).toLocaleString()}`;
+        metricTotalCapital.textContent = `$${totalCapital.toLocaleString()}`;
+        metricWacc.textContent = `${(wacc * 100).toFixed(2)}%`;
+
+        // Redraw chart
+        drawCapitalStructureChart();
+    }
+
+    // Bind listeners
+    [opCostsSlider, cycleSlider, equitySlider, debtSlider, keSlider, kdSlider, taxSlider].forEach(slider => {
+        slider.addEventListener('input', updateLab);
+    });
+
+    window.canvasDrawers['intro'] = drawCapitalStructureChart;
+
+    function drawCapitalStructureChart() {
+        const canvas = document.getElementById('canvas-capital');
+        if (!canvas) return;
+        const ctx = getScaledContext(canvas);
+        const w = canvas.width / (window.devicePixelRatio || 1);
+        const h = canvas.height / (window.devicePixelRatio || 1);
+
+        ctx.clearRect(0, 0, w, h);
+        drawGrid(ctx, w, h);
+
+        const total = state.lab.equity + state.lab.debt;
+        const eqPct = total > 0 ? state.lab.equity / total : 0.5;
+        const dbPct = total > 0 ? state.lab.debt / total : 0.5;
+
+        // Draw Pie Chart
+        const centerX = w / 2 - 80;
+        const centerY = h / 2;
+        const radius = Math.min(w, h) / 2.6;
+
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+        ctx.shadowBlur = 15;
+
+        // Capital Propio (Indigo)
+        ctx.fillStyle = '#6366f1';
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, -Math.PI/2, -Math.PI/2 + eqPct * 2 * Math.PI);
+        ctx.fill();
+
+        // Deuda (Púrpura)
+        ctx.fillStyle = '#a855f7';
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, -Math.PI/2 + eqPct * 2 * Math.PI, Math.PI * 1.5);
+        ctx.fill();
+
+        // Draw center hole for Doughnut style
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#090d16';
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Labels / Legend
+        const legendX = w - 180;
+        const legendY = h / 2 - 40;
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 14px Outfit';
+        ctx.fillText('Estructura de Capital', legendX, legendY - 10);
+
+        // Indigo legend indicator
+        ctx.fillStyle = '#6366f1';
+        ctx.fillRect(legendX, legendY + 10, 16, 16);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '13px Plus Jakarta Sans';
+        ctx.fillText(`C. Propio: ${(eqPct * 100).toFixed(1)}%`, legendX + 25, legendY + 22);
+
+        // Purple legend indicator
+        ctx.fillStyle = '#a855f7';
+        ctx.fillRect(legendX, legendY + 35, 16, 16);
+        ctx.fillStyle = '#cbd5e1';
+        ctx.fillText(`Deuda: ${(dbPct * 100).toFixed(1)}%`, legendX + 25, legendY + 47);
+
+        // Add WACC info in center
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '10px Plus Jakarta Sans';
+        ctx.textAlign = 'center';
+        ctx.fillText('WACC', centerX, centerY - 6);
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 15px Outfit';
+        const wacc = calculateWACC(state.lab.equity, state.lab.debt, state.lab.ke, state.lab.kd, state.lab.tax);
+        ctx.fillText(`${(wacc * 100).toFixed(2)}%`, centerX, centerY + 12);
+        ctx.textAlign = 'left';
+    }
+
+    updateLab();
+}
+
+/*=== TAB 2: CLASSIFICATION GAME ===*/
+function initClassificationGame() {
+    const items = document.querySelectorAll('.dnd-item');
+    const zones = document.querySelectorAll('.dnd-zone');
+    const pool = document.getElementById('dnd-pool');
+    const feedback = document.getElementById('dnd-feedback');
+
+    items.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', item.id);
+        });
+
+        // Click alternative for mobile accessibility
+        item.addEventListener('click', () => {
+            const currentZone = item.parentElement;
+            if (currentZone.id === 'dnd-pool') {
+                // Click moves it to CapEx first
+                moveItem(item, document.getElementById('zone-capex'));
+            } else if (currentZone.id === 'zone-capex') {
+                moveItem(item, document.getElementById('zone-opex'));
+            } else {
+                moveItem(item, pool);
+            }
+            checkClassificationScore();
+        });
+    });
+
+    zones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
+        });
+
+        zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+        });
+
+        zone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const itemId = e.dataTransfer.getData('text/plain');
+            const item = document.getElementById(itemId);
+            if (item) {
+                moveItem(item, zone);
+                checkClassificationScore();
+            }
+        });
+    });
+
+    // Make pool drop-targetable
+    pool.addEventListener('dragover', (e) => e.preventDefault());
+    pool.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const itemId = e.dataTransfer.getData('text/plain');
+        const item = document.getElementById(itemId);
+        if (item) {
+            moveItem(item, pool);
+            checkClassificationScore();
+        }
+    });
+
+    function moveItem(item, targetContainer) {
+        targetContainer.appendChild(item);
+    }
+
+    function checkClassificationScore() {
+        let correctCount = 0;
+        let incorrectCount = 0;
+        const totalItems = items.length;
+
+        items.forEach(item => {
+            const parent = item.parentElement;
+            if (parent.id === 'dnd-pool') {
+                item.className = 'dnd-item'; // Reset styles
+            } else {
+                const targetType = parent.getAttribute('data-zone');
+                const actualType = item.getAttribute('data-type');
+
+                if (targetType === actualType) {
+                    item.className = 'dnd-item bg-correct';
+                    correctCount++;
+                } else {
+                    item.className = 'dnd-item bg-incorrect';
+                    incorrectCount++;
+                }
+            }
+        });
+
+        if (correctCount + incorrectCount > 0) {
+            feedback.style.display = 'block';
+            if (correctCount === totalItems) {
+                feedback.innerHTML = `<span style="color: var(--accent);"><i class="fa-solid fa-trophy"></i> ¡Excelente! Todos los egresos han sido clasificados correctamente. (CapEx = Inversiones a largo plazo; OpEx = Gastos corrientes de operación).</span>`;
+            } else {
+                feedback.innerHTML = `Puntuación: <span style="color: var(--accent);">${correctCount} correctos</span> / <span style="color: var(--danger);">${incorrectCount} incorrectos</span> de ${totalItems}. Sigue intentándolo.`;
+            }
+        } else {
+            feedback.style.display = 'none';
+        }
+    }
+}
+
+/*=== TAB 3: PROPERTIES CALCULATORS ===*/
+function initPropertiesCalculators() {
+    const propEv = document.getElementById('prop-ev');
+    const propRe = document.getElementById('prop-re');
+    const propRd = document.getElementById('prop-rd');
+    const propT = document.getElementById('prop-t');
+    const propWaccRes = document.getElementById('prop-wacc-res');
+
+    const propV0 = document.getElementById('prop-v0');
+    const propVs = document.getElementById('prop-vs');
+    const propN = document.getElementById('prop-n');
+    const propDepRes = document.getElementById('prop-dep-res');
+
+    function updateWaccCalc() {
+        const ev = Number(propEv.value) / 100;
+        const dv = 1 - ev;
+        const re = Number(propRe.value) / 100;
+        const rd = Number(propRd.value) / 100;
+        const t = Number(propT.value) / 100;
+
+        // Use mathematical core via calculated variables
+        const wacc = calculateWACC(ev, dv, re, rd, t);
+        propWaccRes.textContent = `${(wacc * 100).toFixed(2)}%`;
+    }
+
+    function updateDepCalc() {
+        const v0 = Number(propV0.value);
+        const vs = Number(propVs.value);
+        const n = Number(propN.value);
+
+        const dep = calculateDepreciationLinear(v0, vs, n);
+        propDepRes.textContent = `$${Math.round(dep).toLocaleString()} / año`;
+    }
+
+    [propEv, propRe, propRd, propT].forEach(inp => inp.addEventListener('input', updateWaccCalc));
+    [propV0, propVs, propN].forEach(inp => inp.addEventListener('input', updateDepCalc));
+
+    updateWaccCalc();
+    updateDepCalc();
+}
+
+/*=== TAB 4: ELEMENTOS (CASH FLOW GENERATOR) ===*/
+function initFlowCalculator() {
+    const qtySlider = document.getElementById('elem-quantity');
+    const priceSlider = document.getElementById('elem-price');
+    const vcSlider = document.getElementById('elem-vc');
+    const fcSlider = document.getElementById('elem-fc');
+
+    const qtyVal = document.getElementById('elem-quantity-val');
+    const priceVal = document.getElementById('elem-price-val');
+    const vcVal = document.getElementById('elem-vc-val');
+    const fcVal = document.getElementById('elem-fc-val');
+
+    function updateFlowTable() {
+        state.flowParams.quantity = Number(qtySlider.value);
+        state.flowParams.price = Number(priceSlider.value);
+        state.flowParams.vc = Number(vcSlider.value);
+        state.flowParams.fc = Number(fcSlider.value);
+
+        qtyVal.textContent = `${state.flowParams.quantity.toLocaleString()} u`;
+        priceVal.textContent = `$${state.flowParams.price.toFixed(2)}`;
+        vcVal.textContent = `$${state.flowParams.vc.toFixed(2)}`;
+        fcVal.textContent = `$${state.flowParams.fc.toLocaleString()}`;
+
+        // Compute flow values
+        const revenue = state.flowParams.quantity * state.flowParams.price;
+        const varCosts = state.flowParams.quantity * state.flowParams.vc;
+        const fixCosts = state.flowParams.fc;
+        const ebit = revenue - varCosts - fixCosts;
+        const tax = ebit > 0 ? ebit * 0.25 : 0;
+        const nopat = ebit - tax;
+        const depreciation = 50000; // Fixed from case study
+        const capex = 250000;
+        const workCapital = 30000;
+
+        // FCLP = NOPAT + Depr - CapEx - DeltaWC
+        const flows = [];
+        flows.push(-capex - workCapital); // Year 0
+
+        for (let y = 1; y <= 4; y++) {
+            flows.push(nopat + depreciation); // y1-y4 constant
+        }
+        flows.push(nopat + depreciation + workCapital); // Year 5 with WC Recovery
+
+        // Render Table Body
+        const tbody = document.querySelector('#flow-table tbody');
+        tbody.innerHTML = `
+            <tr>
+                <td><strong>Ingresos</strong></td>
+                <td>-</td>
+                <td>$${revenue.toLocaleString()}</td>
+                <td>$${revenue.toLocaleString()}</td>
+                <td>$${revenue.toLocaleString()}</td>
+                <td>$${revenue.toLocaleString()}</td>
+                <td>$${revenue.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Costos Variables (-)</strong></td>
+                <td>-</td>
+                <td>$${varCosts.toLocaleString()}</td>
+                <td>$${varCosts.toLocaleString()}</td>
+                <td>$${varCosts.toLocaleString()}</td>
+                <td>$${varCosts.toLocaleString()}</td>
+                <td>$${varCosts.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Costos Fijos (-)</strong></td>
+                <td>-</td>
+                <td>$${fixCosts.toLocaleString()}</td>
+                <td>$${fixCosts.toLocaleString()}</td>
+                <td>$${fixCosts.toLocaleString()}</td>
+                <td>$${fixCosts.toLocaleString()}</td>
+                <td>$${fixCosts.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Utilidad Operativa (EBIT)</strong></td>
+                <td>-</td>
+                <td style="color:${ebit >= 0 ? 'var(--accent)' : 'var(--danger)'}">$${ebit.toLocaleString()}</td>
+                <td style="color:${ebit >= 0 ? 'var(--accent)' : 'var(--danger)'}">$${ebit.toLocaleString()}</td>
+                <td style="color:${ebit >= 0 ? 'var(--accent)' : 'var(--danger)'}">$${ebit.toLocaleString()}</td>
+                <td style="color:${ebit >= 0 ? 'var(--accent)' : 'var(--danger)'}">$${ebit.toLocaleString()}</td>
+                <td style="color:${ebit >= 0 ? 'var(--accent)' : 'var(--danger)'}">$${ebit.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Impuestos (25%) (-)</strong></td>
+                <td>-</td>
+                <td>$${tax.toLocaleString()}</td>
+                <td>$${tax.toLocaleString()}</td>
+                <td>$${tax.toLocaleString()}</td>
+                <td>$${tax.toLocaleString()}</td>
+                <td>$${tax.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Utilidad Neta (NOPAT)</strong></td>
+                <td>-</td>
+                <td>$${nopat.toLocaleString()}</td>
+                <td>$${nopat.toLocaleString()}</td>
+                <td>$${nopat.toLocaleString()}</td>
+                <td>$${nopat.toLocaleString()}</td>
+                <td>$${nopat.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>(+) Depreciación</strong></td>
+                <td>-</td>
+                <td>$${depreciation.toLocaleString()}</td>
+                <td>$${depreciation.toLocaleString()}</td>
+                <td>$${depreciation.toLocaleString()}</td>
+                <td>$${depreciation.toLocaleString()}</td>
+                <td>$${depreciation.toLocaleString()}</td>
+            </tr>
+            <tr>
+                <td><strong>Inversión Fija (CapEx) (-)</strong></td>
+                <td style="color:var(--danger)">-$${capex.toLocaleString()}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            <tr>
+                <td><strong>Capital de Trabajo (-) / Recov. (+)</strong></td>
+                <td style="color:var(--danger)">-$${workCapital.toLocaleString()}</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td style="color:var(--accent)">+$${workCapital.toLocaleString()}</td>
+            </tr>
+            <tr style="background: rgba(99, 102, 241, 0.15); font-weight: bold;">
+                <td><strong>Flujo Libre de Caja (FCLP)</strong></td>
+                <td style="color:var(--danger)">$${flows[0].toLocaleString()}</td>
+                <td style="color:var(--accent)">$${flows[1].toLocaleString()}</td>
+                <td style="color:var(--accent)">$${flows[2].toLocaleString()}</td>
+                <td style="color:var(--accent)">$${flows[3].toLocaleString()}</td>
+                <td style="color:var(--accent)">$${flows[4].toLocaleString()}</td>
+                <td style="color:var(--accent)">$${flows[5].toLocaleString()}</td>
+            </tr>
+        `;
+
+        // Update Evaluation indicators state in background
+        updateEvaluationResults(flows);
+    }
+
+    [qtySlider, priceSlider, vcSlider, fcSlider].forEach(slider => {
+        slider.addEventListener('input', updateFlowTable);
+    });
+
+    updateFlowTable();
+}
+
+/*=== TAB 5: EVALUATION RESULTS & NPV CURVE ===*/
+let globalFlows = [];
+function updateEvaluationResults(flows) {
+    globalFlows = flows;
+    if (state.activeTab === 'practica') {
+        drawNPVProfile();
+    }
+}
+
+function initEvaluationTab() {
+    window.canvasDrawers['practica'] = drawNPVProfile;
+}
+
+function drawNPVProfile() {
+    const evalVan = document.getElementById('eval-van');
+    const evalTir = document.getElementById('eval-tir');
+    const evalQpe = document.getElementById('eval-qpe');
+    const evalMuu = document.getElementById('eval-muu');
+    const evalWaccShow = document.getElementById('eval-wacc-show');
+    const evalVanShow = document.getElementById('eval-van-show');
+    const evalDecisionBox = document.getElementById('eval-decision-box');
+
+    if (!evalVan || globalFlows.length === 0) return;
+
+    // Use parameters from Flow Calculator
+    const I0 = Math.abs(globalFlows[0]);
+    const cashFlows = globalFlows.slice(1);
+    
+    // Cost of capital from Lab
+    const currentWacc = calculateWACC(state.lab.equity, state.lab.debt, state.lab.ke, state.lab.kd, state.lab.tax);
+
+    const van = calculateNPV(I0, cashFlows, currentWacc);
+    const tir = calculateIRR(I0, cashFlows);
+
+    const mc = calculateMarginalContribution(state.flowParams.price, state.flowParams.vc);
+    const qpe = calculateBreakEven(state.flowParams.fc, mc);
+    const muu = calculateUnitProfit(state.flowParams.price, state.flowParams.vc, state.flowParams.fc, state.flowParams.quantity);
+
+    // Update numbers
+    evalVan.textContent = `$${Math.round(van).toLocaleString()}`;
+    evalTir.textContent = `${(tir * 100).toFixed(2)}%`;
+    evalQpe.textContent = `${Math.round(qpe).toLocaleString()} u`;
+    evalMuu.textContent = `$${muu.toFixed(2)}`;
+    evalWaccShow.textContent = `${(currentWacc * 100).toFixed(2)}%`;
+    evalVanShow.textContent = `$${Math.round(van).toLocaleString()}`;
+
+    // Update decision status
+    if (van > 0 && tir > currentWacc) {
+        evalDecisionBox.className = 'alert-box bg-correct';
+        evalDecisionBox.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent); margin-right: 8px;"></i>
+        <strong>ESTADO:</strong> PROYECTO RENTABLE. El VAN es positivo y la tasa de rendimiento supera el WACC. Se recomienda APROBAR.`;
+    } else {
+        evalDecisionBox.className = 'alert-box bg-incorrect';
+        evalDecisionBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color: var(--danger); margin-right: 8px;"></i>
+        <strong>ESTADO:</strong> PROYECTO RECHAZADO. El VAN es negativo o la TIR no cubre el costo de capital. NO es viable.`;
+    }
+
+    // Draw NPV Profile Curve
+    const canvas = document.getElementById('canvas-npv-profile');
+    if (!canvas) return;
+    const ctx = getScaledContext(canvas);
+    const w = canvas.width / (window.devicePixelRatio || 1);
+    const h = canvas.height / (window.devicePixelRatio || 1);
+
+    ctx.clearRect(0, 0, w, h);
+    drawGrid(ctx, w, h);
+
+    // Generate NPV profile points for discount rates from 0% to 100%
+    const rates = [];
+    const npvs = [];
+    for (let r = 0; r <= 1.0; r += 0.05) {
+        rates.push(r);
+        npvs.push(calculateNPV(I0, cashFlows, r));
+    }
+
+    const minNpv = Math.min(...npvs, -I0 * 0.5);
+    const maxNpv = Math.max(...npvs, I0 * 1.5);
+
+    // Coordinate mapping functions
+    const margin = 40;
+    const mapX = (rate) => margin + (rate / 1.0) * (w - 2 * margin);
+    const mapY = (nVal) => {
+        const pct = (nVal - minNpv) / (maxNpv - minNpv);
+        return h - margin - pct * (h - 2 * margin);
+    };
+
+    // Draw axes
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 1.5;
+    
+    // X axis (NPV = 0)
+    const yZero = mapY(0);
+    ctx.beginPath();
+    ctx.moveTo(margin, yZero);
+    ctx.lineTo(w - margin, yZero);
+    ctx.stroke();
+
+    // Y axis (Rate = 0)
+    ctx.beginPath();
+    ctx.moveTo(margin, margin);
+    ctx.lineTo(margin, h - margin);
+    ctx.stroke();
+
+    // Draw NPV Curve
+    ctx.strokeStyle = '#6366f1';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(mapX(rates[0]), mapY(npvs[0]));
+    for (let i = 1; i < rates.length; i++) {
+        ctx.lineTo(mapX(rates[i]), mapY(npvs[i]));
+    }
+    ctx.stroke();
+
+    // Mark current WACC
+    const waccX = mapX(currentWacc);
+    const waccY = mapY(van);
+
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(waccX, waccY, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Draw dotted line from WACC axis
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.6)';
+    ctx.beginPath();
+    ctx.moveTo(waccX, yZero);
+    ctx.lineTo(waccX, waccY);
+    ctx.moveTo(margin, waccY);
+    ctx.lineTo(waccX, waccY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Mark IRR (where NPV meets 0)
+    if (tir > 0 && tir <= 1.0) {
+        const irrX = mapX(tir);
+        ctx.fillStyle = '#10b981';
+        ctx.beginPath();
+        ctx.arc(irrX, yZero, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.font = 'bold 10px Plus Jakarta Sans';
+        ctx.fillStyle = '#10b981';
+        ctx.fillText(`TIR: ${(tir * 100).toFixed(1)}%`, irrX - 25, yZero - 10);
+    }
+
+    // Axes Labels
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = '10px Plus Jakarta Sans';
+    ctx.fillText('Tasa de Descuento (%)', w - 140, yZero + 15);
+    
+    ctx.save();
+    ctx.translate(margin - 10, margin + 40);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText('VAN (USD)', 0, 0);
+    ctx.restore();
+
+    ctx.fillStyle = '#cbd5e1';
+    ctx.fillText(`WACC: ${(currentWacc * 100).toFixed(1)}%`, waccX - 30, yZero + 15);
+}
+
+/*=== TAB 6: 12 GUIDED EXERCISES DATABASE ===*/
+const solvedExercisesDB = {
+    1: {
+        title: "Ejercicio 1: CapEx Tangible vs Intangible",
+        statement: "Una fábrica compra maquinaria por $180,000, gasta $20,000 en cimentación civil, $15,000 en licencias de software y $5,000 en capacitación. Calcula el CapEx Tangible e Intangible.",
+        steps: [
+            {
+                header: "Paso 1: Identificación y Clasificación",
+                content: "El CapEx se divide en activos físicos (tangibles) y derechos/servicios (intangibles).<br>Fórmula: \[CapEx_{\text{Tangible}} = \text{Maquinaria} + \text{Cimentación}\]\[CapEx_{\text{Intangible}} = \text{Software} + \text{Capacitación}\]"
+            },
+            {
+                header: "Paso 2: Suma de Valores",
+                content: "Tangible: \(180,000 + 20,000 = \$200,000\) USD.<br>Intangible: \(15,000 + 5,000 = \$20,000\) USD.<br>CapEx Total: \(200,000 + 20,000 = \$220,000\) USD."
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+            
+            // Bar graph representation
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(80, h - 80 - 120, 80, 120); // Tangible
+            
+            ctx.fillStyle = '#a855f7';
+            ctx.fillRect(200, h - 80 - 30, 80, 30); // Intangible
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 12px Outfit';
+            ctx.fillText('Tangible ($200k)', 75, h - 60);
+            ctx.fillText('Intangible ($20k)', 195, h - 60);
+
+            if (step === 2) {
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(60, h - 80 - 130, 240, 140);
+                ctx.fillStyle = '#10b981';
+                ctx.fillText('CapEx Total = $220k', 120, h - 230);
+            }
+        }
+    },
+    2: {
+        title: "Ejercicio 2: Periodo de Desfase de Capital de Trabajo",
+        statement: "Un proyecto tiene costos operativos de $450,000 anuales. Si el ciclo neto de caja es de 45 días, calcula el Capital de Trabajo necesario.",
+        steps: [
+            {
+                header: "Paso 1: Aplicación de la fórmula",
+                content: "Utilizamos el método de desfase para financiar la caja durante el ciclo operativo:<br>\[\text{Capital de Trabajo} = \left(\frac{\text{Costos Operativos}}{365}\right) \times \text{Días de Ciclo}\]"
+            },
+            {
+                header: "Paso 2: Reemplazo y Cálculo",
+                content: "\[KT = \left(\frac{450,000}{365}\right) \times 45 = 1,232.88 \times 45 = \$55,479.45\text{ USD}\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Timeline representations
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(50, h/2);
+            ctx.lineTo(w - 50, h/2);
+            ctx.stroke();
+
+            // Cash cycle block
+            ctx.fillStyle = 'rgba(99, 102, 241, 0.2)';
+            ctx.fillRect(50, h/2 - 40, w - 100, 80);
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '13px Plus Jakarta Sans';
+            ctx.fillText('Día 0: Egresos', 40, h/2 + 60);
+            ctx.fillText('Día 45: Recuperación', w - 160, h/2 + 60);
+            
+            ctx.fillStyle = '#f8fafc';
+            ctx.font = 'bold 14px Outfit';
+            ctx.fillText('Ciclo de Caja: 45 días', w/2 - 60, h/2 + 5);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.font = 'bold 15px Outfit';
+                ctx.fillText('Capital de Trabajo Requerido: $55,479.45', 60, h/2 - 60);
+            }
+        }
+    },
+    3: {
+        title: "Ejercicio 3: Costo de Capital Propio (CAPM)",
+        statement: "Una empresa evalúa el costo del capital propio. La tasa libre de riesgo es 4.5%, el Beta del sector es 1.25, y la prima de riesgo de mercado es 6.0%. Calcula el Re.",
+        steps: [
+            {
+                header: "Paso 1: Ecuación del CAPM",
+                content: "El modelo CAPM estima el retorno mínimo esperado por el inversionista:<br>\[R_e = R_f + \beta \times (R_m - R_f)\]Donde \(R_f\) es la tasa libre de riesgo, \(\beta\) es el riesgo sistemático, y \(R_m - R_f\) es la prima de mercado."
+            },
+            {
+                header: "Paso 2: Reemplazo numérico",
+                content: "\[R_e = 4.5\% + 1.25 \times 6.0\% = 4.5\% + 7.5\% = 12.0\%\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Draw CAPM Line chart (SML)
+            ctx.strokeStyle = '#64748b';
+            ctx.lineWidth = 2;
+            // X-axis (Beta)
+            ctx.beginPath(); ctx.moveTo(50, h - 50); ctx.lineTo(w - 50, h - 50); ctx.stroke();
+            // Y-axis (Re)
+            ctx.beginPath(); ctx.moveTo(50, 50); ctx.lineTo(50, h - 50); ctx.stroke();
+
+            // Line slope
+            ctx.strokeStyle = '#a855f7';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(50, h - 50 - 45); // Rf
+            ctx.lineTo(w - 100, h - 50 - 180);
+            ctx.stroke();
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '11px Plus Jakarta Sans';
+            ctx.fillText('Beta (Riesgo)', w - 120, h - 30);
+            ctx.fillText('Re (%)', 20, 40);
+            ctx.fillText('Rf (4.5%)', 10, h - 50 - 45);
+
+            if (step === 2) {
+                // Mark point Beta = 1.25
+                const bx = 50 + 1.25 * 150;
+                const by = h - 50 - 45 - 1.25 * 54;
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath(); ctx.arc(bx, by, 6, 0, Math.PI*2); ctx.fill();
+                ctx.fillText('Re = 12.0% (Beta = 1.25)', bx + 10, by - 5);
+            }
+        }
+    },
+    4: {
+        title: "Ejercicio 4: Cálculo de WACC Completo",
+        statement: "Un proyecto se financia con 60% de capital propio (retorno 14%) y 40% de deuda (tasa de interés 9%). Tasa de impuestos corporativos es 30%. Calcula el WACC.",
+        steps: [
+            {
+                header: "Paso 1: Plantear la ponderación del costo de capital",
+                content: "Recordar la fórmula simplificada por proporciones:<br>\[\text{WACC} = (\%E \times R_e) + (\%D \times R_d \times (1 - T))\]"
+            },
+            {
+                header: "Paso 2: Resolver la ecuación",
+                content: "\[\text{WACC} = (0.60 \times 0.14) + (0.40 \times 0.09 \times (1 - 0.30))\]\[\text{WACC} = 0.084 + 0.0252 = 0.1092 \implies 10.92\%\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Draw a Balance representation
+            const pivotX = w/2;
+            const pivotY = h - 80;
+
+            // Base
+            ctx.fillStyle = '#1e293b';
+            ctx.beginPath();
+            ctx.moveTo(pivotX - 30, pivotY);
+            ctx.lineTo(pivotX + 30, pivotY);
+            ctx.lineTo(pivotX, pivotY - 40);
+            ctx.closePath();
+            ctx.fill();
+
+            // Balance arm
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(pivotX - 120, pivotY - 40);
+            ctx.lineTo(pivotX + 120, pivotY - 40);
+            ctx.stroke();
+
+            // Weights
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(pivotX - 150, pivotY - 40 - 20, 60, 20); // Equity 60%
+            ctx.fillStyle = '#a855f7';
+            ctx.fillRect(pivotX + 90, pivotY - 40 - 20, 60, 20); // Debt 40%
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 12px Outfit';
+            ctx.fillText('Re: 14% (60%)', pivotX - 160, pivotY - 70);
+            ctx.fillText('Rd: 9% (40%)', pivotX + 90, pivotY - 70);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.font = 'bold 16px Outfit';
+                ctx.fillText('WACC: 10.92% (Neto)', pivotX - 60, pivotY - 110);
+            }
+        }
+    },
+    5: {
+        title: "Ejercicio 5: Depreciación de Línea Recta y Libros",
+        statement: "Una prensa industrial tiene un costo inicial de $120,000, vida útil de 6 años y valor de salvamento de $30,000. Grafica la depreciación acumulada y el valor en libros.",
+        steps: [
+            {
+                header: "Paso 1: Cálculo del cargo de depreciación anual",
+                content: "\[D_k = \frac{120,000 - 30,000}{6} = \frac{90,000}{6} = \$15,000\text{ USD anuales}\]"
+            },
+            {
+                header: "Paso 2: Evolución de valor en libros",
+                content: "El valor en libros disminuye cada año en $15,000 hasta alcanzar el valor de salvamento al año 6 ($30,000)."
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Chart of Book Value
+            ctx.strokeStyle = '#64748b';
+            ctx.beginPath(); ctx.moveTo(60, h-40); ctx.lineTo(w-40, h-40); ctx.stroke(); // X
+            ctx.beginPath(); ctx.moveTo(60, 40); ctx.lineTo(60, h-40); ctx.stroke(); // Y
+
+            const points = [120000, 105000, 90000, 75000, 60000, 45000, 30000];
+            const mapX = (y) => 60 + y * (w - 120) / 6;
+            const mapY = (val) => h - 40 - (val / 120000) * (h - 80);
+
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(mapX(0), mapY(points[0]));
+            for (let i = 1; i < points.length; i++) {
+                ctx.lineTo(mapX(i), mapY(points[i]));
+            }
+            ctx.stroke();
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '10px Plus Jakarta Sans';
+            ctx.fillText('Valor en libros (USD)', 10, 30);
+            ctx.fillText('Año 0', mapX(0) - 10, h - 20);
+            ctx.fillText('Año 6', mapX(6) - 10, h - 20);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.fillText('V. Salvamento: $30k', mapX(6) + 5, mapY(30000));
+                ctx.beginPath(); ctx.arc(mapX(6), mapY(30000), 5, 0, Math.PI*2); ctx.fill();
+            }
+        }
+    },
+    6: {
+        title: "Ejercicio 6: Utilidad Operativa NOPAT",
+        statement: "Una planta reporta ventas de $800,000, costos directos de $350,000, gastos G&A de $100,000 e incluye una depreciación de $50,000. Tasa impositiva 25%. Obtén el NOPAT.",
+        steps: [
+            {
+                header: "Paso 1: Obtener el EBIT (Utilidad Operativa)",
+                content: "\[\text{EBIT} = \text{Ventas} - \text{Costos Directos} - \text{Gastos Fijos}\]\[\text{EBIT} = 800,000 - 350,000 - 100,000 = \$350,000\text{ USD}\]"
+            },
+            {
+                header: "Paso 2: Calcular impuesto y NOPAT",
+                content: "Impuestos: \(350,000 \times 0.25 = \$87,500\) USD.<br>NOPAT: \(350,000 - 87,500 = \$262,500\) USD."
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Waterfall structure block
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(50, 50, w - 100, 30); // Ventas 800
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = 'bold 12px Outfit';
+            ctx.fillText('Ventas: $800k', 60, 70);
+
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(50, 100, w/2, 30); // Costos -450
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('Costos: -$450k', 60, 120);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(50, 150, (w-100) * (262.5/800), 30); // NOPAT
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillText('NOPAT Neto: $262.5k', 60, 170);
+            }
+        }
+    },
+    7: {
+        title: "Ejercicio 7: Punto de Equilibrio Operativo",
+        statement: "Un proceso de ensamble vende repuestos a $15.00/u. El costo variable unitario es $9.00/u y los costos fijos anuales suman $120,000. Calcula el Q_PE.",
+        steps: [
+            {
+                header: "Paso 1: Margen de contribución",
+                content: "\[MC_u = P_u - CV_u = 15.00 - 9.00 = 6.00 \text{ USD/unidad}\]"
+            },
+            {
+                header: "Paso 2: Equilibrio",
+                content: "\[Q_{PE} = \frac{\text{Costos Fijos}}{MC_u} = \frac{120,000}{6.00} = 20,000 \text{ unidades/año}\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Break-even axes
+            ctx.strokeStyle = '#64748b';
+            ctx.beginPath(); ctx.moveTo(50, h-40); ctx.lineTo(w-40, h-40); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(50, 40); ctx.lineTo(50, h-40); ctx.stroke();
+
+            // Total Cost Line
+            ctx.strokeStyle = '#f43f5e';
+            ctx.beginPath();
+            ctx.moveTo(50, h - 40 - 60); // CF = 60
+            ctx.lineTo(w - 60, h - 40 - 180);
+            ctx.stroke();
+
+            // Total Revenue Line
+            ctx.strokeStyle = '#10b981';
+            ctx.beginPath();
+            ctx.moveTo(50, h - 40);
+            ctx.lineTo(w - 60, h - 40 - 240);
+            ctx.stroke();
+
+            if (step === 2) {
+                // Mark intersection
+                const intersectX = 50 + 150;
+                const intersectY = h - 40 - 120;
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath(); ctx.arc(intersectX, intersectY, 6, 0, Math.PI*2); ctx.fill();
+                ctx.fillText('Q_pe = 20,000 u', intersectX - 40, intersectY - 15);
+            }
+        }
+    },
+    8: {
+        title: "Ejercicio 8: Margen de Utilidad Unitario",
+        statement: "Con base en el Ejercicio 7, si se fabrican y venden 35,000 unidades en vez de 20,000, calcula el costo total unitario y la rentabilidad por unidad.",
+        steps: [
+            {
+                header: "Paso 1: Costo total unitario",
+                content: "El costo variable por unidad sigue siendo $9.00.<br>Costo fijo prorrateado: \(120,000 / 35,000 = \$3.43\) USD.<br>Costo total unitario: \(9.00 + 3.43 = \$12.43\) USD."
+            },
+            {
+                header: "Paso 2: Margen de utilidad",
+                content: "Margen: \(MC_u = Precio - CT_u = 15.00 - 12.43 = \$2.57\) USD por unidad."
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Bar chart comparing cost components
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillRect(80, h - 80 - 90, 60, 90); // CV = $9
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(80, h - 80 - 124, 60, 34); // CF = $3.43
+
+            ctx.fillStyle = '#6366f1';
+            ctx.fillRect(200, h - 80 - 150, 60, 150); // Precio = $15
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Costo: $12.43', 75, h - 60);
+            ctx.fillText('Precio: $15.00', 195, h - 60);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(200, h - 80 - 150, 60, 26); // Profit Margin top
+                ctx.fillText('Ganancia: $2.57/u', 180, h - 240);
+            }
+        }
+    },
+    9: {
+        title: "Ejercicio 9: Valor Actual Neto (VAN)",
+        statement: "Un proyecto tiene una inversión inicial de $100,000 y flujos netos anuales de $35,000 por 4 años. Costo de capital (WACC) es 10%. Calcula el VAN.",
+        steps: [
+            {
+                header: "Paso 1: Sumatoria de flujos descontados",
+                content: "\[\text{VP} = \sum_{t=1}^{4} \frac{35,000}{(1+0.10)^t} = 31,818 + 28,926 + 26,296 + 23,905 = \$110,945\]"
+            },
+            {
+                header: "Paso 2: Restar inversión inicial",
+                content: "\[\text{VAN} = 110,945 - 100,000 = \$10,945\text{ USD}\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Flow diagram
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.beginPath(); ctx.moveTo(50, h/2); ctx.lineTo(w-50, h/2); ctx.stroke();
+
+            // Initial investment down arrow
+            ctx.strokeStyle = '#f43f5e';
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(80, h/2); ctx.lineTo(80, h/2 + 80); ctx.stroke();
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('-$100k', 60, h/2 + 95);
+
+            // Inflow arrows
+            ctx.strokeStyle = '#10b981';
+            for (let i = 1; i <= 4; i++) {
+                const x = 80 + i * 60;
+                ctx.beginPath(); ctx.moveTo(x, h/2); ctx.lineTo(x, h/2 - 50); ctx.stroke();
+                ctx.fillText(`+$35k`, x - 15, h/2 - 60);
+            }
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.font = 'bold 16px Outfit';
+                ctx.fillText('VAN: +$10,945 (Viable)', w/2 - 60, 50);
+            }
+        }
+    },
+    10: {
+        title: "Ejercicio 10: Tasa Interna de Retorno (TIR)",
+        statement: "Determina la TIR del proyecto del Ejercicio 9 y comprueba que el VAN se vuelve cero con esta tasa.",
+        steps: [
+            {
+                header: "Paso 1: Planteamiento de la ecuación",
+                content: "La TIR (r) cumple con la condición de anulación del VAN:<br>\[\sum_{t=1}^{4} \frac{35,000}{(1+r)^t} - 100,000 = 0\]"
+            },
+            {
+                header: "Paso 2: Resolución numérica",
+                content: "Resolviendo iterativamente por el método de Newton-Raphson, se obtiene una tasa de:<br>\[r = 18.45\%\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Draw NPV Curve
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.beginPath(); ctx.moveTo(50, h/2); ctx.lineTo(w-50, h/2); ctx.stroke();
+
+            ctx.strokeStyle = '#a855f7';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(80, 50);
+            ctx.quadraticCurveTo(w/2 - 20, h/2 + 20, w - 80, h - 60);
+            ctx.stroke();
+
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('NPV = 0 Line', w - 130, h/2 - 10);
+
+            if (step === 2) {
+                // Mark intersection
+                const irrX = w/2 - 10;
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath(); ctx.arc(irrX, h/2, 6, 0, Math.PI*2); ctx.fill();
+                ctx.fillText('TIR: 18.45%', irrX - 30, h/2 - 15);
+            }
+        }
+    },
+    11: {
+        title: "Ejercicio 11: Periodo de Recuperación Descontado (PRI)",
+        statement: "Calcula en qué año exacto se recupera la inversión de $100,000 en el Ejercicio 9 si descontamos los flujos al 10%.",
+        steps: [
+            {
+                header: "Paso 1: Flujos acumulados descontados",
+                content: "Año 1: \(31,818\) (Restante: \(68,182\))<br>Año 2: \(31,818 + 28,926 = 60,744\) (Restante: \(39,256\))<br>Año 3: \(60,744 + 26,296 = 87,040\) (Restante: \(12,960\))<br>Año 4: \(87,040 + 23,905 = 110,945\) (Supera la inversión)"
+            },
+            {
+                header: "Paso 2: Interpolación lineal",
+                content: "El retorno ocurre en el transcurso del año 4:<br>\[PRI = 3 + \frac{12,960}{23,905} = 3.54 \text{ años}\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Cumulative flow chart
+            ctx.strokeStyle = '#cbd5e1';
+            ctx.beginPath(); ctx.moveTo(50, h - 80); ctx.lineTo(w-50, h - 80); ctx.stroke();
+
+            const cumulative = [0, 31.8, 60.7, 87.0, 110.9];
+            const mapX = (idx) => 60 + idx * (w - 120) / 4;
+            const mapY = (val) => h - 80 - (val / 120) * (h - 120);
+
+            // Draw line
+            ctx.strokeStyle = '#6366f1';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(mapX(0), mapY(cumulative[0]));
+            for (let i = 1; i < cumulative.length; i++) {
+                ctx.lineTo(mapX(i), mapY(cumulative[i]));
+            }
+            ctx.stroke();
+
+            // Investment threshold
+            ctx.strokeStyle = 'rgba(244, 63, 94, 0.6)';
+            ctx.setLineDash([4, 4]);
+            ctx.beginPath();
+            ctx.moveTo(50, mapY(100));
+            ctx.lineTo(w-50, mapY(100));
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.fillStyle = '#f43f5e';
+            ctx.fillText('Inversión ($100k)', 60, mapY(100) - 10);
+
+            if (step === 2) {
+                // Mark intersection
+                const intersectX = mapX(3) + 0.54 * (mapX(4) - mapX(3));
+                ctx.fillStyle = '#10b981';
+                ctx.beginPath(); ctx.arc(intersectX, mapY(100), 6, 0, Math.PI*2); ctx.fill();
+                ctx.fillText('PRI: 3.54 años', intersectX - 40, mapY(100) + 20);
+            }
+        }
+    },
+    12: {
+        title: "Ejercicio 12: Escudo Fiscal por Intereses y Depreciación",
+        statement: "Un proyecto deduce $50,000 en depreciación y paga $12,000 de intereses. Si la tasa impositiva corporativa es del 25%, calcula el ahorro fiscal acumulado.",
+        steps: [
+            {
+                header: "Paso 1: Explicación del Escudo Fiscal",
+                content: "Los intereses y la depreciación son deducibles antes del cálculo de impuestos.<br>\[\text{Escudo Fiscal} = (\text{Depreciación} + \text{Intereses}) \times T\]"
+            },
+            {
+                header: "Paso 2: Reemplazo numérico",
+                content: "\[EF = (50,000 + 12,000) \times 0.25 = 62,000 \times 0.25 = \$15,500\text{ USD anuales}\]"
+            }
+        ],
+        draw: (ctx, w, h, step) => {
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+
+            // Blocks of tax deduction
+            ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+            ctx.fillRect(80, 80, 200, 40); // Depreciation
+            ctx.strokeStyle = '#f43f5e';
+            ctx.strokeRect(80, 80, 200, 40);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '12px Plus Jakarta Sans';
+            ctx.fillText('Depreciación Deductible: $50k', 95, 105);
+
+            ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+            ctx.fillRect(80, 130, 200, 40); // Intereses
+            ctx.strokeStyle = '#f59e0b';
+            ctx.strokeRect(80, 130, 200, 40);
+            ctx.fillStyle = '#cbd5e1';
+            ctx.fillText('Intereses Deductibles: $12k', 95, 155);
+
+            if (step === 2) {
+                ctx.fillStyle = '#10b981';
+                ctx.fillRect(300, 80, 100, 90); // Escudo fiscal
+                ctx.fillStyle = '#f8fafc';
+                ctx.font = 'bold 13px Outfit';
+                ctx.fillText('Ahorro', 315, 120);
+                ctx.fillText('$15.5k', 315, 140);
+            }
+        }
+    }
+};
+
+function initSolvedExercises() {
+    const solvedSelector = document.getElementById('solved-selector');
+    const solvedTitle = document.getElementById('solved-ex-title');
+    const solvedStatement = document.getElementById('solved-ex-statement');
+    const solvedStepHeader = document.getElementById('solved-step-header');
+    const solvedStepContent = document.getElementById('solved-step-content');
+    const solvedStepCounter = document.getElementById('solved-step-counter');
+
+    const btnPrev = document.getElementById('btn-prev-step');
+    const btnNext = document.getElementById('btn-next-step');
+
+    // Create selection buttons
+    for (let id = 1; id <= 12; id++) {
+        const btn = document.createElement('button');
+        btn.textContent = `E${id}`;
+        btn.className = `btn-exercise ${id === 1 ? 'active' : ''}`;
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('#solved-selector .btn-exercise').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectExercise(id);
+        });
+        solvedSelector.appendChild(btn);
+    }
+
+    function selectExercise(id) {
+        state.solved.currentExId = id;
+        state.solved.currentStep = 0;
+        updateExerciseUI();
+    }
+
+    function updateExerciseUI() {
+        const ex = solvedExercisesDB[state.solved.currentExId];
+        solvedTitle.textContent = ex.title;
+        solvedStatement.textContent = ex.statement;
+
+        const stepObj = ex.steps[state.solved.currentStep];
+        solvedStepHeader.textContent = stepObj.header;
+        solvedStepContent.innerHTML = stepObj.content;
+        solvedStepCounter.textContent = `Paso ${state.solved.currentStep + 1} de ${ex.steps.length}`;
+
+        // Disable buttons accordingly
+        btnPrev.disabled = state.solved.currentStep === 0;
+        btnNext.disabled = state.solved.currentStep === ex.steps.length - 1;
+
+        // Draw Canvas illustration
+        const canvas = document.getElementById('canvas-exercise');
+        if (canvas) {
+            const ctx = getScaledContext(canvas);
+            const w = canvas.width / (window.devicePixelRatio || 1);
+            const h = canvas.height / (window.devicePixelRatio || 1);
+            ex.draw(ctx, w, h, state.solved.currentStep + 1);
+        }
+
+        // Render MathJax equations
+        if (window.MathJax) {
+            MathJax.typesetPromise([solvedStepContent]);
+        }
+    }
+
+    btnPrev.addEventListener('click', () => {
+        if (state.solved.currentStep > 0) {
+            state.solved.currentStep--;
+            updateExerciseUI();
+        }
+    });
+
+    btnNext.addEventListener('click', () => {
+        const ex = solvedExercisesDB[state.solved.currentExId];
+        if (state.solved.currentStep < ex.steps.length - 1) {
+            state.solved.currentStep++;
+            updateExerciseUI();
+        }
+    });
+
+    window.canvasDrawers['interactivos'] = () => {
+        updateExerciseUI();
+    };
+
+    selectExercise(1);
+}
+
+/*=== TAB 7: 12 PROPOSED EXERCISES DATABASE ===*/
+const proposedExercisesDB = {
+    13: {
+        title: "Ejercicio 13: CapEx de Instalación",
+        statement: "Una fábrica compra una troqueladora neumática por $95,000. Los costos de envío y aduanas son $8,000, los de instalación e ingeniería civil $12,000 y se capacita a los operarios por $3,000. ¿Cuál es el CapEx Tangible total del activo?",
+        options: ["$95,000", "$103,000", "$115,000", "$118,000"],
+        correctIndex: 2,
+        solution: "El CapEx tangible incluye el precio de compra más todos los costos capitalizables necesarios para poner el activo en operación (Fletes, Obras civiles e Instalación). La capacitación se considera comúnmente gasto intangible o directo al ejercicio operativo.<br>Formula: \[\text{CapEx Tangible} = 95,000 + 8,000 + 12,000 = \$115,000\text{ USD}\]"
+    },
+    14: {
+        title: "Ejercicio 14: Capital de Trabajo",
+        statement: "Una línea de producción opera con egresos anuales de $219,000. Si las cuentas por cobrar tardan 40 días, inventario 25 días y cuentas por pagar 15 días en promedio, calcula el Capital de Trabajo necesario (método periodo desfase con días netos).",
+        options: ["$30,000", "$39,000", "$45,000", "$50,000"],
+        correctIndex: 0,
+        solution: "Primero calculamos el Ciclo Neto de Caja:<br>\[\text{Ciclo de Caja} = \text{Días Inventario} + \text{Días Cobro} - \text{Días Pago}\]\[\text{Ciclo} = 25 + 40 - 15 = 50\text{ días}\]<br>Aplicando el desfase:<br>\[KT = \left(\frac{219,000}{365}\right) \times 50 = 600 \times 50 = \$30,000\text{ USD}\]"
+    },
+    15: {
+        title: "Ejercicio 15: Modelo CAPM para Sector Logístico",
+        statement: "Calcula la tasa de retorno exigida por accionistas (Re) para un operador logístico, si la tasa libre de riesgo es de 5.0%, el Beta del sector es 0.80, y el retorno de mercado esperado es de 11.25%.",
+        options: ["8.0%", "10.0%", "11.25%", "13.0%"],
+        correctIndex: 1,
+        solution: "La prima de riesgo de mercado es \(R_m - R_f = 11.25\% - 5.0\% = 6.25\%\).<br>Aplicando CAPM:<br>\[R_e = 5.0\% + 0.80 \times 6.25\% = 5.0\% + 5.0\% = 10.0\%\]"
+    },
+    16: {
+        title: "Ejercicio 16: WACC con Tasas de Impuestos Locales",
+        statement: "Una planta química utiliza 30% de capital de terceros (Préstamo al 10%) y 70% de capital propio (Costo 14%). Con una tasa corporativa de impuestos del 30%, calcula el WACC.",
+        options: ["11.20%", "11.90%", "12.00%", "12.80%"],
+        correctIndex: 1,
+        solution: "Reemplazando en la fórmula ponderada:<br>\[\text{WACC} = (0.70 \times 0.14) + (0.30 \times 0.10 \times (1 - 0.30))\]\[\text{WACC} = 0.098 + 0.021 = 0.119 \implies 11.90\%\]"
+    },
+    17: {
+        title: "Ejercicio 17: Depreciación de Reactores",
+        statement: "Un reactor biológico de $200,000 se deprecia linealmente por 8 años. Si su valor de salvamento técnico al final del periodo se estima en $40,000, ¿cuál es su valor contable en libros al final del año 5?",
+        options: ["$75,000", "$90,000", "$100,000", "$120,000"],
+        correctIndex: 2,
+        solution: "Calculamos la depreciación anual:<br>\[D_k = \frac{200,000 - 40,000}{8} = 20,000\text{ USD/año}\]<br>Al final del año 5, la depreciación acumulada es \(20,000 \times 5 = \$100,000\).<br>El valor en libros es:<br>\[V_5 = 200,000 - 100,000 = \$100,000\text{ USD}\]"
+    },
+    18: {
+        title: "Ejercicio 18: Margen de Contribución Relativo",
+        statement: "Una embotelladora vende bebidas a $2.50 la unidad, incurriendo en un costo variable unitario de $1.50. ¿Cuántas unidades debe vender al año para cubrir costos fijos por $60,000?",
+        options: ["24,000 u", "40,000 u", "60,000 u", "90,000 u"],
+        correctIndex: 2,
+        solution: "Margen unitario: \(MC_u = 2.50 - 1.50 = 1.00\) USD/u.<br>\[Q_{PE} = \frac{60,000}{1.00} = 60,000\text{ unidades/año}\]"
+    },
+    19: {
+        title: "Ejercicio 19: Punto de Equilibrio en Ventas (USD)",
+        statement: "Con los datos del Ejercicio 18, determina el volumen de ventas monetarias necesario para estar en punto de equilibrio.",
+        options: ["$60,000", "$90,000", "$120,000", "$150,000"],
+        correctIndex: 3,
+        solution: "Ventas de equilibrio: \(Q_{PE} \times Precio = 60,000 \times 2.50 = \$150,000\) USD."
+    },
+    20: {
+        title: "Ejercicio 20: Impuesto a las Utilidades y Flujos",
+        statement: "Un taller mecánico reporta ingresos de $150,000, costos operativos de $80,000 y depreciación por $20,000. Si la tasa impositiva es de 20%, calcula el NOPAT.",
+        options: ["$40,000", "$44,000", "$50,000", "$56,000"],
+        correctIndex: 0,
+        solution: "EBIT: \(150,000 - 80,000 - 20,000 = \$50,000\).<br>Impuesto: \(50,000 \times 0.20 = \$10,000\).<br>NOPAT: \(50,000 - 10,000 = \$40,000\) USD."
+    },
+    21: {
+        title: "Ejercicio 21: VAN de un Activo Logístico",
+        statement: "Una grúa horquilla requiere inversión neta inicial de $40,000 (Año 0). Genera ahorros netos (FCLP) de $15,000 anuales del año 1 al 4. Con WACC de 8%, determina el VAN.",
+        options: ["$9,681", "$20,000", "$9,000", "$49,681"],
+        correctIndex: 0,
+        solution: "\[VAN = -40,000 + \sum_{t=1}^{4} \frac{15,000}{(1.08)^t} = -40,000 + 49,681.65 = \$9,681.65\text{ USD}\]"
+    },
+    22: {
+        title: "Ejercicio 22: TIR de Inversión Tecnológica",
+        statement: "Un software de planeación ERP cuesta $30,000 y ahorra $18,000 al final del año 1 y $18,000 al final del año 2. ¿Cuál es su TIR aproximada?",
+        options: ["10.0%", "15.0%", "20.0%", "23.4%"],
+        correctIndex: 3,
+        solution: "La TIR cumple con la ecuación:<br>\[\frac{18,000}{1+r} + \frac{18,000}{(1+r)^2} = 30,000\]<br>Iterando se obtiene \(r \approx 23.38\%\) (se aproxima a 23.4%)."
+    },
+    23: {
+        title: "Ejercicio 23: Payback Descontado",
+        statement: "Determina el PRI descontado (al 8%) para el equipo logístico del Ejercicio 21 (Inversión $40,000, flujo anual descontado de $13,889, $12,860, $11,907, $11,025).",
+        options: ["2.67 años", "3.11 años", "3.50 años", "2.00 años"],
+        correctIndex: 1,
+        solution: "Flujos acumulados descontados:<br>Año 1: \(13,889\) (Faltan \(26,111\))<br>Año 2: \(13,889 + 12,860 = 26,749\) (Faltan \(13,251\))<br>Año 3: \(26,749 + 11,907 = 38,656\) (Faltan \(1,344\))<br>Año 4: \(38,656 + 11,025 = 49,681\) (Supera la inversión)<br>Interpolación en el Año 4:<br>\[PRI = 3 + \frac{1,344}{11,025} \approx 3.12\text{ años (opción 3.11 por decimales)}\]"
+    },
+    24: {
+        title: "Ejercicio 24: Margen Utilidad Prorrateado",
+        statement: "Un producto industrial se vende a $80. Costos fijos anuales son $240,000 y costo variable unitario es $40. Si la capacidad nominal del periodo es de 8,000 unidades, calcula el margen de utilidad unitaria total.",
+        options: ["$10", "$20", "$30", "$40"],
+        correctIndex: 0,
+        solution: "Costo Fijo por unidad: \(240,000 / 8,000 = \$30\) USD/u.<br>Costo Total Unitario: \(40 + 30 = \$70\) USD/u.<br>Margen de utilidad unitaria: \(80 - 70 = \$10\) USD/u."
+    }
+};
+
+function initProposedExercises() {
+    const container = document.getElementById('proposed-accordion-container');
+    if (!container) return;
+
+    for (const [id, ex] of Object.entries(proposedExercisesDB)) {
+        const accordion = document.createElement('div');
+        accordion.className = 'accordion';
+        accordion.id = `proposed-ex-${id}`;
+
+        accordion.innerHTML = `
+            <div class="accordion-header" tabindex="0" role="button" aria-expanded="false" aria-controls="acc-body-${id}">
+                <span>${ex.title}</span>
+                <i class="fa-solid fa-chevron-down accordion-icon"></i>
+            </div>
+            <div class="accordion-content" id="acc-body-${id}" role="region">
+                <p style="margin-bottom: 15px; font-weight: 500;">${ex.statement}</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;" id="options-group-${id}">
+                    ${ex.options.map((opt, i) => `
+                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 6px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); background: rgba(255,255,255,0.01);">
+                            <input type="radio" name="radio-ex-${id}" value="${i}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('')}
+                </div>
+
+                <button class="btn-nav" style="padding: 6px 12px; font-size: 0.85rem;" id="btn-validate-${id}">Validar Respuesta</button>
+
+                <div class="alert-box" style="display: none; margin-top: 15px;" id="solution-box-${id}">
+                    <h4 style="color: var(--secondary); margin-bottom: 8px;"><i class="fa-solid fa-graduation-cap"></i> Retroalimentación Detallada</h4>
+                    <p>${ex.solution}</p>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(accordion);
+
+        // Bind events
+        const header = accordion.querySelector('.accordion-header');
+        header.addEventListener('click', () => toggleAccordion(accordion, header));
+        header.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                toggleAccordion(accordion, header);
+            }
+        });
+
+        const validateBtn = accordion.querySelector(`#btn-validate-${id}`);
+        validateBtn.addEventListener('click', () => validateProposedAnswer(id, ex));
+    }
+
+    function toggleAccordion(accordion, header) {
+        const content = accordion.querySelector('.accordion-content');
+        const isOpen = accordion.classList.contains('open');
+
+        if (isOpen) {
+            accordion.classList.remove('open');
+            header.setAttribute('aria-expanded', 'false');
+            content.style.maxHeight = '0';
+        } else {
+            // Close other accordions first
+            document.querySelectorAll('.accordion').forEach(acc => {
+                acc.classList.remove('open');
+                acc.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+                acc.querySelector('.accordion-content').style.maxHeight = '0';
+            });
+
+            accordion.classList.add('open');
+            header.setAttribute('aria-expanded', 'true');
+            
+            // Allow time for DOM calculation
+            setTimeout(() => {
+                content.style.maxHeight = content.scrollHeight + 100 + 'px';
+                // Trigger LaTeX rendering inside active accordion
+                if (window.MathJax) {
+                    MathJax.typesetPromise([content]);
+                }
+            }, 50);
+        }
+    }
+
+    function validateProposedAnswer(id, ex) {
+        const selected = document.querySelector(`input[name="radio-ex-${id}"]:checked`);
+        const solutionBox = document.getElementById(`solution-box-${id}`);
+        const content = document.getElementById(`acc-body-${id}`);
+        const optionsGroup = document.getElementById(`options-group-${id}`);
+
+        if (!selected) {
+            alert("Por favor selecciona una respuesta.");
+            return;
+        }
+
+        const answerIndex = parseInt(selected.value);
+        
+        // Remove old success/error colors from options
+        optionsGroup.querySelectorAll('label').forEach(lbl => {
+            lbl.style.borderColor = 'rgba(255,255,255,0.05)';
+            lbl.style.background = 'rgba(255,255,255,0.01)';
+        });
+
+        const selectedLabel = selected.parentElement;
+
+        if (answerIndex === ex.correctIndex) {
+            selectedLabel.style.borderColor = 'var(--accent)';
+            selectedLabel.style.background = 'rgba(16, 185, 129, 0.1)';
+        } else {
+            selectedLabel.style.borderColor = 'var(--danger)';
+            selectedLabel.style.background = 'rgba(244, 63, 94, 0.1)';
+            
+            // Mark correct answer subtly
+            const correctInput = optionsGroup.querySelector(`input[value="${ex.correctIndex}"]`);
+            if (correctInput) {
+                const correctLabel = correctInput.parentElement;
+                correctLabel.style.borderColor = 'var(--accent)';
+                correctLabel.style.background = 'rgba(16, 185, 129, 0.05)';
+            }
+        }
+
+        // Show solution and update accordion height
+        solutionBox.style.display = 'block';
+        content.style.maxHeight = content.scrollHeight + 150 + 'px';
+
+        // Re-render LaTeX
+        if (window.MathJax) {
+            MathJax.typesetPromise([solutionBox]);
+        }
+    }
+}
+
+</script>
+</body>
+</html>

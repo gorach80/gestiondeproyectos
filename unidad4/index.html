@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Educativo: Análisis Económico y Financiero de Proyectos</title>
+    
+    <!-- Handoff & SEO Metadata -->
+    <meta name="description" content="Panel interactivo de ingeniería industrial sobre análisis económico y financiero para evaluación de proyectos de inversión.">
+    <meta name="keywords" content="CapEx, OpEx, WACC, VAN, TIR, Punto de Equilibrio, Capital de Trabajo, Ingeniería Industrial, Gestión de Proyectos">
+    <meta name="author" content="Antigravity Web Agent">
+    
+    <!-- CDNs: Font Awesome & MathJax Configuration -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)']],
+                displayMath: [['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' },
+            startup: {
+                ready: () => {
+                    MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+
+    <!-- Skip Link para Accesibilidad WCAG -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <div class="app-container">
+        
+        <!-- CABECERA PRINCIPAL -->
+        <header class="app-header">
+            <h1>ANÁLISIS ECONÓMICO Y FINANCIERO</h1>
+            <p>Gestión de Proyectos Industriales — Ingeniería Industrial</p>
+        </header>
+
+        <!-- NAVEGACIÓN SEMÁNTICA POR PESTAÑAS (ARIA COMPLIANT) -->
+        <nav role="tablist" aria-label="Nivel de Aprendizaje (Taxonomía de Bloom)" class="tabs-navigation">
+            <button role="tab" aria-selected="true" aria-controls="panel-intro" id="tab-intro" class="tab-btn" tabindex="0">
+                <i class="fa-solid fa-flask"></i> 1. Intro & Lab
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-clasificacion" id="tab-clasificacion" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-sitemap"></i> 2. Clasificación
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-propiedades" id="tab-propiedades" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-calculator"></i> 3. Propiedades
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-elementos" id="tab-elementos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-chart-line"></i> 4. Elementos
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-practica" id="tab-practica" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-industry"></i> 5. Evaluación
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-interactivos" id="tab-interactivos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-graduation-cap"></i> 6. Ejercicios
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="panel-propuestos" id="tab-propuestos" class="tab-btn" tabindex="-1">
+                <i class="fa-solid fa-clipboard-question"></i> 7. Autoevaluación
+            </button>
+        </nav>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <main id="main-content">
+
+            <!-- PESTAÑA 1: INTRO & LAB -->
+            <section role="tabpanel" id="panel-intro" aria-labelledby="tab-intro" class="tab-panel active">
+                <div class="content-card">
+                    <h2>Fundamentos Económico-Financieros</h2>
+                    <p style="margin-bottom: 20px;">
+                        El análisis económico y financiero traduce la viabilidad técnica de un proyecto a variables monetarias.
+                        Esta sección te permite explorar la estructura de capital y los requerimientos iniciales mediante simulaciones interactivas.
+                    </p>
+                    
+                    <div class="control-grid">
+                        <!-- Capital de Trabajo -->
+                        <div class="control-group">
+                            <label for="lab-opcosts">Costos Operativos Anuales (USD)
+                                <span class="val-display" id="lab-opcosts-val">$325,000</span>
+                            </label>
+                            <input type="range" id="lab-opcosts" min="50000" max="1000000" step="10000" value="325000" class="input-slider" aria-valuemin="50000" aria-valuemax="1000000" aria-valuenow="325000">
+                            
+                            <label for="lab-cycle" style="margin-top: 10px;">Ciclo de Caja (Días)
+                                <span class="val-display" id="lab-cycle-val">34 días</span>
+                            </label>
+                            <input type="range" id="lab-cycle" min="10" max="180" step="1" value="34" class="input-slider" aria-valuemin="10" aria-valuemax="180" aria-valuenow="34">
+                        </div>
+
+                        <!-- Estructura de Capital -->
+                        <div class="control-group">
+                            <label for="lab-equity">Capital Propio (E - USD)
+                                <span class="val-display" id="lab-equity-val">$150,000</span>
+                            </label>
+                            <input type="range" id="lab-equity" min="20000" max="500000" step="5000" value="150000" class="input-slider">
+
+                            <label for="lab-debt" style="margin-top: 10px;">Deuda (D - USD)
+                                <span class="val-display" id="lab-debt-val">$130,000</span>
+                            </label>
+                            <input type="range" id="lab-debt" min="0" max="500000" step="5000" value="130000" class="input-slider">
+                        </div>
+
+                        <!-- Tasas del WACC -->
+                        <div class="control-group">
+                            <label for="lab-ke">Costo Capital Propio (Re)
+                                <span class="val-display" id="lab-ke-val">15.0%</span>
+                            </label>
+                            <input type="range" id="lab-ke" min="5" max="30" step="0.5" value="15" class="input-slider">
+
+                            <label for="lab-kd" style="margin-top: 10px;">Tasa Interés Deuda (Rd)
+                                <span class="val-display" id="lab-kd-val">8.0%</span>
+                            </label>
+                            <input type="range" id="lab-kd" min="2" max="25" step="0.5" value="8" class="input-slider">
+
+                            <label for="lab-tax" style="margin-top: 10px;">Tasa Impositiva (T)
+                                <span class="val-display" id="lab-tax-val">25.0%</span>
+                            </label>
+                            <input type="range" id="lab-tax" min="0" max="50" step="1" value="25" class="input-slider">
+                        </div>
+                    </div>
+
+                    <div class="metrics-row">
+                        <div class="metric-card secondary-card">
+                            <div class="metric-label">Capital de Trabajo</div>
+                            <div class="metric-value" id="metric-work-cap">$30,274</div>
+                        </div>
+                        <div class="metric-card accent-card">
+                            <div class="metric-value" id="metric-wacc">11.79%</div>
+                            <div class="metric-label">WACC Calculado</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-label">Capital Total (V)</div>
+                            <div class="metric-value" id="metric-total-capital">$280,000</div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas de Estructura de Capital -->
+                    <div class="viz-container">
+                        <canvas id="canvas-capital" class="viz-canvas" role="img" aria-label="Diagrama circular de la estructura de capital (Deuda vs Capital Propio)"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 2: CLASIFICACIÓN -->
+            <section role="tabpanel" id="panel-clasificacion" aria-labelledby="tab-clasificacion" class="tab-panel">
+                <div class="content-card">
+                    <h2>Clasificación de Egresos Industriales</h2>
+                    <p style="margin-bottom: 20px;">
+                        Es vital separar los egresos entre inversiones permanentes de capital (**CapEx**) y gastos/costos operativos (**OpEx**). Clasifica los siguientes conceptos arrastrándolos o haciendo clic en ellos:
+                    </p>
+
+                    <div class="dnd-container">
+                        <!-- Banco de Elementos -->
+                        <div>
+                            <h3>Conceptos por Clasificar</h3>
+                            <div class="dnd-pool" id="dnd-pool">
+                                <div class="dnd-item" draggable="true" id="item-obras" data-type="capex">Obras Civiles / Edificios</div>
+                                <div class="dnd-item" draggable="true" id="item-patente" data-type="capex">Patentes & Licencias</div>
+                                <div class="dnd-item" draggable="true" id="item-maquinaria" data-type="capex">Maquinaria de Proceso</div>
+                                <div class="dnd-item" draggable="true" id="item-mpd" data-type="opex">Materia Prima Directa</div>
+                                <div class="dnd-item" draggable="true" id="item-maint" data-type="opex">Mantenimiento de Planta</div>
+                                <div class="dnd-item" draggable="true" id="item-depr" data-type="opex">Depreciación de Maquinaria</div>
+                                <div class="dnd-item" draggable="true" id="item-constitucion" data-type="capex">Gastos de Constitución</div>
+                                <div class="dnd-item" draggable="true" id="item-servicios" data-type="opex">Servicios Auxiliares (Agua, Luz)</div>
+                                <div class="dnd-item" draggable="true" id="item-mod" data-type="opex">Mano de Obra Directa</div>
+                            </div>
+                        </div>
+
+                        <!-- Zonas de Destino -->
+                        <div style="display: flex; flex-direction: column; gap: 16px;">
+                            <div class="dnd-zone" id="zone-capex" data-zone="capex">
+                                <h3><i class="fa-solid fa-building-columns" style="color: var(--primary);"></i> Inversión Fija (CapEx)</h3>
+                            </div>
+                            <div class="dnd-zone" id="zone-opex" data-zone="opex">
+                                <h3><i class="fa-solid fa-gears" style="color: var(--secondary);"></i> Costos Operativos (OpEx)</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="dnd-feedback" class="alert-box" style="display:none; text-align: center; font-weight: bold;"></div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 3: PROPIEDADES -->
+            <section role="tabpanel" id="panel-propiedades" aria-labelledby="tab-propiedades" class="tab-panel">
+                <div class="content-card">
+                    <h2>Modelos Matemáticos: WACC y Depreciación</h2>
+                    <p style="margin-bottom: 24px;">
+                        Las dos herramientas clave para estructurar la inversión y la reducción contable son el **WACC** (Costo Promedio Ponderado del Capital) y la **Depreciación Lineal**.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <!-- Bloque WACC -->
+                        <div class="step-box" style="border-color: var(--secondary); margin-bottom: 0;">
+                            <h3>Costo de Capital (WACC)</h3>
+                            <div style="margin: 15px 0;">
+                                \[\text{WACC} = \left( \frac{E}{V} \times R_e \right) + \left( \frac{D}{V} \times R_d \times (1 - T) \right)\]
+                            </div>
+                            <p style="font-size: 0.9rem; margin-bottom: 16px;">
+                                Representa la tasa mínima de rendimiento que el proyecto debe generar para satisfacer a inversionistas (capital propio) y acreedores (bancos/deuda), considerando el beneficio tributario del escudo fiscal.
+                            </p>
+                            
+                            <!-- Mini calculador WACC -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(9,13,22,0.3); padding: 12px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>E/V (%)</span>
+                                    <input type="number" id="prop-ev" value="53.57" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Re (%)</span>
+                                    <input type="number" id="prop-re" value="15.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Rd (%)</span>
+                                    <input type="number" id="prop-rd" value="8.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Impuesto T (%)</span>
+                                    <input type="number" id="prop-t" value="25.0" class="input-field" style="width: 80px; padding: 4px;">
+                                </div>
+                                <div style="font-weight: bold; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 5px; display: flex; justify-content: space-between;">
+                                    <span>WACC = </span>
+                                    <span id="prop-wacc-res" style="color: var(--accent);">11.79%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bloque Depreciación -->
+                        <div class="step-box" style="border-color: var(--accent); margin-bottom: 0;">
+                            <h3>Depreciación en Línea Recta</h3>
+                            <div style="margin: 15px 0;">
+                                \[D_k = \frac{V_0 - V_s}{n}\]
+                            </div>
+                            <p style="font-size: 0.9rem; margin-bottom: 16px;">
+                                Distribuye uniformemente el costo neto de adquisición de un activo fijo a lo largo de su vida útil fiscal o técnica, actuando como egreso no desembolsable que reduce los impuestos.
+                            </p>
+                            
+                            <!-- Mini calculador Depreciación -->
+                            <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(9,13,22,0.3); padding: 12px; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Valor Inicial (V0)</span>
+                                    <input type="number" id="prop-v0" value="250000" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Valor Salvamento (Vs)</span>
+                                    <input type="number" id="prop-vs" value="0" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="display: flex; justify-content: space-between;">
+                                    <span>Vida Útil (n)</span>
+                                    <input type="number" id="prop-n" value="5" class="input-field" style="width: 100px; padding: 4px;">
+                                </div>
+                                <div style="font-weight: bold; border-top: 1px solid var(--card-border); padding-top: 10px; margin-top: 15px; display: flex; justify-content: space-between;">
+                                    <span>Depreciación Anual = </span>
+                                    <span id="prop-dep-res" style="color: var(--accent);">$50,000 / año</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 4: ELEMENTOS -->
+            <section role="tabpanel" id="panel-elementos" aria-labelledby="tab-elementos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Estructura del Flujo de Caja Libre del Proyecto (FCLP)</h2>
+                    <p style="margin-bottom: 20px;">
+                        El Flujo de Caja Libre del Proyecto evalúa la rentabilidad del proyecto con independencia de cómo se financie. Modifica los parámetros de operación a continuación para ver el impacto inmediato en la proyección del flujo:
+                    </p>
+
+                    <div class="control-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 20px;">
+                        <div class="control-group">
+                            <label for="elem-quantity">Producción Anual (Q)
+                                <span class="val-display" id="elem-quantity-val">50,000 u</span>
+                            </label>
+                            <input type="range" id="elem-quantity" min="10000" max="100000" step="2000" value="50000" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-price">Precio Unitario (Pu)
+                                <span class="val-display" id="elem-price-val">$12.00</span>
+                            </label>
+                            <input type="range" id="elem-price" min="5" max="30" step="0.5" value="12" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-vc">Costo Var. Unitario (CVu)
+                                <span class="val-display" id="elem-vc-val">$6.50</span>
+                            </label>
+                            <input type="range" id="elem-vc" min="2" max="20" step="0.1" value="6.5" class="input-slider">
+                        </div>
+                        <div class="control-group">
+                            <label for="elem-fc">Costos Fijos Totales (CF)
+                                <span class="val-display" id="elem-fc-val">$110,000</span>
+                            </label>
+                            <input type="range" id="elem-fc" min="50000" max="250000" step="5000" value="110000" class="input-slider">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" id="flow-table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto (USD)</th>
+                                    <th>Año 0</th>
+                                    <th>Año 1</th>
+                                    <th>Año 2</th>
+                                    <th>Año 3</th>
+                                    <th>Año 4</th>
+                                    <th>Año 5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Inyectado dinámicamente por JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 5: EVALUACIÓN -->
+            <section role="tabpanel" id="panel-practica" aria-labelledby="tab-practica" class="tab-panel">
+                <div class="content-card">
+                    <h2>Indicadores de Evaluación de Proyectos (VAN y TIR)</h2>
+                    <p style="margin-bottom: 24px;">
+                        Evaluación monetaria y rentabilidad utilizando indicadores financieros clave. El **VAN** descuenta los flujos al WACC, y la **TIR** determina la rentabilidad interna.
+                    </p>
+
+                    <div class="metrics-row" style="margin-bottom: 24px;">
+                        <div class="metric-card accent-card">
+                            <div class="metric-label">Valor Actual Neto (VAN)</div>
+                            <div class="metric-value" id="eval-van">$363,353</div>
+                        </div>
+                        <div class="metric-card secondary-card">
+                            <div class="metric-label">Tasa Interna de Retorno (TIR)</div>
+                            <div class="metric-value" id="eval-tir">55.98%</div>
+                        </div>
+                        <div class="metric-card warning-card">
+                            <div class="metric-label">Punto de Equilibrio (Qpe)</div>
+                            <div class="metric-value" id="eval-qpe">20,000 u</div>
+                        </div>
+                        <div class="metric-card danger-card">
+                            <div class="metric-label">Margen Utilidad Unitario (MUu)</div>
+                            <div class="metric-value" id="eval-muu">$3.30</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="step-box" style="border-color: var(--primary); display: flex; flex-direction: column; justify-content: center; margin-bottom: 0;">
+                            <h3>Criterio de Decisión Financiera</h3>
+                            <p style="margin: 10px 0; font-size: 0.95rem;">
+                                Con un WACC del <strong id="eval-wacc-show">12.0%</strong>, el proyecto tiene un <strong>VAN positivo</strong>, lo que indica que cubre el costo de oportunidad del capital y genera valor adicional de <strong><span id="eval-van-show">$363,353</span> USD</strong> para la empresa.
+                            </p>
+                            <p style="font-size: 0.95rem;">
+                                La <strong>TIR (55.98%)</strong> es significativamente mayor que el WACC, confirmando que el proyecto es altamente rentable y robusto financieramente.
+                            </p>
+                            <div class="alert-box" id="eval-decision-box" style="margin-top: 15px;">
+                                <i class="fa-solid fa-circle-check" style="color: var(--accent); margin-right: 8px;"></i>
+                                <strong>ESTADO:</strong> APROBAR PROYECTO.
+                            </div>
+                        </div>
+                        
+                        <!-- Curva del Perfil del VAN -->
+                        <div class="viz-container" style="min-height: 300px; padding: 10px;">
+                            <canvas id="canvas-npv-profile" class="viz-canvas" role="img" aria-label="Curva del perfil del VAN vs Tasa de Descuento"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 6: EJERCICIOS INTERACTIVOS -->
+            <section role="tabpanel" id="panel-interactivos" aria-labelledby="tab-interactivos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Ejercicios Resueltos Paso a Paso</h2>
+                    <p style="margin-bottom: 20px;">
+                        Practica con 12 ejercicios estructurados que cubren desde el cálculo básico de depreciación hasta la evaluación del WACC y flujos complejos. Selecciona un ejercicio para resolverlo de forma guiada:
+                    </p>
+
+                    <!-- Selector de ejercicio -->
+                    <div class="exercise-selector" id="solved-selector">
+                        <!-- Inyectado dinámicamente -->
+                    </div>
+
+                    <div class="exercise-body-layout">
+                        <!-- Lado Izquierdo: Pasos del ejercicio -->
+                        <div style="display: flex; flex-direction: column; justify-content: space-between;">
+                            <div>
+                                <h3 id="solved-ex-title" style="margin-bottom: 12px; color: var(--secondary);">Ejercicio 1</h3>
+                                <p id="solved-ex-statement" style="margin-bottom: 20px; font-weight: 500; font-size: 1.05rem;"></p>
+                                
+                                <div class="step-box" id="solved-step-container">
+                                    <div class="step-header" id="solved-step-header">Paso 1: Datos iniciales</div>
+                                    <div id="solved-step-content" style="font-size: 0.95rem;"></div>
+                                </div>
+                            </div>
+
+                            <div class="step-nav-row">
+                                <button class="btn-nav" id="btn-prev-step"><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+                                <span style="font-weight: 700;" id="solved-step-counter">Paso 1 de 3</span>
+                                <button class="btn-nav" id="btn-next-step">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- Lado Derecho: Visualización de Canvas -->
+                        <div class="viz-container">
+                            <canvas id="canvas-exercise" class="viz-canvas" role="img" aria-label="Demostración visual viva del ejercicio seleccionado"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PESTAÑA 7: EJERCICIOS PROPUESTOS -->
+            <section role="tabpanel" id="panel-propuestos" aria-labelledby="tab-propuestos" class="tab-panel">
+                <div class="content-card">
+                    <h2>Autoevaluación: 12 Ejercicios Propuestos</h2>
+                    <p style="margin-bottom: 24px;">
+                        Mide tus conocimientos resolviendo los siguientes 12 problemas de opción múltiple. Una vez selecciones tu respuesta, podrás validar tu resultado y abrir la retroalimentación detallada con fórmulas en LaTeX.
+                    </p>
+
+                    <div id="proposed-accordion-container">
+                        <!-- Inyectado dinámicamente por JS (Acordeones de ejercicios 13 a 24) -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Carga de la lógica de aplicación -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>
