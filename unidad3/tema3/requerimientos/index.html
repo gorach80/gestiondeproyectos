@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 3: Requerimientos Tecnológicos e Infraestructura | UPSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary:#0c1220;--bg-secondary:#111a2e;--bg-card:#162038;--bg-card-hover:#1c2a4a;
+            --bg-input:#0e1628;--accent:#e97a2f;--accent-light:#f59e4e;--accent-dark:#c4611a;
+            --accent-glow:rgba(233,122,47,0.12);--danger:#ef4444;--danger-bg:rgba(239,68,68,0.08);
+            --success:#10b981;--success-bg:rgba(16,185,129,0.08);--info:#38bdf8;--info-bg:rgba(56,189,248,0.08);
+            --warn:#f59e0b;--warn-bg:rgba(245,158,11,0.08);--text-primary:#f1f5f9;--text-secondary:#94a3b8;
+            --text-muted:#64748b;--border:#1e3050;--border-light:#253a5c;--sidebar-w:290px;
+            --radius:12px;--radius-sm:8px;--shadow:0 4px 24px rgba(0,0,0,0.3);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'Source Sans 3',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+        h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif;line-height:1.2;}
+        a{color:var(--accent);text-decoration:none;}a:hover{color:var(--accent-light);}
+        #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.3;}
+
+        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:linear-gradient(180deg,#080d18,#0c1525);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1);}
+        .sidebar-header{padding:24px 20px 20px;border-bottom:1px solid var(--border);}
+        .sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+        .sidebar-logo .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#000;font-weight:800;font-family:'Outfit';text-align:center;line-height:1.1;}
+        .sidebar-logo .logo-text{font-family:'Outfit';font-weight:700;font-size:14px;color:var(--text-primary);line-height:1.2;}
+        .sidebar-logo .logo-text small{display:block;font-size:11px;font-weight:400;color:var(--text-muted);margin-top:2px;}
+        .sidebar-subtitle{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+        .sidebar-nav{flex:1;overflow-y:auto;padding:12px 10px;}
+        .sidebar-nav::-webkit-scrollbar{width:4px;}.sidebar-nav::-webkit-scrollbar-track{background:transparent;}.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+        .nav-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);padding:16px 12px 6px;font-weight:600;}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;font-size:14px;color:var(--text-secondary);margin-bottom:2px;position:relative;border:1px solid transparent;}
+        .nav-item:hover{background:var(--accent-glow);color:var(--text-primary);}
+        .nav-item.active{background:var(--accent-glow);color:var(--accent);border-color:rgba(233,122,47,.2);font-weight:600;}
+        .nav-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent);border-radius:0 3px 3px 0;}
+        .nav-item i{width:20px;text-align:center;font-size:14px;}
+        .nav-item .nav-badge{margin-left:auto;font-size:10px;background:var(--accent);color:#000;padding:1px 7px;border-radius:10px;font-weight:700;}
+        .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);}
+        .sidebar-footer .prof-name{color:var(--text-secondary);font-weight:600;font-size:12px;}
+
+        .menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;width:44px;height:44px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:18px;cursor:pointer;align-items:center;justify-content:center;transition:all .2s;}
+        .menu-toggle:hover{background:var(--accent-glow);border-color:var(--accent);}
+        .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;backdrop-filter:blur(2px);}
+
+        .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1;}
+        .section{display:none;padding:48px 48px 80px;max-width:960px;margin:0 auto;animation:fadeInUp .4s ease;}
+        .section.active{display:block;}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+        .section-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);background:var(--accent-glow);padding:6px 14px;border-radius:20px;border:1px solid rgba(233,122,47,.2);margin-bottom:16px;}
+        .section-title{font-size:34px;font-weight:800;color:var(--text-primary);margin-bottom:8px;letter-spacing:-.5px;}
+        .section-desc{font-size:17px;color:var(--text-secondary);margin-bottom:40px;max-width:700px;line-height:1.7;}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;transition:all .25s;}
+        .card:hover{border-color:var(--border-light);background:var(--bg-card-hover);}
+        .card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+        .card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .card-icon.orange{background:var(--accent-glow);color:var(--accent);}
+        .card-icon.red{background:var(--danger-bg);color:var(--danger);}
+        .card-icon.green{background:var(--success-bg);color:var(--success);}
+        .card-icon.blue{background:var(--info-bg);color:var(--info);}
+        .card-icon.amber{background:var(--warn-bg);color:var(--warn);}
+        .card-title{font-size:18px;font-weight:700;}
+        .card p{color:var(--text-secondary);margin-bottom:12px;}.card p:last-child{margin-bottom:0;}
+
+        .h3{font-size:22px;font-weight:700;margin:36px 0 14px;color:var(--text-primary);}
+        .h4{font-size:17px;font-weight:600;margin:24px 0 10px;color:var(--text-primary);}
+        .text-accent{color:var(--accent);}.text-danger{color:var(--danger);}.text-success{color:var(--success);}.text-info{color:var(--info);}.text-warn{color:var(--warn);}.text-muted{color:var(--text-muted);}
+
+        .content-list{padding-left:0;list-style:none;margin:12px 0;}
+        .content-list li{padding:6px 0 6px 28px;position:relative;color:var(--text-secondary);font-size:15px;}
+        .content-list li::before{content:'';position:absolute;left:8px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:.7;}
+        .numbered-list{padding-left:0;list-style:none;margin:12px 0;counter-reset:item;}
+        .numbered-list li{padding:6px 0 6px 32px;position:relative;color:var(--text-secondary);font-size:15px;counter-increment:item;}
+        .numbered-list li::before{content:counter(item);position:absolute;left:4px;top:6px;width:22px;height:22px;border-radius:6px;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+        .table-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--radius);border:1px solid var(--border);}
+        table{width:100%;border-collapse:collapse;font-size:14px;}
+        thead{background:rgba(233,122,47,.06);}
+        th{padding:12px 16px;text-align:left;font-weight:600;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);white-space:nowrap;}
+        td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary);}
+        tbody tr:hover{background:rgba(233,122,47,.03);}tbody tr:last-child td{border-bottom:none;}
+
+        .formula-box{background:linear-gradient(135deg,rgba(233,122,47,.06),rgba(233,122,47,.02));border:1px solid rgba(233,122,47,.15);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin:20px 0;overflow-x:auto;}
+        .formula-box .formula-label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+        .formula-box .katex-display{margin:8px 0!important;}
+
+        .callout{border-radius:var(--radius);padding:20px 24px;margin:20px 0;display:flex;gap:14px;align-items:flex-start;}
+        .callout i{margin-top:3px;font-size:18px;flex-shrink:0;}
+        .callout.orange{background:var(--accent-glow);border:1px solid rgba(233,122,47,.2);}.callout.orange i{color:var(--accent);}
+        .callout.red{background:var(--danger-bg);border:1px solid rgba(239,68,68,.2);}.callout.red i{color:var(--danger);}
+        .callout.green{background:var(--success-bg);border:1px solid rgba(16,185,129,.2);}.callout.green i{color:var(--success);}
+        .callout.blue{background:var(--info-bg);border:1px solid rgba(56,189,248,.2);}.callout.blue i{color:var(--info);}
+        .callout.amber{background:var(--warn-bg);border:1px solid rgba(245,158,11,.2);}.callout.amber i{color:var(--warn);}
+        .callout p{color:var(--text-secondary);margin:0;font-size:14px;}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin:20px 0;}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0;}
+
+        .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:all .25s;}
+        .stat-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+        .stat-number{font-family:'Outfit';font-size:32px;font-weight:800;color:var(--accent);line-height:1;}
+        .stat-label{font-size:13px;color:var(--text-muted);margin-top:6px;}
+
+        .hero{text-align:center;padding:60px 20px 40px;position:relative;}
+        .hero-icon{width:80px;height:80px;margin:0 auto 24px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#000;box-shadow:0 8px 32px rgba(233,122,47,.25);animation:float 4s ease-in-out infinite;}
+        @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+        .hero h1{font-size:40px;font-weight:900;margin-bottom:12px;letter-spacing:-1px;}.hero h1 span{color:var(--accent);}
+        .hero p{font-size:18px;color:var(--text-secondary);max-width:620px;margin:0 auto 36px;}
+
+        .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0;}
+        .obj-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px 20px;display:flex;gap:12px;align-items:flex-start;transition:all .2s;}
+        .obj-item:hover{border-color:var(--accent);}
+        .obj-num{width:28px;height:28px;border-radius:8px;background:var(--accent-glow);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Outfit';flex-shrink:0;}
+        .obj-text{font-size:14px;color:var(--text-secondary);}
+
+        .flow-steps{display:flex;gap:0;align-items:center;flex-wrap:wrap;margin:20px 0;justify-content:center;}
+        .flow-step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;text-align:center;min-width:110px;transition:all .2s;}
+        .flow-step:hover{border-color:var(--accent);}
+        .flow-step .step-num{font-family:'Outfit';font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+        .flow-step .step-label{font-size:13px;color:var(--text-secondary);font-weight:500;}
+        .flow-arrow{color:var(--accent);font-size:18px;padding:0 4px;flex-shrink:0;}
+
+        .exercise-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:32px;position:relative;}
+        .exercise-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));border-radius:var(--radius) var(--radius) 0 0;}
+        .exercise-num{font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
+        .exercise-title{font-size:20px;font-weight:700;margin-bottom:16px;}
+        .exercise-context{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;}
+        .exercise-context p{color:var(--text-secondary);font-size:14px;margin-bottom:8px;}.exercise-context p:last-child{margin-bottom:0;}
+        .question{margin:20px 0;padding:16px 20px;background:rgba(233,122,47,.03);border-radius:var(--radius-sm);border-left:3px solid var(--accent);}
+        .question p{color:var(--text-primary);font-size:15px;margin-bottom:10px;font-weight:500;}
+        .input-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .input-row label{font-size:14px;color:var(--text-secondary);white-space:nowrap;}
+        .input-field{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;color:var(--text-primary);font-size:15px;font-family:'Source Sans 3';width:140px;transition:all .2s;outline:none;}
+        .input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+        .input-field.correct{border-color:var(--success);background:var(--success-bg);}
+        .input-field.incorrect{border-color:var(--danger);background:var(--danger-bg);}
+        .input-unit{font-size:14px;color:var(--text-muted);}
+
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:'Outfit';cursor:pointer;border:1px solid transparent;transition:all .2s;outline:none;}
+        .btn-primary{background:var(--accent);color:#000;border-color:var(--accent);}
+        .btn-primary:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(233,122,47,.3);}
+        .btn-outline{background:transparent;color:var(--text-secondary);border-color:var(--border);}
+        .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+        .btn-sm{padding:7px 16px;font-size:13px;}
+
+        .feedback{margin-top:12px;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;display:none;align-items:center;gap:8px;}
+        .feedback.show{display:flex;}
+        .feedback.correct{background:var(--success-bg);color:var(--success);border:1px solid rgba(16,185,129,.2);}
+        .feedback.incorrect{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,.2);}
+
+        .solution-box{display:none;margin-top:16px;padding:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);}
+        .solution-box.show{display:block;animation:fadeInUp .3s ease;}
+        .solution-box h4{color:var(--accent);font-size:15px;margin-bottom:12px;}
+        .solution-box p{color:var(--text-secondary);font-size:14px;margin-bottom:6px;}
+        .exercise-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+
+        .score-bar{display:flex;align-items:center;gap:16px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:28px;}
+        .score-bar .score-label{font-size:14px;color:var(--text-secondary);}
+        .score-bar .score-value{font-family:'Outfit';font-size:22px;font-weight:800;color:var(--accent);}
+        .progress-bar-bg{flex:1;height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;}
+        .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent));border-radius:4px;transition:width .5s ease;}
+
+        .task-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;}
+        .task-header{padding:24px 28px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:background .2s;}
+        .task-header:hover{background:var(--bg-card-hover);}
+        .task-header .task-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .task-header .task-info{flex:1;}
+        .task-header .task-name{font-size:17px;font-weight:700;}
+        .task-header .task-meta{font-size:13px;color:var(--text-muted);margin-top:2px;}
+        .task-header .task-chevron{color:var(--text-muted);transition:transform .3s;font-size:14px;}
+        .task-card.open .task-chevron{transform:rotate(180deg);}
+        .task-body{display:none;padding:0 28px 28px;border-top:1px solid var(--border);}
+        .task-card.open .task-body{display:block;animation:fadeInUp .3s ease;}
+        .task-body .task-desc{padding-top:20px;}
+        .task-body .task-desc p{color:var(--text-secondary);font-size:15px;margin-bottom:12px;}
+
+        textarea.task-textarea{width:100%;min-height:120px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;color:var(--text-primary);font-family:'Source Sans 3';font-size:14px;line-height:1.7;resize:vertical;outline:none;margin:12px 0;transition:border-color .2s;}
+        textarea.task-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+        textarea.task-textarea::placeholder{color:var(--text-muted);}
+        .task-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+        .saved-indicator{display:none;align-items:center;gap:6px;font-size:13px;color:var(--success);margin-left:8px;}
+        .saved-indicator.show{display:inline-flex;}
+
+        .case-header{background:linear-gradient(135deg,rgba(233,122,47,.1),rgba(233,122,47,.02));border:1px solid rgba(233,122,47,.2);border-radius:var(--radius);padding:32px;margin-bottom:28px;position:relative;overflow:hidden;}
+        .case-header::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(233,122,47,.08),transparent 70%);}
+        .case-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#000;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+        .case-title{font-size:24px;font-weight:800;margin-bottom:8px;}
+        .case-desc{color:var(--text-secondary);font-size:15px;max-width:650px;}
+
+        .case-phase{margin-bottom:28px;}
+        .phase-label{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding:4px 12px;background:var(--accent-glow);border-radius:6px;}
+        .phase-content{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
+        .divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
+
+        .toast-container{position:fixed;top:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:10px;}
+        .toast{padding:14px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:#fff;display:flex;align-items:center;gap:10px;animation:slideInR .3s ease,fadeOut .3s ease 2.7s forwards;box-shadow:var(--shadow);}
+        .toast.success{background:#059669;}.toast.error{background:#dc2626;}.toast.info{background:#0284c7;}
+        @keyframes slideInR{from{transform:translateX(100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+        @keyframes fadeOut{to{opacity:0;transform:translateX(40px);}}
+
+        .katex{color:var(--text-primary);}
+        .katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .minner,.katex .mop{color:var(--text-primary);}
+
+        .mini-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .2s;}
+        .mini-card:hover{border-color:var(--accent);}
+
+        @media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr;}.grid-4{grid-template-columns:1fr 1fr;}}
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%);}.sidebar.open{transform:translateX(0);}.sidebar-overlay.open{display:block;}
+            .menu-toggle{display:flex;}.main-content{margin-left:0;}.section{padding:72px 20px 60px;}
+            .hero h1{font-size:26px;}.section-title{font-size:24px;}
+            .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.obj-grid{grid-template-columns:1fr;}
+            .exercise-card{padding:20px;}.input-row{flex-direction:column;align-items:flex-start;}.input-field{width:100%;}
+            .flow-steps{flex-direction:column;}.flow-arrow{transform:rotate(90deg);}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;}}
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="toast-container" id="toastContainer"></div>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menú"><i class="fas fa-bars"></i></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon">T3</div>
+            <div class="logo-text">Requerimientos Tecnológicos<small>UPSE · Seguridad Industrial</small></div>
+        </div>
+        <div class="sidebar-subtitle">Tema 3 — Plataforma Educativa</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Contenido</div>
+        <div class="nav-item active" data-section="inicio"><i class="fas fa-home"></i> Inicio</div>
+        <div class="nav-item" data-section="fundamentos"><i class="fas fa-microchip"></i> Fundamentos</div>
+        <div class="nav-item" data-section="metodos"><i class="fas fa-calculator"></i> Métodos de Evaluación</div>
+        <div class="nav-item" data-section="infraestructura"><i class="fas fa-cogs"></i> Infraestructura y Servicios</div>
+        <div class="nav-section-label">Práctica</div>
+        <div class="nav-item" data-section="ejercicios"><i class="fas fa-flask"></i> Ejercicios<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareas"><i class="fas fa-tasks"></i> Tareas<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareaaplicada"><i class="fas fa-hard-hat"></i> Tarea Aplicada<span class="nav-badge" style="background:var(--danger);color:#fff;">Real</span></div>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="prof-name"><i class="fas fa-user-tie" style="margin-right:6px;color:var(--accent);"></i> Docente UPSE</div>
+        <div style="margin-top:4px;">Ing. en Seguridad Industrial</div>
+    </div>
+</aside>
+
+<main class="main-content">
+
+<!-- ====== INICIO ====== -->
+<div class="section active" id="sec-inicio">
+    <div class="hero">
+        <div class="hero-icon"><i class="fas fa-microchip"></i></div>
+        <h1>Requerimientos <span>Tecnológicos</span> e Infraestructura</h1>
+        <p>Tema 3 de Gestión de Proyectos. Aprenda a identificar, cuantificar y justificar las necesidades tecnológicas y de infraestructura en proyectos de seguridad industrial.</p>
+    </div>
+    <div class="grid-4">
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Métodos de evaluación</div></div>
+        <div class="stat-card"><div class="stat-number">12+</div><div class="stat-label">Fórmulas con LaTeX</div></div>
+        <div class="stat-card"><div class="stat-number">6</div><div class="stat-label">Servicios industriales</div></div>
+        <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Caso aplicado real</div></div>
+    </div>
+    <h3 class="h3">Objetivos de Aprendizaje</h3>
+    <div class="obj-grid">
+        <div class="obj-item"><div class="obj-num">1</div><div class="obj-text">Comprender el proceso de determinación de requerimientos tecnológicos y su relación con la seguridad industrial.</div></div>
+        <div class="obj-item"><div class="obj-num">2</div><div class="obj-text">Aplicar el TCO, ROI, NPV y análisis costo-beneficio para justificar inversiones tecnológicas.</div></div>
+        <div class="obj-item"><div class="obj-num">3</div><div class="obj-text">Dimensionar servicios industriales (eléctrico, hidráulico, aire comprimido, HVAC) con bases de cálculo.</div></div>
+        <div class="obj-item"><div class="obj-num">4</div><div class="obj-text">Calcular indicadores de confiabilidad (MTBF, MTTR, disponibilidad) para equipos críticos de seguridad.</div></div>
+        <div class="obj-item"><div class="obj-num">5</div><div class="obj-text">Elaborar especificaciones técnicas y matrices de evaluación para la selección de tecnología.</div></div>
+        <div class="obj-item"><div class="obj-num">6</div><div class="obj-text">Integrar criterios de seguridad, redundancia y respaldo en el diseño de requerimientos.</div></div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent);">
+        <h4 class="h4" style="margin-top:0;"><i class="fas fa-stream text-accent" style="margin-right:8px;"></i>Flujo del Tema</h4>
+        <div class="flow-steps">
+            <div class="flow-step"><div class="step-num">PASO 1</div><div class="step-label">Fundamentos de requerimientos</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 2</div><div class="step-label">Métodos de evaluación (TCO, ROI, NPV)</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 3</div><div class="step-label">Confiabilidad y mantenimiento</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 4</div><div class="step-label">Infraestructura y dimensionamiento</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 5</div><div class="step-label">Caso aplicado</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== FUNDAMENTOS ====== -->
+<div class="section" id="sec-fundamentos">
+    <div class="section-badge"><i class="fas fa-microchip"></i> Unidad 3.1</div>
+    <h2 class="section-title">Fundamentos de Requerimientos Tecnológicos</h2>
+    <p class="section-desc">Proceso sistemático de identificación, análisis y especificación de las necesidades tecnológicas y de infraestructura de un proyecto.</p>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon orange"><i class="fas fa-bullseye"></i></div><div class="card-title">¿Qué es un Requerimiento Tecnológico?</div></div>
+        <p>Un <strong>requerimiento tecnológico</strong> es una necesidad específica de equipamiento, sistemas, software o infraestructura técnica que debe ser satisfecha para que un proyecto pueda operar de manera segura, eficiente y conforme a normativas.</p>
+        <div class="callout red">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><strong>En seguridad industrial:</strong> Los requerimientos tecnológicos NO son opcionales. Un detector de gas sin especificación adecuada, un sistema de extinción subdimensionado, o una red eléctrica sin redundancia pueden tener consecuencias fatales. La norma ISO 45001 exige que la organización determine y proporcione los recursos tecnológicos necesarios.</p>
+        </div>
+    </div>
+
+    <h3 class="h3">Clasificación de Requerimientos</h3>
+    <div class="grid-2">
+        <div class="card" style="border-top:3px solid var(--accent);">
+            <h4 class="h4" style="margin-top:0;color:var(--accent);">Requerimientos de Equipamiento</h4>
+            <ul class="content-list">
+                <li>Equipos de proceso (reactores, intercambiadores, tanques)</li>
+                <li>Instrumentación y control (sensores, PLC, SCADA)</li>
+                <li>Equipos de seguridad (detectores, extintores, sistemas fijos)</li>
+                <li>Herramientas y equipos de mantenimiento</li>
+            </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--info);">
+            <h4 class="h4" style="margin-top:0;color:var(--info);">Requerimientos de Infraestructura</h4>
+            <ul class="content-list">
+                <li>Servicios industriales (electricidad, agua, vapor, aire)</li>
+                <li>Edificaciones e instalaciones civiles</li>
+                <li>Sistemas de comunicación y datos</li>
+                <li>Vialidad interna y drenaje industrial</li>
+            </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--warn);">
+            <h4 class="h4" style="margin-top:0;color:var(--warn);">Requerimientos de Sistemas</h4>
+            <ul class="content-list">
+                <li>Software de gestión (SGSST, ERP, CMMS)</li>
+                <li>Sistemas de monitoreo continuo (gas, vibraciones, temperatura)</li>
+                <li>Sistemas de videovigilancia y control de acceso</li>
+                <li>Sistemas de respuesta de emergencia</li>
+            </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--success);">
+            <h4 class="h4" style="margin-top:0;color:var(--success);">Requerimientos de Capacitación</h4>
+            <ul class="content-list">
+                <li>Competencias operativas para nuevos equipos</li>
+                <li>Certificaciones requeridas (operadores, soldadores, electricistas)</li>
+                <li>Entrenamiento en sistemas de emergencia</li>
+                <li>Formación en normativas específicas</li>
+            </ul>
+        </div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Proceso de Determinación de Requerimientos</h3>
+    <div class="flow-steps">
+        <div class="flow-step" style="min-width:120px;"><div class="step-num">1</div><div class="step-label">Identificación de necesidades</div></div>
+        <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="flow-step" style="min-width:120px;"><div class="step-num">2</div><div class="step-label">Análisis de brechas</div></div>
+        <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="flow-step" style="min-width:120px;"><div class="step-num">3</div><div class="step-label">Especificación técnica</div></div>
+        <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="flow-step" style="min-width:120px;"><div class="step-num">4</div><div class="step-label">Evaluación económica</div></div>
+        <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+        <div class="flow-step" style="min-width:120px;"><div class="step-num">5</div><div class="step-label">Selección y adquisición</div></div>
+    </div>
+
+    <h3 class="h3">Análisis de Brechas Tecnológicas (Gap Analysis)</h3>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">Compara el estado actual (EA) con el estado deseado (ED) para identificar déficits:</p>
+    <div class="formula-box">
+        <div class="formula-label">Brecha Tecnológica</div>
+        $$Brecha_i = ED_i - EA_i$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Si \(Brecha_i > 0\): existe un déficit que requiere inversión. Si \(Brecha_i \leq 0\): el requerimiento está satisfecho.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon blue"><i class="fas fa-clipboard-list"></i></div><div class="card-title">Ejemplo: Gap Analysis en Planta Química</div></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Requerimiento</th><th>EA (escala 1-5)</th><th>ED (escala 1-5)</th><th>Brecha</th><th>Acción</th></tr></thead>
+                <tbody>
+                    <tr><td>Detección de gases (LEL)</td><td>2</td><td>5</td><td class="text-danger"><strong>+3</strong></td><td>Adquirir sistema fijo</td></tr>
+                    <tr><td>Red eléctrica de emergencia</td><td>3</td><td>5</td><td class="text-warn"><strong>+2</strong></td><td>Instalar generador redundante</td></tr>
+                    <tr><td>Sistema SCADA</td><td>4</td><td>5</td><td><strong>+1</strong></td><td>Actualización de módulos</td></tr>
+                    <tr><td>Extintores portátiles</td><td>5</td><td>5</td><td class="text-success"><strong>0</strong></td><td>Mantenimiento únicamente</td></tr>
+                    <tr><td>Ventilación forzada Zona A</td><td>1</td><td>5</td><td class="text-danger"><strong>+4</strong></td><td>Diseño e instalación completa</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <h3 class="h3">Especificación Técnica — Contenido Mínimo</h3>
+    <div class="callout orange">
+        <i class="fas fa-file-alt"></i>
+        <p><strong>Toda especificación técnica debe incluir:</strong> Descripción funcional del requerimiento, parámetros de desempeño (capacidad, rango, precisión), condiciones de operación (temperatura, presión, atmósfera), normativas aplicables (NFPA, API, ISO, NEC), requisitos de certificación, dimensiones y pesos, requerimientos de servicios (eléctrico, neumático), requisitos de seguridad intrínseca, y criterios de aceptación.</p>
+    </div>
+</div>
+
+<!-- ====== MÉTODOS DE EVALUACIÓN ====== -->
+<div class="section" id="sec-metodos">
+    <div class="section-badge"><i class="fas fa-calculator"></i> Unidad 3.2</div>
+    <h2 class="section-title">Métodos de Evaluación Económica</h2>
+    <p class="section-desc">Herramientas financieras para justificar la inversión en tecnología e infraestructura desde el punto de vista económico y de seguridad.</p>
+
+    <!-- TCO -->
+    <h3 class="h3">Costo Total de Propiedad (TCO)</h3>
+    <div class="card">
+        <div class="card-header"><div class="card-icon orange"><i class="fas fa-coins"></i></div><div class="card-title">Total Cost of Ownership</div></div>
+        <p>El TCO cuantifica <strong>todos</strong> los costos asociados a un activo tecnológico durante su ciclo de vida, no solo el precio de compra.</p>
+        <div class="formula-box">
+            <div class="formula-label">TCO — Fórmula General</div>
+            $$TCO = C_{adq} + C_{inst} + C_{op} + C_{mant} + C_{desecho} - V_{residual}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">
+                \(C_{adq}\) = Costo de adquisición, \(C_{inst}\) = Costo de instalación y puesta en marcha, \(C_{op}\) = Costos operativos anuales, \(C_{mant}\) = Costos de mantenimiento, \(C_{desecho}\) = Costo de disposición final, \(V_{residual}\) = Valor residual al final de la vida útil.
+            </p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">TCO con valor presente (considerando el valor del dinero en el tiempo)</div>
+            $$TCO_{VP} = C_{adq} + C_{inst} + \sum_{t=1}^{n} \frac{C_{op_t} + C_{mant_t}}{(1+i)^t} + \frac{C_{desecho}}{(1+i)^n} - \frac{V_{residual}}{(1+i)^n}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(i\) = tasa de descuento, \(n\) = vida útil en años, \(t\) = período.</p>
+        </div>
+    </div>
+
+    <!-- ROI -->
+    <h3 class="h3">Retorno sobre Inversión (ROI)</h3>
+    <div class="card">
+        <div class="card-header"><div class="card-icon green"><i class="fas fa-chart-pie"></i></div><div class="card-title">Return on Investment</div></div>
+        <div class="formula-box">
+            <div class="formula-label">ROI Simple</div>
+            $$ROI = \frac{Beneficio\_Neto\_Total}{Inversión\_Total} \times 100\%$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(Beneficio\_Neto\_Total = Ingresos\_o\_Ahorros - TCO\). Un ROI > 0 indica que la inversión genera valor.</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">ROI Anualizado</div>
+            $$ROI_{anual} = \frac{Beneficio\_Neto\_Anual}{Inversión\_Total} \times 100\%$$         </div>
+        <div class="callout amber">
+            <i class="fas fa-lightbulb"></i>
+            <p><strong>En seguridad industrial:</strong> El "beneficio" muchas veces no es ingreso directo, sino <em>costo evitado</em> por accidentes, multas, paradas no programadas. Esto hace que el ROI de inversiones en seguridad sea difícil de calcular pero fundamental de justificar.</p>
+        </div>
+    </div>
+
+    <!-- NPV y Payback -->
+    <h3 class="h3">Valor Neto Presente (NPV) y Período de Recuperación</h3>
+    <div class="grid-2">
+        <div class="formula-box">
+            <div class="formula-label">Valor Neto Presente (NPV)</div>
+            $$NPV = -I_0 + \sum_{t=1}^{n} \frac{CF_t}{(1+i)^t}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(I_0\) = inversión inicial, \(CF_t\) = flujo de caja neto del período \(t\), \(i\) = tasa de descuento. \(NPV > 0\): la inversión es rentable.</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Período de Recuperación (Payback)</div>
+            $$PP = \min\left\{t : \sum_{k=1}^{t} CF_k \geq I_0\right\}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Tiempo mínimo en que se recupera la inversión. Versión descontada: reemplazar \(CF_k\) por \(CF_k/(1+i)^k\).</p>
+        </div>
+    </div>
+
+    <!-- Análisis Costo-Beneficio -->
+    <h3 class="h3">Análisis Costo-Beneficio (ACB)</h3>
+    <div class="card">
+        <div class="card-header"><div class="card-icon blue"><i class="fas fa-balance-scale"></i></div><div class="card-title">Cost-Benefit Analysis (CBA)</div></div>
+        <div class="formula-box">
+            <div class="formula-label">Relación Beneficio-Costo</div>
+            $$B/C = \frac{\displaystyle\sum_{t=1}^{n} \frac{B_t}{(1+i)^t}}{\displaystyle\sum_{t=0}^{n} \frac{C_t}{(1+i)^t}}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(B_t\) = beneficios del período \(t\), \(C_t\) = costos del período \(t\). Si \(B/C > 1\): los beneficios superan los costos → proyecto justificado.</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Beneficio Neto Presente</div>
+            $$BNP = VP_{beneficios} - VP_{costos} = \sum_{t=1}^{n} \frac{B_t}{(1+i)^t} - \sum_{t=0}^{n} \frac{C_t}{(1+i)^t}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Si \(BNP > 0\): el proyecto genera valor neto positivo.</p>
+        </div>
+    </div>
+
+    <!-- CONFIABILIDAD -->
+    <hr class="divider">
+    <h3 class="h3">Indicadores de Confiabilidad Tecnológica</h3>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">Para equipos de seguridad, la confiabilidad no es negociable. Estos indicadores permiten cuantificarla.</p>
+
+    <div class="grid-2">
+        <div class="formula-box">
+            <div class="formula-label">Tasa de Fallos (\(\lambda\))</div>
+            $$\lambda = \frac{\text{Número de fallos}}{\text{Tiempo total de operación}}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Se expresa en fallos/hora. Para componentes electrónicos típicos: \(\lambda \approx 10^{-6}\) a \(10^{-9}\) fallos/hora.</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Tiempo Medio entre Fallos (MTBF)</div>
+            $$MTBF = \frac{1}{\lambda} = \frac{\text{Tiempo total de operación}}{\text{Número de fallos}}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Para un detector de gas con MTBF de 87,600 h, se espera un fallo cada 10 años de operación continua.</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Tiempo Medio de Reparación (MTTR)</div>
+            $$MTTR = \frac{\text{Tiempo total de reparación}}{\text{Número de reparaciones}}$$         </div>
+        <div class="formula-box">
+            <div class="formula-label">Disponibilidad</div>
+            $$A = \frac{MTBF}{MTBF + MTTR} = \frac{\text{Tiempo operativo}}{\text{Tiempo total}}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Para sistemas de seguridad críticos se requiere \(A \geq 99.9\%\) (máximo 8.76 horas de parada/año).</p>
+        </div>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula-label">Confiabilidad en el tiempo (distribución exponencial)</div>
+        $$R(t) = e^{-\lambda t} = e^{-t/MTBF}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Probabilidad de que el equipo funcione sin fallos hasta el tiempo \(t\). Si un sistema de bombeo tiene MTBF=5,000 h, la probabilidad de operar sin fallos durante 720 h (un mes) es: \(R(720) = e^{-720/5000} = 0.866\) (86.6%).</p>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula-label">Confiabilidad de un sistema en serie (todos deben funcionar)</div>
+        $$R_{serie} = \prod_{i=1}^{n} R_i = R_1 \times R_2 \times \cdots \times R_n$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">La confiabilidad en serie siempre es menor que la del componente menos confiable. Por esto se usan redundancias.</p>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula-label">Confiabilidad de un sistema en paralelo (basta uno funcionando)</div>
+        $$R_{paralelo} = 1 - \prod_{i=1}^{n}(1 - R_i)$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">La redundancia paralela aumenta drásticamente la confiabilidad. Dos detectores en paralelo con \(R=0.9\) cada uno: \(R_p = 1-(0.1)^2 = 0.99\).</p>
+    </div>
+
+    <div class="callout red">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p><strong>Norma IEC 61511 (Sistemas Instrumentados de Seguridad — SIS):</strong> Define Niveles de Integridad de Seguridad (SIL) del 1 al 4. Cada nivel requiere una Probabilidad de Fallo por Demanda (PFD) específica. SIL 2 requiere PFD \(\geq 10^{-3}\) y \(< 10^{-2}\), lo que implica MTBF muy altos y redundancia típica.</p>
+    </div>
+</div>
+
+<!-- ====== INFRAESTRUCTURA ====== -->
+<div class="section" id="sec-infraestructura">
+    <div class="section-badge"><i class="fas fa-cogs"></i> Unidad 3.3</div>
+    <h2 class="section-title">Infraestructura y Servicios Industriales</h2>
+    <p class="section-desc">Dimensionamiento de los servicios industriales requeridos por un proyecto, con bases de cálculo aplicadas a seguridad industrial.</p>
+
+    <h3 class="h3">Servicios Industriales Principales</h3>
+    <div class="grid-3">
+        <div class="mini-card"><div style="color:var(--accent);font-size:24px;margin-bottom:8px;"><i class="fas fa-bolt"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">Energía Eléctrica</div><div style="font-size:13px;color:var(--text-muted);">Potencia instalada, demanda máxima, factor de potencia, redundancia</div></div>
+        <div class="mini-card"><div style="color:var(--info);font-size:24px;margin-bottom:8px;"><i class="fas fa-tint"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">Agua Industrial</div><div style="font-size:13px;color:var(--text-muted);">Agua de proceso, enfriamiento, contra incendios, sanitaria</div></div>
+        <div class="mini-card"><div style="color:var(--warn);font-size:24px;margin-bottom:8px;"><i class="fas fa-wind"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">Aire Comprimido</div><div style="font-size:13px;color:var(--text-muted);">Instrumentación, neumática, limpieza, potencia de compresión</div></div>
+        <div class="mini-card"><div style="color:var(--danger);font-size:24px;margin-bottom:8px;"><i class="fas fa-fire"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">Vapor</div><div style="font-size:13px;color:var(--text-muted);">Calentamiento, procesos, trazas de vapor para prevención de congelación</div></div>
+        <div class="mini-card"><div style="color:var(--success);font-size:24px;margin-bottom:8px;"><i class="fas fa-snowflake"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">HVAC</div><div style="font-size:13px;color:var(--text-muted);">Aire acondicionado, ventilación, presurización de áreas clasificadas</div></div>
+        <div class="mini-card"><div style="color:#a78bfa;font-size:24px;margin-bottom:8px;"><i class="fas fa-network-wired"></i></div><div style="font-weight:700;font-size:14px;margin-bottom:4px;">Comunicaciones</div><div style="font-size:13px;color:var(--text-muted);">Red de datos, radio, alarma, intercomunicación, SCADA</div></div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Dimensionamiento Eléctrico</h3>
+    <div class="formula-box">
+        <div class="formula-label">Potencia Instalada Total</div>
+        $$P_{inst} = \sum_{j=1}^{m} P_{nom_j}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Suma de las potencias nominales de todos los equipos eléctricos.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Demanda Máxima</div>
+        $$P_{dem} = P_{inst} \times F_D$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(F_D\) = Factor de demanda (típicamente 0.6–0.8). No todos los equipos operan simultáneamente al 100%.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Potencia del Transformador (con reserva)</div>
+        $$P_{trans} = \frac{P_{dem}}{0.8} \times 1.25$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Se divide por 0.8 (factor de potencia mínimo) y se multiplica por 1.25 (25% de reserva para seguridad).</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Dimensionamiento de Agua Contra Incendios</h3>
+    <div class="formula-box">
+        <div class="formula-label">Caudal de diseño (NFPA 15)</div>
+        $$Q = A \times D$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(Q\) = caudal requerido (L/min), \(A\) = área de diseño (m²), \(D\) = densidad de aplicación (L/min·m²). Para spray de espuma: \(D = 4.1\) a \(6.5\) L/min·m².</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Volumen de reserva de agua contra incendios</div>
+        $$V_{reserva} = Q \times T_{descarga} \times 1.1$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(T_{descarga}\) = tiempo mínimo de descarga (típicamente 60–120 min según NFPA). Factor 1.1 para margen de seguridad.</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Dimensionamiento de Aire Comprimido</h3>
+    <div class="formula-box">
+        <div class="formula-label">Caudal de aire libre (FAD) requerido</div>
+        $$Q_{FAD} = \frac{\sum_{j} q_j \times f_u_j}{\eta_{red}}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(q_j\) = consumo del equipo \(j\), \(f_{u_j}\) = factor de utilización, \(\eta_{red}\) = eficiencia de la red (típicamente 0.85–0.95, incluye pérdidas por fugas).</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Potencia del compresor (isotérmica ideal)</div>
+        $$P_{comp} = \frac{Q_{FAD} \cdot P_1 \cdot \ln\left(\frac{P_2}{P_1}\right)}{\eta_{comp}}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(P_1\) = presión de succión (abs), \(P_2\) = presión de descarga (abs), \(\eta_{comp}\) = eficiencia del compresor (0.5–0.8).</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Capacidad y Dimensionamiento General</h3>
+    <div class="formula-box">
+        <div class="formula-label">Capacidad de Diseño vs. Capacidad Efectiva</div>
+        $$C_{efectiva} = C_{diseno} \times \eta_{utilizacion} \times \eta_{rendimiento}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(\eta_{utilizacion}\) = fracción del tiempo que el sistema opera (ej. 0.85 = 85%), \(\eta_{rendimiento}\) = eficiencia del proceso (ej. 0.92).</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Factor de Sobredimensionamiento</div>
+        $$C_{seleccionada} = \frac{C_{requerida}}{0.80 \text{ a } 0.90}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Se selecciona un equipo con capacidad del 110% al 125% de la requerida para no operar al límite. En seguridad, este factor suele ser mayor (1.3–1.5).</p>
+    </div>
+    <div class="callout green">
+        <i class="fas fa-check-circle"></i>
+        <p><strong>Regla de oro en seguridad industrial:</strong> Todo sistema de seguridad (bombeo contra incendios, detección de gases, ventilación de emergencia, alimentación eléctrica de respaldo) se dimensiona con un factor de seguridad mínimo de 1.5 sobre el cálculo nominal, y se implementa con redundancia (N+1 como mínimo).</p>
+    </div>
+</div>
+
+<!-- ====== EJERCICIOS ====== -->
+<div class="section" id="sec-ejercicios">
+    <div class="section-badge"><i class="fas fa-flask"></i> Práctica</div>
+    <h2 class="section-title">Ejercicios de Aplicación</h2>
+    <p class="section-desc">Resuelva los siguientes ejercicios. Ingrese sus respuestas y verifique si son correctas.</p>
+
+    <div class="score-bar">
+        <div><div class="score-label">Progreso</div><div class="score-value" id="scoreDisplay">0 / 14</div></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="scoreBar" style="width:0%"></div></div>
+    </div>
+
+    <!-- EJERCICIO 1: TCO -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 1</div>
+        <div class="exercise-title">TCO y NPV — Sistema Fijo de Detección de Gases</div>
+        <div class="exercise-context">
+            <p>Se evalúa un sistema fijo de detección de gases (20 detectores + central + cableado) con vida útil de 10 años, tasa de descuento \(i = 12\%\):</p>
+            <p><strong>Adquisición:</strong> $85,000</p>
+            <p><strong>Instalación:</strong> $25,000</p>
+            <p><strong>Costo operativo anual:</strong> $3,500 (calibración, verificación)</p>
+            <p><strong>Mantenimiento anual:</strong> $2,200 (reparaciones, repuestos)</p>
+            <p><strong>Ahorro anual estimado:</strong> $28,000 (evita paradas, multas, incidentes)</p>
+            <p><strong>Valor residual (año 10):</strong> $5,000</p>
+            <p><strong>Costo de disposición:</strong> $3,000</p>
+        </div>
+        <div class="question"><p>a) TCO simple (sin descontar, redondee al entero más cercano):</p><div class="input-row"><label>TCO =</label><input type="number" class="input-field" id="e1a" step="1" placeholder="$..."><span class="input-unit">$</span></div><div class="feedback" id="fb-e1a"></div></div>
+        <div class="question"><p>b) NPV de la inversión (redondee al entero más cercano):</p><div class="input-row"><label>NPV =</label><input type="number" class="input-field" id="e1b" step="1" placeholder="$..."><span class="input-unit">$</span></div><div class="feedback" id="fb-e1b"></div></div>
+        <div class="question"><p>c) Período de recuperación simple (payback) en años (redondee a 1 decimal):</p><div class="input-row"><label>PP =</label><input type="number" class="input-field" id="e1c" step="0.1" placeholder="0.0"><span class="input-unit">años</span></div><div class="feedback" id="fb-e1c"></div></div>
+        <div class="question"><p>d) ROI simple total (redondee a 1 decimal, sin el signo %):</p><div class="input-row"><label>ROI =</label><input type="number" class="input-field" id="e1d" step="0.1" placeholder="0.0"><span class="input-unit">%</span></div><div class="feedback" id="fb-e1d"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx1()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol1')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol1">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(TCO = 85{,}000 + 25{,}000 + (3{,}500 + 2{,}200) \times 10 + 3{,}000 - 5{,}000 = 110{,}000 + 57{,}000 + 3{,}000 - 5{,}000 = \$165{,}000\)</p>
+            <p>\(CF_{anual} = 28{,}000 - 3{,}500 - 2{,}200 = \$22{,}300\)</p>
+            <p>\(NPV = -110{,}000 + 22{,}300 \times \frac{1-(1.12)^{-10}}{0.12} + \frac{5{,}000 - 3{,}000}{(1.12)^{10}}\)</p>
+            <p>\(= -110{,}000 + 22{,}300 \times 5.6502 + \frac{2{,}000}{3.1058}\)</p>
+            <p>\(= -110{,}000 + 125{,}979 + 644 = \$16{,}623\)</p>
+            <p>\(PP = \frac{110{,}000}{22{,}300} = 4.9 \text{ años}\)</p>
+            <p>\(ROI = \frac{(22{,}300 \times 10) - 110{,}000}{110{,}000} \times 100 = \frac{223{,}000 - 110{,}000}{110{,}000} \times 100 = 102.7\%\)</p>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 2: CONFIABILIDAD -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 2</div>
+        <div class="exercise-title">Confiabilidad — Sistema de Alarma contra Incendios</div>
+        <div class="exercise-context">
+            <p>Un sistema de alarma tiene 3 subsistemas en serie: Detectores (\(R_1 = 0.97\)), Central de alarma (\(R_2 = 0.99\)), Sirenas (\(R_3 = 0.95\)).</p>
+        </div>
+        <div class="question"><p>a) Confiabilidad del sistema completo (redondee a 4 decimales):</p><div class="input-row"><label>R_sistema =</label><input type="number" class="input-field" id="e2a" step="0.0001" placeholder="0.0000"></div><div class="feedback" id="fb-e2a"></div></div>
+        <div class="question"><p>b) Si se duplican los detectores en paralelo (2 detectores con R=0.97 cada uno), nueva confiabilidad del sistema (redondee a 4 decimales):</p><div class="input-row"><label>R_nuevo =</label><input type="number" class="input-field" id="e2b" step="0.0001" placeholder="0.0000"></div><div class="feedback" id="fb-e2b"></div></div>
+        <div class="question"><p>c) Un detector tiene \(\lambda = 2.5 \times 10^{-5}\) fallos/hora. Calcule el MTBF en horas (redondee al entero):</p><div class="input-row"><label>MTBF =</label><input type="number" class="input-field" id="e2c" step="1" placeholder="horas"><span class="input-unit">horas</span></div><div class="feedback" id="fb-e2c"></div></div>
+        <div class="question"><p>d) Con ese MTBF, probabilidad de funcionar sin fallos durante 2,000 horas (redondee a 4 decimales):</p><div class="input-row"><label>R(2000) =</label><input type="number" class="input-field" id="e2d" step="0.0001" placeholder="0.0000"></div><div class="feedback" id="fb-e2d"></div></div>
+        <div class="question"><p>e) Si el MTTR del detector es 4 horas, disponibilidad (redondee a 4 decimales, sin %):</p><div class="input-row"><label>A =</label><input type="number" class="input-field" id="e2e" step="0.0001" placeholder="0.0000"></div><div class="feedback" id="fb-e2e"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx2()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol2')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol2">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(R_{serie} = 0.97 \times 0.99 \times 0.95 = 0.9123\)</p>
+            <p>\(R_{paralelo\_detectores} = 1 - (1-0.97)^2 = 1 - 0.0009 = 0.9991\)</p>
+            <p>\(R_{nuevo} = 0.9991 \times 0.99 \times 0.95 = 0.9392\)</p>
+            <p>\(MTBF = 1 / (2.5 \times 10^{-5}) = 40{,}000 \text{ horas}\)</p>
+            <p>\(R(2000) = e^{-2000/40000} = e^{-0.05} = 0.9512\)</p>
+            <p>\(A = 40000 / (40000 + 4) = 0.9999\)</p>
+        </div>
+    </div>
+
+    <!-- EJERCICIO 3: INFRAESTRUCTURA -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 3</div>
+        <div class="exercise-title">Dimensionamiento — Servicios de una Planta de Pintura Industrial</div>
+        <div class="exercise-context">
+            <p>Datos de la planta:</p>
+            <p><strong>Potencia instalada:</strong> 450 kW</p>
+            <p><strong>Factor de demanda:</strong> 0.72</p>
+            <p><strong>Factor de potencia mínimo:</strong> 0.85</p>
+            <p><strong>Área de protección contra incendios:</strong> 800 m²</p>
+            <p><strong>Densidad de aplicación (rociadores):</strong> 6.1 L/min·m²</p>
+            <p><strong>Tiempo mínimo de descarga:</strong> 90 minutos</p>
+            <p><strong>Consumo de aire comprimido:</strong> 2.5 m³/min (11 detectores × 0.2 + herramientas × 0.3, con factor uso 0.8)</p>
+            <p><strong>Eficiencia de red de aire:</strong> 0.88</p>
+        </div>
+        <div class="question"><p>a) Potencia del transformador con reserva (redondee al entero, en kVA):</p><div class="input-row"><label>P_trans =</label><input type="number" class="input-field" id="e3a" step="1" placeholder="kVA"><span class="input-unit">kVA</span></div><div class="feedback" id="fb-e3a"></div></div>
+        <div class="question"><p>b) Caudal de diseño contra incendios (L/min, redondee al entero):</p><div class="input-row"><label>Q =</label><input type="number" class="input-field" id="e3b" step="1" placeholder="L/min"><span class="input-unit">L/min</span></div><div class="feedback" id="fb-e3b"></div></div>
+        <div class="question"><p>c) Volumen de reserva de agua (m³, redondee a 1 decimal):</p><div class="input-row"><label>V =</label><input type="number" class="input-field" id="e3c" step="0.1" placeholder="0.0"><span class="input-unit">m³</span></div><div class="feedback" id="fb-e3c"></div></div>
+        <div class="question"><p>d) Caudal FAD de aire comprimido (m³/min, redondee a 2 decimales):</p><div class="input-row"><label>Q_FAD =</label><input type="number" class="input-field" id="e3d" step="0.01" placeholder="0.00"><span class="input-unit">m³/min</span></div><div class="feedback" id="fb-e3d"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx3()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol3')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol3">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(P_{dem} = 450 \times 0.72 = 324 \text{ kW}\)</p>
+            <p>\(P_{trans} = \frac{324}{0.85} \times 1.25 = 381.2 \times 1.25 = 476.5 \rightarrow 477 \text{ kVA}\)</p>
+            <p>\(Q = 800 \times 6.1 = 4{,}880 \text{ L/min}\)</p>
+            <p>\(V = \frac{4{,}880 \times 90 \times 1.1}{1000} = \frac{483{,}120}{1000} = 483.1 \text{ m³}\)</p>
+            <p>\(Q_{FAD} = \frac{2.5}{0.88} = 2.84 \text{ m³/min}\)</p>
+        </div>
+    </div>
+</div>
+
+<!-- ====== TAREAS ====== -->
+<div class="section" id="sec-tareas">
+    <div class="section-badge"><i class="fas fa-tasks"></i> Evaluación</div>
+    <h2 class="section-title">Tareas del Tema</h2>
+    <p class="section-desc">Desarrolle las siguientes tareas de manera individual. Sus respuestas se guardan localmente.</p>
+
+    <div class="task-card" id="task1">
+        <div class="task-header" onclick="toggleTask('task1')">
+            <div class="task-icon orange"><i class="fas fa-coins"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 1: TCO y NPV Comparativo de Dos Tecnologías</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Compare dos alternativas para un <strong>sistema de ventilación de emergencia</strong> en un túnel de una mina subterránea:</p>
+            <p><strong>Opción A — Ventiladores axiales tradicionales:</strong> Inversión $120,000, costo operativo $18,000/año, mantenimiento $6,000/año, vida útil 8 años, valor residual $10,000.</p>
+            <p><strong>Opción B — Ventiladores de alta eficiencia con VFD:</strong> Inversión $195,000, costo operativo $9,500/año (40% menos energía), mantenimiento $8,500/año, vida útil 10 años, valor residual $25,000.</p>
+            <p>Ambas generan el mismo ahorro por seguridad: $55,000/año. Tasa de descuento: 10%. Costo de instalación: 15% del equipo en ambos casos.</p>
+            <ul class="numbered-list"><li>Calcule el TCO simple de cada opción</li><li>Calcule el NPV de cada opción</li><li>Calcule el ROI y payback de cada opción</li><li>Elabore una tabla comparativa y seleccione la mejor alternativa justificando</li><li>¿Cambia la decisión si la tasa de descuento sube al 15%? Realice el análisis de sensibilidad.</li></ul>
+            <textarea class="task-textarea" id="task1-text" placeholder="Desarrolle su análisis comparativo aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task1')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task1','Tarea1_TCO_NPV_Comparativo')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task1"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="task-card" id="task2">
+        <div class="task-header" onclick="toggleTask('task2')">
+            <div class="task-icon blue"><i class="fas fa-shield-alt"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 2: Análisis de Confiabilidad de un SIS</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Un <strong>Sistema Instrumentado de Seguridad (SIS)</strong> para cierre de emergencia de una válvula de gas tiene la siguiente arquitectura:</p>
+            <ul class="content-list">
+                <li><strong>Sensor:</strong> 3 detectores de gas en votación 2 de 3 (2oo3), cada uno con \(\lambda_{DU} = 3 \times 10^{-6}\) fallos por hora (fallos peligrosos no detectados)</li>
+                <li><strong>Lógica solucionadora:</strong> PLC de seguridad con \(\lambda_{DU} = 1 \times 10^{-7}\) fallos/hora</li>
+                <li><strong>Elemento final:</strong> 1 válvula de cierre con actuador, \(\lambda_{DU} = 5 \times 10^{-6}\) fallos/hora</li>
+            </ul>
+            <p>Intervalo de prueba de seguridad (TI) = 8,760 horas (1 año).</p>
+            <ul class="numbered-list">
+                <li>Calcule la PFD promedio de cada subsistema usando: \(PFD_{avg} \approx \lambda_{DU} \times TI / 2\)</li>
+                <li>Calcule la PFD del sistema completo (serie de los 3 subsistemas)</li>
+                <li>Determine el nivel SIL alcanzado según IEC 61511</li>
+                <li>Calcule el RRF (Risk Reduction Factor = 1/PFD)</li>
+                <li>Si se requiera SIL 2, ¿qué redundancia propondría para la válvula? Justifique con cálculos.</li>
+            </ul>
+            <textarea class="task-textarea" id="task2-text" placeholder="Desarrolle su análisis de confiabilidad SIS aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task2')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task2','Tarea2_Confiabilidad_SIS')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task2"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="task-card" id="task3">
+        <div class="task-header" onclick="toggleTask('task3')">
+            <div class="task-icon green"><i class="fas fa-drafting-compass"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 3: Dimensionamiento Completo de Servicios</div><div class="task-meta">Valor: 20 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Para una <strong>planta de fabricación de pinturas industriales</strong> con los siguientes datos, dimensione todos los servicios industriales:</p>
+            <div class="exercise-context">
+                <p><strong>Equipos eléctricos:</strong> Mezclador 75 kW, molino 45 kW, bombas (3×15 kW), ventiladores (2×7.5 kW), iluminación 25 kW, otros 20 kW</p>
+                <p><strong>Agua de proceso:</strong> 3 m³/hora (operación 16 h/día, 300 días/año)</p>
+                <p><strong>Agua contra incendios:</strong> Área de almacenamiento de solventes: 500 m², densidad 6.1 L/min·m², tiempo 90 min</p>
+                <p><strong>Aire comprimido:</strong> Instrumentación: 1.2 m³/min continuo, neumática: 0.8 m³/min intermitente (fu=0.4), limpieza: 1.5 m³/min (fu=0.1)</p>
+                <p><strong>Red de aire:</strong> Eficiencia 0.90</p>
+            </div>
+            <ul class="numbered-list">
+                <li>Calcule potencia instalada, demanda y capacidad del transformador con reserva</li>
+                <li>Calcule el volumen de agua de proceso anual y el tanque de reserva mínimo</li>
+                <li>Calcule el volumen de reserva contra incendios</li>
+                <li>Calcule el caudal FAD de aire comprimido</li>
+                <li>Elabore un cuadro resumen de todos los servicios con las especificaciones de selección</li>
+            </ul>
+            <textarea class="task-textarea" id="task3-text" placeholder="Desarrolle su dimensionamiento completo aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task3')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task3','Tarea3_Dimensionamiento_Servicios')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task3"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+</div>
+
+<!-- ====== TAREA APLICADA ====== -->
+<div class="section" id="sec-tareaaplicada">
+    <div class="section-badge"><i class="fas fa-hard-hat"></i> Aplicación Real</div>
+    <h2 class="section-title">Tarea Aplicada: Caso de Seguridad Industrial</h2>
+    <p class="section-desc">Integre todos los conocimientos del tema en un caso real de la carrera.</p>
+
+    <div class="case-header">
+        <div class="case-tag"><i class="fas fa-oil-can"></i> Caso de Estudio</div>
+        <h3 class="case-title">Requerimientos Tecnológicos para la Automatización del Sistema contra Incendios — Refinería del Pacífico</h3>
+        <p class="case-desc">La Refinería del Pacífico (REFIPAC) necesita modernizar su sistema contra incendios, que actualmente es 100% manual. Se requiere determinar todos los requerimientos tecnológicos, evaluar económicamente las opciones y dimensionar la infraestructura necesaria.</p>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-search"></i> Fase 1 — Diagnóstico del Estado Actual</div>
+        <div class="phase-content">
+            <p style="color:var(--text-secondary);font-size:15px;margin-bottom:16px;">La refinería opera desde 1978. El sistema contra incendios actual tiene las siguientes deficiencias:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Componente</th><th>Estado Actual (EA)</th><th>Estado Deseado (ED)</th><th>Brecha</th></tr></thead>
+                    <tbody>
+                        <tr><td>Detección de fuego</td><td>1 — Solo visual humana</td><td>5 — Detección automática multisensores</td><td class="text-danger"><strong>+4</strong></td></tr>
+                        <tr><td>Activación de sistemas</td><td>2 — Manual con válvulas</td><td>5 — Automática con remote control</td><td class="text-danger"><strong>+3</strong></td></tr>
+                        <tr><td>Red de agua contra incendios</td><td>2 — Presión insuficiente, sin monitoreo</td><td>5 — Monitoreada con presión y flujo constante</td><td class="text-danger"><strong>+3</strong></td></tr>
+                        <tr><td>Bombas contra incendios</td><td>3 — Una bomba diesel, una eléctrica sin redundancia</td><td>5 — N+1 con arranque automático</td><td class="text-warn"><strong>+2</strong></td></tr>
+                        <tr><td>Sistema de alarma</td><td>2 — Sirena manual, cobertura parcial</td><td>5 — Alarma masiva automatizada por zonas</td><td class="text-danger"><strong>+3</strong></td></tr>
+                        <tr><td>Comunicación de emergencia</td><td>2 — Radios portátiles</td><td>5 — Sistema integrado radio+intercom+PA</td><td class="text-danger"><strong>+3</strong></td></tr>
+                        <tr><td>SCADA de seguridad</td><td>1 — No existe</td><td>5 — SCADA dedicado con HMI de emergencia</td><td class="text-danger"><strong>+4</strong></td></tr>
+                        <tr><td>Pozo de agua de reserva</td><td>3 — Un pozo, capacidad no verificada</td><td>5 — Dos pozos con nivel monitoreado</td><td class="text-warn"><strong>+2</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout red">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong>Antecedente:</strong> En los últimos 5 años se registraron 3 eventos de incendio menores donde el tiempo de respuesta manual superó los 8 minutos. NFPA 30 exige activación en menos de 3 minutos para áreas de almacenamiento de líquidos inflamables.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-list-alt"></i> Fase 2 — Listado de Requerimientos Tecnológicos</div>
+        <div class="phase-content">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Código</th><th>Requerimiento</th><th>Especificación Mínima</th><th>Cantidad</th></tr></thead>
+                    <tbody>
+                        <tr><td>RT-01</td><td>Detectores de llama UV/IR</td><td>Alcance 15m, respuesta <5s, SIL 2, certificados IECEx</td><td>48</td></tr>
+                        <tr><td>RT-02</td><td>Detectores de humo fotoeléctricos</td><td>Cables de aspiración, cobertura 200m²/cabezal</td><td>32</td></tr>
+                        <tr><td>RT-03</td><td>Detectores de temperatura puntual</td><td>Rango 0-120°C, ajustable, SIL 2</td><td>24</td></tr>
+                        <tr><td>RT-04</td><td>Central de detección y alarma</td><td>La expansión, protocolo convencional/análogo, 2 lares redundantes</td><td>2</td></tr>
+                        <tr><td>RT-05</td><td>Bomba contra incendios eléctrica adicional</td><td>1,500 GPM @ 125 PSI, motor 150 HP, arranque automático</td><td>1</td></tr>
+                        <tr><td>RT-06</td><td>Válvulas motorizadas de seccionamiento</td><td>6" ANSI 300, actuador eléctrico, failsafe cerrar</td><td>12</td></tr>
+                        <tr><td>RT-07</td><td>Sistema SCADA de seguridad</td><td>Servidor redundante, 4 estaciones HMI, protocolo OPC-UA</td><td>1</td></tr>
+                        <tr><td>RT-08</td><td>Red de fibra óptica dedicada</td><td>Anillo redundante, 48 puertos, 10 km</td><td>1</td></tr>
+                        <tr><td>RT-09</td><td>Sistema de alarma masiva</td><td>128 altavoces industriales, 100 dB a 3m, zonificación</td><td>1</td></tr>
+                        <tr><td>RT-10</td><td>UPS dedicado para seguridad</td><td>40 kVA, 2 horas autonomía, redundante</td><td>2</td></tr>
+                        <tr><td>RT-11</td><td>Cámara termográficas</td><td>Resolución 640×480, rango -20°C a 500°C, IP66</td><td>8</td></tr>
+                        <tr><td>RT-12</td><td>Transmisores de presión en red CI</td><td>0-250 PSI, 4-20mA + HART, SIL 2</td><td>16</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-dollar-sign"></i> Fase 3 — Datos de Costos</div>
+        <div class="phase-content">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Código</th><th>Costo Equipo ($)</th><th>Instalación ($)</th><th>Op. Anual ($)</th><th>Mant. Anual ($)</th><th>Vida útil (años)</th></tr></thead>
+                    <tbody>
+                        <tr><td>RT-01</td><td>96,000</td><td>19,200</td><td>4,800</td><td>2,400</td><td>10</td></tr>
+                        <tr><td>RT-02</td><td>38,400</td><td>7,680</td><td>1,920</td><td>960</td><td>10</td></tr>
+                        <tr><td>RT-03</td><td>14,400</td><td>2,880</td><td>720</td><td>360</td><td>10</td></tr>
+                        <tr><td>RT-04</td><td>45,000</td><td>9,000</td><td>2,250</td><td>1,500</td><td>12</td></tr>
+                        <tr><td>RT-05</td><td>125,000</td><td>37,500</td><td>6,250</td><td>5,000</td><td>20</td></tr>
+                        <tr><td>RT-06</td><td>54,000</td><td>16,200</td><td>2,700</td><td>1,800</td><td>15</td></tr>
+                        <tr><td>RT-07</td><td>180,000</td><td>45,000</td><td>12,000</td><td>9,000</td><td>8</td></tr>
+                        <tr><td>RT-08</td><td>65,000</td><td>32,500</td><td>1,500</td><td>1,000</td><td>15</td></tr>
+                        <tr><td>RT-09</td><td>52,000</td><td>15,600</td><td>1,300</td><td>800</td><td>12</td></tr>
+                        <tr><td>RT-10</td><td>48,000</td><td>9,600</td><td>3,600</td><td>2,400</td><td>8</td></tr>
+                        <tr><td>RT-11</td><td>72,000</td><td>14,400</td><td>3,600</td><td>2,400</td><td>8</td></tr>
+                        <tr><td>RT-12</td><td>24,000</td><td>4,800</td><td>800</td><td>600</td><td>10</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout orange">
+                <i class="fas fa-info-circle"></i>
+                <p><strong>Ahorro estimado por la automatización:</strong> Reducción de tiempo de respuesta de 8 min a <2 min → estimación conservadora de ahorro por daños evitados: <strong>$380,000/año</strong>. Además, se evita una multa regulatoria potencial de $200,000 (historial de no conformidades).</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-clipboard-check"></i> Fase 4 — Instrucciones de Entrega</div>
+        <div class="phase-content">
+            <p style="color:var(--text-primary);font-size:15px;font-weight:600;margin-bottom:16px;">Desarrolle las siguientes partes:</p>
+
+            <h4 class="h4">Parte A: TCO del Proyecto Completo (20%)</h4>
+            <ul class="content-list">
+                <li>Calcule el TCO simple (sin descontar) para cada uno de los 12 requerimientos</li>
+                <li>Calcule el TCO total del proyecto</li>
+                <li>Identifique los 3 requerimientos con mayor TCO y analice si existen alternativas más económicas sin sacrificar seguridad</li>
+            </ul>
+
+            <h4 class="h4">Parte B: Evaluación Económica (NPV, ROI, Payback) (25%)</h4>
+            <ul class="content-list">
+                <li>Considere una tasa de descuento del 10% y un horizonte de 12 años (vida útil mínima del sistema)</li>
+                <li>Para requerimientos con vida útil >12 años, asuma un valor residual proporcional</li>
+                <li>Calcule el NPV, ROI anualizado y payback descontado del proyecto completo</li>
+                <li>Realice análisis de sensibilidad: ¿cuál es el ahorro mínimo anual para que el NPV sea >0?</li>
+            </ul>
+
+            <h4 class="h4">Parte C: Análisis de Confiabilidad (25%)</h4>
+            <ul class="content-list">
+                <li>Para el subsistema de detección (RT-01 a RT-04): defina la arquitectura de confiabilidad (serie, paralelo, votación)</li>
+                <li>Asigne tasas de fallo razonables para cada tipo de detector (busque referencias en tablas de confiabilidad estándar como MIL-HDBK-217F, OREDA, o exida)</li>
+                <li>Calcule la confiabilidad del subsistema de detección para una misión de 8,760 horas</li>
+                <li>Determine si se cumple SIL 2 para la función de detección</li>
+                <li>Calcule MTBF y disponibilidad del subsistema de bombas (RT-05, considerando que existen 2 eléctricas + 1 diesel = configuración N+1)</li>
+            </ul>
+
+            <h4 class="h4">Parte D: Dimensionamiento de Infraestructura (15%)</h4>
+            <ul class="content-list">
+                <li>Calcule la potencia eléctrica adicional requerida por los nuevos equipos (estime consumo de cada equipo) y el dimensionamiento del UPS</li>
+                <li>Verifique si la red de agua contra incendios actual soporta el caudal adicional que demandan los nuevos rociadores (si se adicionan)</li>
+                <li>Dimensione la red de comunicaciones (fibra óptica): ancho de banda requerido para SCADA + cámaras + alarma</li>
+            </ul>
+
+            <h4 class="h4">Parte E: Informe Ejecutivo y Especificaciones (15%)</h4>
+            <ul class="content-list">
+                <li>Redacte un informe ejecutivo (mínimo 600 palabras) para la Gerencia de REFIPAC</li>
+                <li>Incluya: resumen ejecutivo, metodología, resultados financieros, análisis de confiabilidad, dimensionamiento, cronograma de implementación propuesto (en fases), y riesgos del proyecto de modernización</li>
+                <li>Elabore la especificación técnica detallada para al menos 2 de los 12 requerimientos (formato profesional)</li>
+            </ul>
+
+            <div class="callout red">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong>Criterio de aprobación:</strong> Mínimo 70/100. Las Partes B y C son obligatorias y se evalúan rigor matemático. La Parte E evalúa redacción profesional, formato de especificación técnica, y viabilidad del cronograma. Se penaliza la falta de justificación desde la perspectiva de seguridad industrial.</p>
+            </div>
+
+            <h4 class="h4">Desarrollo de la Tarea</h4>
+            <textarea class="task-textarea" id="taskReal-text" placeholder="Desarrolle las cinco partes de la tarea aplicada aquí. Organice con encabezados claros (Parte A, B, C, D, E)..." style="min-height:400px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary" onclick="saveTask('taskReal')"><i class="fas fa-save"></i> Guardar Progreso</button>
+                <button class="btn btn-outline" onclick="downloadTask('taskReal','TareaAplicada_REFIPAC_SistemaContraIncendios')"><i class="fas fa-download"></i> Descargar como TXT</button>
+                <span class="saved-indicator" id="saved-taskReal"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<script>
+const canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d');
+let nodes=[];const NC=40,MD=130;
+function resizeC(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeC();window.addEventListener('resize',resizeC);
+for(let i=0;i<NC;i++)nodes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.8+.8});
+function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;}for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD){ctx.strokeStyle=`rgba(233,122,47,${(1-d/MD)*.1})`;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}}for(let n of nodes){ctx.fillStyle='rgba(233,122,47,.2)';ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}requestAnimationFrame(anim);}
+if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)anim();
+
+const navI=document.querySelectorAll('.nav-item'),secs=document.querySelectorAll('.section'),sb=document.getElementById('sidebar'),ov=document.getElementById('sidebarOverlay'),mt=document.getElementById('menuToggle');
+function sw(id){secs.forEach(s=>s.classList.remove('active'));const t=document.getElementById('sec-'+id);if(t)t.classList.add('active');navI.forEach(n=>n.classList.remove('active'));const ni=document.querySelector(`.nav-item[data-section="${id}"]`);if(ni)ni.classList.add('active');sb.classList.remove('open');ov.classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});rM();}
+navI.forEach(i=>i.addEventListener('click',()=>sw(i.dataset.section)));
+mt.addEventListener('click',()=>{sb.classList.toggle('open');ov.classList.toggle('open');});
+ov.addEventListener('click',()=>{sb.classList.remove('open');ov.classList.remove('open');});
+
+function rM(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});}
+document.addEventListener('DOMContentLoaded',()=>{rM();loadS();});setTimeout(rM,1000);setTimeout(rM,3000);
+
+function cV(id,cor,tol,fid){const inp=document.getElementById(id),fb=document.getElementById(fid),v=parseFloat(inp.value);if(isNaN(v)){inp.classList.remove('correct','incorrect');fb.classList.remove('show','correct','incorrect');return false;}if(Math.abs(v-cor)<=tol){inp.classList.add('correct');inp.classList.remove('incorrect');fb.innerHTML='<i class="fas fa-check-circle"></i> Correcto';fb.classList.add('show','correct');fb.classList.remove('incorrect');return true;}else{inp.classList.add('incorrect');inp.classList.remove('correct');fb.innerHTML=`<i class="fas fa-times-circle"></i> Incorrecto. Respuesta: ${cor}`;fb.classList.add('show','incorrect');fb.classList.remove('correct');return false;}}
+const TQ=14;
+function uS(){let s=0;document.querySelectorAll('.input-field.correct').forEach(()=>s++);document.getElementById('scoreDisplay').textContent=s+' / '+TQ;document.getElementById('scoreBar').style.width=((s/TQ)*100)+'%';}
+
+function checkEx1(){let c=0;if(cV('e1a',165000,2,'fb-e1a'))c++;if(cV('e1b',16623,50,'fb-e1b'))c++;if(cV('e1c',4.9,0.1,'fb-e1c'))c++;if(cV('e1d',102.7,0.2,'fb-e1d'))c++;uS();showT(c===4?'Ej.1: Todas correctas':'Ej.1: '+c+'/4 correctas',c===4?'success':'info');}
+function checkEx2(){let c=0;if(cV('e2a',0.9123,.001,'fb-e2a'))c++;if(cV('e2b',0.9392,.001,'fb-e2b'))c++;if(cV('e2c',40000,10,'fb-e2c'))c++;if(cV('e2d',0.9512,.001,'fb-e2d'))c++;if(cV('e2e',0.9999,.0001,'fb-e2e'))c++;uS();showT(c===5?'Ej.2: Todas correctas':'Ej.2: '+c+'/5 correctas',c===5?'success':'info');}
+function checkEx3(){let c=0;if(cV('e3a',477,2,'fb-e3a'))c++;if(cV('e3b',4880,2,'fb-e3b'))c++;if(cV('e3c',483.1,.2,'fb-e3c'))c++;if(cV('e3d',2.84,.02,'fb-e3d'))c++;uS();showT(c===4?'Ej.3: Todas correctas':'Ej.3: '+c+'/4 correctas',c===4?'success':'info');}
+
+function toggleSol(id){document.getElementById(id).classList.toggle('show');}
+function toggleTask(id){document.getElementById(id).classList.toggle('open');}
+function saveTask(id){const ta=document.getElementById(id+'-text');if(ta){localStorage.setItem('upse_req_'+id,ta.value);const ind=document.getElementById('saved-'+id);if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),3000);}showT('Progreso guardado','success');}}
+function downloadTask(id,nm){const ta=document.getElementById(id+'-text');if(ta&&ta.value.trim()){const b=new Blob([ta.value],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=nm+'.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);showT('Archivo descargado','success');}else showT('No hay contenido','error');}
+function loadS(){['task1','task2','task3','taskReal'].forEach(id=>{const s=localStorage.getItem('upse_req_'+id);const ta=document.getElementById(id+'-text');if(s&&ta)ta.value=s;});}
+function showT(m,t){const c=document.getElementById('toastContainer'),e=document.createElement('div');e.className='toast '+t;const i=t==='success'?'fa-check-circle':t==='error'?'fa-exclamation-circle':'fa-info-circle';e.innerHTML=`<i class="fas ${i}"></i> ${m}`;c.appendChild(e);setTimeout(()=>{if(e.parentNode)e.parentNode.removeChild(e);},3200);}
+</script>
+</body>
+</html>
