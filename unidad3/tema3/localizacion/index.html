@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 2: Localización y Distribución de Planta | UPSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0c1220;
+            --bg-secondary: #111a2e;
+            --bg-card: #162038;
+            --bg-card-hover: #1c2a4a;
+            --bg-input: #0e1628;
+            --accent: #10b981;
+            --accent-light: #34d399;
+            --accent-dark: #059669;
+            --accent-glow: rgba(16,185,129,0.12);
+            --danger: #ef4444;
+            --danger-bg: rgba(239,68,68,0.08);
+            --success: #10b981;
+            --success-bg: rgba(16,185,129,0.08);
+            --info: #38bdf8;
+            --info-bg: rgba(56,189,248,0.08);
+            --warn: #f59e0b;
+            --warn-bg: rgba(245,158,11,0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #1e3050;
+            --border-light: #253a5c;
+            --sidebar-w: 290px;
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html{scroll-behavior:smooth;}
+        body{font-family:'Source Sans 3',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;line-height:1.7;}
+        h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif;line-height:1.2;}
+        a{color:var(--accent);text-decoration:none;}
+        a:hover{color:var(--accent-light);}
+
+        #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35;}
+
+        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:linear-gradient(180deg,#080d18 0%,#0c1525 100%);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);}
+        .sidebar-header{padding:24px 20px 20px;border-bottom:1px solid var(--border);}
+        .sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+        .sidebar-logo .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#000;font-weight:800;font-family:'Outfit';text-align:center;line-height:1.1;}
+        .sidebar-logo .logo-text{font-family:'Outfit';font-weight:700;font-size:15px;color:var(--text-primary);line-height:1.2;}
+        .sidebar-logo .logo-text small{display:block;font-size:11px;font-weight:400;color:var(--text-muted);margin-top:2px;}
+        .sidebar-subtitle{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+        .sidebar-nav{flex:1;overflow-y:auto;padding:12px 10px;}
+        .sidebar-nav::-webkit-scrollbar{width:4px;}
+        .sidebar-nav::-webkit-scrollbar-track{background:transparent;}
+        .sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+        .nav-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);padding:16px 12px 6px;font-weight:600;}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:14px;color:var(--text-secondary);margin-bottom:2px;position:relative;border:1px solid transparent;}
+        .nav-item:hover{background:var(--accent-glow);color:var(--text-primary);}
+        .nav-item.active{background:var(--accent-glow);color:var(--accent);border-color:rgba(16,185,129,0.2);font-weight:600;}
+        .nav-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent);border-radius:0 3px 3px 0;}
+        .nav-item i{width:20px;text-align:center;font-size:14px;}
+        .nav-item .nav-badge{margin-left:auto;font-size:10px;background:var(--accent);color:#000;padding:1px 7px;border-radius:10px;font-weight:700;}
+        .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted);}
+        .sidebar-footer .prof-name{color:var(--text-secondary);font-weight:600;font-size:12px;}
+
+        .menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;width:44px;height:44px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:18px;cursor:pointer;align-items:center;justify-content:center;transition:all 0.2s;}
+        .menu-toggle:hover{background:var(--accent-glow);border-color:var(--accent);}
+        .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:90;backdrop-filter:blur(2px);}
+
+        .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1;}
+        .section{display:none;padding:48px 48px 80px;max-width:960px;margin:0 auto;animation:fadeInUp 0.4s ease;}
+        .section.active{display:block;}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+        .section-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);background:var(--accent-glow);padding:6px 14px;border-radius:20px;border:1px solid rgba(16,185,129,0.2);margin-bottom:16px;}
+        .section-title{font-size:36px;font-weight:800;color:var(--text-primary);margin-bottom:8px;letter-spacing:-0.5px;}
+        .section-desc{font-size:17px;color:var(--text-secondary);margin-bottom:40px;max-width:700px;line-height:1.7;}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;transition:all 0.25s;}
+        .card:hover{border-color:var(--border-light);background:var(--bg-card-hover);}
+        .card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+        .card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .card-icon.green{background:var(--success-bg);color:var(--success);}
+        .card-icon.red{background:var(--danger-bg);color:var(--danger);}
+        .card-icon.blue{background:var(--info-bg);color:var(--info);}
+        .card-icon.amber{background:var(--warn-bg);color:var(--warn);}
+        .card-title{font-size:18px;font-weight:700;}
+        .card p{color:var(--text-secondary);margin-bottom:12px;}
+        .card p:last-child{margin-bottom:0;}
+
+        .h3{font-size:22px;font-weight:700;margin:36px 0 14px;color:var(--text-primary);}
+        .h4{font-size:17px;font-weight:600;margin:24px 0 10px;color:var(--text-primary);}
+        .text-accent{color:var(--accent);}
+        .text-danger{color:var(--danger);}
+        .text-success{color:var(--success);}
+        .text-info{color:var(--info);}
+        .text-warn{color:var(--warn);}
+        .text-muted{color:var(--text-muted);}
+
+        .content-list{padding-left:0;list-style:none;margin:12px 0;}
+        .content-list li{padding:6px 0 6px 28px;position:relative;color:var(--text-secondary);font-size:15px;}
+        .content-list li::before{content:'';position:absolute;left:8px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:0.7;}
+        .numbered-list{padding-left:0;list-style:none;margin:12px 0;counter-reset:item;}
+        .numbered-list li{padding:6px 0 6px 32px;position:relative;color:var(--text-secondary);font-size:15px;counter-increment:item;}
+        .numbered-list li::before{content:counter(item);position:absolute;left:4px;top:6px;width:22px;height:22px;border-radius:6px;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+        .table-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--radius);border:1px solid var(--border);}
+        table{width:100%;border-collapse:collapse;font-size:14px;}
+        thead{background:rgba(16,185,129,0.06);}
+        th{padding:12px 16px;text-align:left;font-weight:600;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border);white-space:nowrap;}
+        td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary);}
+        tbody tr:hover{background:rgba(16,185,129,0.03);}
+        tbody tr:last-child td{border-bottom:none;}
+
+        .formula-box{background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(16,185,129,0.02));border:1px solid rgba(16,185,129,0.15);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin:20px 0;overflow-x:auto;}
+        .formula-box .formula-label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+        .formula-box .katex-display{margin:8px 0 !important;}
+
+        .callout{border-radius:var(--radius);padding:20px 24px;margin:20px 0;display:flex;gap:14px;align-items:flex-start;}
+        .callout i{margin-top:3px;font-size:18px;flex-shrink:0;}
+        .callout.green{background:var(--success-bg);border:1px solid rgba(16,185,129,0.2);}
+        .callout.green i{color:var(--success);}
+        .callout.red{background:var(--danger-bg);border:1px solid rgba(239,68,68,0.2);}
+        .callout.red i{color:var(--danger);}
+        .callout.amber{background:var(--warn-bg);border:1px solid rgba(245,158,11,0.2);}
+        .callout.amber i{color:var(--warn);}
+        .callout.blue{background:var(--info-bg);border:1px solid rgba(56,189,248,0.2);}
+        .callout.blue i{color:var(--info);}
+        .callout p{color:var(--text-secondary);margin:0;font-size:14px;}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0;}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin:20px 0;}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0;}
+
+        .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:all 0.25s;}
+        .stat-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+        .stat-number{font-family:'Outfit';font-size:32px;font-weight:800;color:var(--accent);line-height:1;}
+        .stat-label{font-size:13px;color:var(--text-muted);margin-top:6px;}
+
+        .hero{text-align:center;padding:60px 20px 40px;position:relative;}
+        .hero-icon{width:80px;height:80px;margin:0 auto 24px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:36px;color:#000;box-shadow:0 8px 32px rgba(16,185,129,0.25);animation:float 4s ease-in-out infinite;}
+        @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+        .hero h1{font-size:42px;font-weight:900;margin-bottom:12px;letter-spacing:-1px;}
+        .hero h1 span{color:var(--accent);}
+        .hero p{font-size:18px;color:var(--text-secondary);max-width:620px;margin:0 auto 36px;}
+
+        .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0;}
+        .obj-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px 20px;display:flex;gap:12px;align-items:flex-start;transition:all 0.2s;}
+        .obj-item:hover{border-color:var(--accent);}
+        .obj-num{width:28px;height:28px;border-radius:8px;background:var(--accent-glow);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Outfit';flex-shrink:0;}
+        .obj-text{font-size:14px;color:var(--text-secondary);}
+
+        .exercise-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:32px;position:relative;}
+        .exercise-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));border-radius:var(--radius) var(--radius) 0 0;}
+        .exercise-num{font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;}
+        .exercise-title{font-size:20px;font-weight:700;margin-bottom:16px;}
+        .exercise-context{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px;}
+        .exercise-context p{color:var(--text-secondary);font-size:14px;margin-bottom:8px;}
+        .exercise-context p:last-child{margin-bottom:0;}
+        .question{margin:20px 0;padding:16px 20px;background:rgba(16,185,129,0.03);border-radius:var(--radius-sm);border-left:3px solid var(--accent);}
+        .question p{color:var(--text-primary);font-size:15px;margin-bottom:10px;font-weight:500;}
+        .input-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+        .input-row label{font-size:14px;color:var(--text-secondary);white-space:nowrap;}
+        .input-field{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;color:var(--text-primary);font-size:15px;font-family:'Source Sans 3';width:140px;transition:all 0.2s;outline:none;}
+        .input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+        .input-field.correct{border-color:var(--success);background:var(--success-bg);}
+        .input-field.incorrect{border-color:var(--danger);background:var(--danger-bg);}
+        .input-unit{font-size:14px;color:var(--text-muted);}
+
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:'Outfit';cursor:pointer;border:1px solid transparent;transition:all 0.2s;outline:none;}
+        .btn-primary{background:var(--accent);color:#000;border-color:var(--accent);}
+        .btn-primary:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(16,185,129,0.3);}
+        .btn-outline{background:transparent;color:var(--text-secondary);border-color:var(--border);}
+        .btn-outline:hover{border-color:var(--accent);color:var(--accent);}
+        .btn-sm{padding:7px 16px;font-size:13px;}
+
+        .feedback{margin-top:12px;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;display:none;align-items:center;gap:8px;}
+        .feedback.show{display:flex;}
+        .feedback.correct{background:var(--success-bg);color:var(--success);border:1px solid rgba(16,185,129,0.2);}
+        .feedback.incorrect{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,0.2);}
+
+        .solution-box{display:none;margin-top:16px;padding:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);}
+        .solution-box.show{display:block;animation:fadeInUp 0.3s ease;}
+        .solution-box h4{color:var(--accent);font-size:15px;margin-bottom:12px;}
+        .solution-box p{color:var(--text-secondary);font-size:14px;margin-bottom:6px;}
+
+        .exercise-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;}
+
+        .score-bar{display:flex;align-items:center;gap:16px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:28px;}
+        .score-bar .score-label{font-size:14px;color:var(--text-secondary);}
+        .score-bar .score-value{font-family:'Outfit';font-size:22px;font-weight:800;color:var(--accent);}
+        .progress-bar-bg{flex:1;height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden;}
+        .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent));border-radius:4px;transition:width 0.5s ease;}
+
+        .task-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px;}
+        .task-header{padding:24px 28px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:background 0.2s;}
+        .task-header:hover{background:var(--bg-card-hover);}
+        .task-header .task-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+        .task-header .task-info{flex:1;}
+        .task-header .task-name{font-size:17px;font-weight:700;}
+        .task-header .task-meta{font-size:13px;color:var(--text-muted);margin-top:2px;}
+        .task-header .task-chevron{color:var(--text-muted);transition:transform 0.3s;font-size:14px;}
+        .task-card.open .task-chevron{transform:rotate(180deg);}
+        .task-body{display:none;padding:0 28px 28px;border-top:1px solid var(--border);}
+        .task-card.open .task-body{display:block;animation:fadeInUp 0.3s ease;}
+        .task-body .task-desc{padding-top:20px;}
+        .task-body .task-desc p{color:var(--text-secondary);font-size:15px;margin-bottom:12px;}
+
+        .deliverables-list{list-style:none;padding:0;margin:12px 0;}
+        .deliverables-list li{padding:8px 0 8px 32px;position:relative;color:var(--text-secondary);font-size:14px;}
+        .deliverables-list li::before{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;position:absolute;left:6px;top:8px;color:var(--success);font-size:12px;}
+
+        textarea.task-textarea{width:100%;min-height:120px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;color:var(--text-primary);font-family:'Source Sans 3';font-size:14px;line-height:1.7;resize:vertical;outline:none;margin:12px 0;transition:border-color 0.2s;}
+        textarea.task-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);}
+        textarea.task-textarea::placeholder{color:var(--text-muted);}
+        .task-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;}
+        .saved-indicator{display:none;align-items:center;gap:6px;font-size:13px;color:var(--success);margin-left:8px;}
+        .saved-indicator.show{display:inline-flex;}
+
+        .case-header{background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.02));border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius);padding:32px;margin-bottom:28px;position:relative;overflow:hidden;}
+        .case-header::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,0.08),transparent 70%);}
+        .case-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#000;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+        .case-title{font-size:26px;font-weight:800;margin-bottom:8px;}
+        .case-desc{color:var(--text-secondary);font-size:15px;max-width:650px;}
+
+        .case-phase{margin-bottom:28px;}
+        .phase-label{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding:4px 12px;background:var(--accent-glow);border-radius:6px;}
+        .phase-content{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;}
+
+        .divider{border:none;border-top:1px solid var(--border);margin:36px 0;}
+
+        .toast-container{position:fixed;top:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:10px;}
+        .toast{padding:14px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:#fff;display:flex;align-items:center;gap:10px;animation:slideInRight 0.3s ease,fadeOut 0.3s ease 2.7s forwards;box-shadow:var(--shadow);}
+        .toast.success{background:#059669;}
+        .toast.error{background:#dc2626;}
+        .toast.info{background:#0284c7;}
+        @keyframes slideInRight{from{transform:translateX(100px);opacity:0;}to{transform:translateX(0);opacity:1;}}
+        @keyframes fadeOut{to{opacity:0;transform:translateX(40px);}}
+
+        /* CUAL Matrix */
+        .cual-grid{display:grid;grid-template-columns:60px repeat(6,1fr);gap:3px;max-width:520px;margin:20px 0;}
+        .cual-cell{display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:13px;font-weight:600;padding:10px 4px;min-height:42px;}
+        .cual-header{background:transparent;color:var(--text-muted);font-size:11px;font-weight:700;}
+        .cual-a{background:rgba(16,185,129,0.25);color:var(--accent-light);}
+        .cual-e{background:rgba(56,189,248,0.15);color:var(--info);}
+        .cual-i{background:rgba(245,158,11,0.15);color:var(--warn);}
+        .cual-o{background:rgba(148,163,184,0.08);color:var(--text-muted);}
+        .cual-u{background:rgba(239,68,68,0.12);color:var(--danger);}
+        .cual-x{background:rgba(239,68,68,0.3);color:var(--danger);}
+        .cual-diag{background:rgba(148,163,184,0.05);color:var(--text-muted);}
+
+        .cual-legend{display:flex;gap:16px;flex-wrap:wrap;margin:12px 0;}
+        .cual-legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-secondary);}
+        .cual-legend-swatch{width:20px;height:20px;border-radius:4px;}
+
+        .katex{color:var(--text-primary);}
+        .katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .minner,.katex .mop{color:var(--text-primary);}
+
+        .flow-steps{display:flex;gap:0;align-items:center;flex-wrap:wrap;margin:20px 0;justify-content:center;}
+        .flow-step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;text-align:center;min-width:100px;transition:all 0.2s;}
+        .flow-step:hover{border-color:var(--accent);}
+        .flow-step .step-num{font-family:'Outfit';font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px;}
+        .flow-step .step-label{font-size:13px;color:var(--text-secondary);font-weight:500;}
+        .flow-arrow{color:var(--accent);font-size:18px;padding:0 4px;flex-shrink:0;}
+
+        @media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr;}.grid-4{grid-template-columns:1fr 1fr;}}
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%);}
+            .sidebar.open{transform:translateX(0);}
+            .sidebar-overlay.open{display:block;}
+            .menu-toggle{display:flex;}
+            .main-content{margin-left:0;}
+            .section{padding:72px 20px 60px;}
+            .hero h1{font-size:28px;}
+            .section-title{font-size:26px;}
+            .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+            .obj-grid{grid-template-columns:1fr;}
+            .exercise-card{padding:20px;}
+            .input-row{flex-direction:column;align-items:flex-start;}
+            .input-field{width:100%;}
+            .flow-steps{flex-direction:column;}
+            .flow-arrow{transform:rotate(90deg);}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;transition-duration:0.01ms!important;}}
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="toast-container" id="toastContainer"></div>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menú"><i class="fas fa-bars"></i></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <div class="logo-icon">T2</div>
+            <div class="logo-text">Localización y Distribución de Planta<small>UPSE · Seguridad Industrial</small></div>
+        </div>
+        <div class="sidebar-subtitle">Tema 2 — Plataforma Educativa</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Contenido</div>
+        <div class="nav-item active" data-section="inicio"><i class="fas fa-home"></i> Inicio</div>
+        <div class="nav-item" data-section="localizacion"><i class="fas fa-map-marker-alt"></i> Localización Industrial</div>
+        <div class="nav-item" data-section="metodosloc"><i class="fas fa-balance-scale"></i> Métodos de Localización</div>
+        <div class="nav-item" data-section="distribucion"><i class="fas fa-th-large"></i> Distribución de Planta</div>
+        <div class="nav-item" data-section="slp"><i class="fas fa-project-diagram"></i> SLP y Diagrama CUAL</div>
+        <div class="nav-section-label">Práctica</div>
+        <div class="nav-item" data-section="ejercicios"><i class="fas fa-calculator"></i> Ejercicios<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareas"><i class="fas fa-tasks"></i> Tareas<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareaaplicada"><i class="fas fa-hard-hat"></i> Tarea Aplicada<span class="nav-badge" style="background:var(--danger);color:#fff;">Real</span></div>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="prof-name"><i class="fas fa-user-tie" style="margin-right:6px;color:var(--accent);"></i> Docente UPSE</div>
+        <div style="margin-top:4px;">Ing. en Seguridad Industrial</div>
+        <div style="margin-top:2px;">Facultad de Ingeniería</div>
+    </div>
+</aside>
+
+<main class="main-content">
+
+    <!-- ======================== INICIO ======================== -->
+    <div class="section active" id="sec-inicio">
+        <div class="hero">
+            <div class="hero-icon"><i class="fas fa-industry"></i></div>
+            <h1>Localización y <span>Distribución</span> de Planta</h1>
+            <p>Tema 2 de la materia de Gestión de Proyectos. Aprenda a determinar la ubicación óptima de instalaciones industriales y diseñar layouts eficientes y seguros.</p>
+        </div>
+        <div class="grid-4">
+            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Métodos de localización</div></div>
+            <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Tipos de distribución</div></div>
+            <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Fórmulas con LaTeX</div></div>
+            <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Caso aplicado real</div></div>
+        </div>
+        <h3 class="h3">Objetivos de Aprendizaje</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;font-size:15px;">Al finalizar este tema, el estudiante será capaz de:</p>
+        <div class="obj-grid">
+            <div class="obj-item"><div class="obj-num">1</div><div class="obj-text">Identificar y evaluar los factores que influyen en la localización de instalaciones industriales desde la perspectiva de seguridad.</div></div>
+            <div class="obj-item"><div class="obj-num">2</div><div class="obj-text">Aplicar métodos cuantitativos (punto de equilibrio, factores ponderados, centro de gravedad, Brown-Gibson) para seleccionar la ubicación óptima.</div></div>
+            <div class="obj-item"><div class="obj-num">3</div><div class="obj-text">Clasificar y seleccionar el tipo de distribución de planta apropiado según el proceso productivo.</div></div>
+            <div class="obj-item"><div class="obj-num">4</div><div class="obj-text">Aplicar la técnica SLP de Muther y el diagrama CUAL para diseñar distribuciones eficientes y seguras.</div></div>
+            <div class="obj-item"><div class="obj-num">5</div><div class="obj-text">Calcular métricas de eficiencia de distribución (índice de eficiencia, distancia total de recorrido).</div></div>
+            <div class="obj-item"><div class="obj-num">6</div><div class="obj-text">Integrar criterios de seguridad industrial en las decisiones de localización y distribución.</div></div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--accent);">
+            <h4 class="h4" style="margin-top:0;"><i class="fas fa-stream text-accent" style="margin-right:8px;"></i>Flujo del Tema</h4>
+            <div class="flow-steps">
+                <div class="flow-step"><div class="step-num">PASO 1</div><div class="step-label">Factores de localización</div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">PASO 2</div><div class="step-label">Métodos cuantitativos</div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">PASO 3</div><div class="step-label">Tipos de distribución</div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">PASO 4</div><div class="step-label">SLP y CUAL</div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">PASO 5</div><div class="step-label">Caso aplicado</div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== LOCALIZACIÓN ======================== -->
+    <div class="section" id="sec-localizacion">
+        <div class="section-badge"><i class="fas fa-map-marker-alt"></i> Unidad 2.1</div>
+        <h2 class="section-title">Localización Industrial</h2>
+        <p class="section-desc">La localización es la decisión estratégica de dónde situar una instalación industrial, considerando factores técnicos, económicos, sociales y de seguridad.</p>
+
+        <div class="card">
+            <div class="card-header"><div class="card-icon green"><i class="fas fa-bullseye"></i></div><div class="card-title">Definición y Importancia</div></div>
+            <p>La <strong>localización industrial</strong> es el proceso de determinación del sitio geográfico más conveniente para una planta o instalación, de modo que se maximice la rentabilidad y se minimicen los riesgos. Es una decisión <em>irreversible a corto plazo</em> con impacto de largo plazo.</p>
+            <div class="callout red">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong>En seguridad industrial:</strong> Una mala localización puede exponer a la planta a riesgos naturales (sismos, inundaciones), riesgos tecnológicos (proximidad a poblaciones, otras industrias), y dificultar la respuesta de emergencia. La norma NFPA y las regulaciones ambientales imponen restricciones de distancia obligatorias.</p>
+            </div>
+        </div>
+
+        <h3 class="h3">Factores de Localización</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;">Los factores se clasifican en dos grandes grupos:</p>
+
+        <div class="grid-2">
+            <div class="card" style="border-top:3px solid var(--accent);">
+                <h4 class="h4" style="margin-top:0;color:var(--accent);">Factores Objetivos (Cuantificables)</h4>
+                <ul class="content-list">
+                    <li><strong>Costo del terreno:</strong> Precio por m², disponibilidad de área</li>
+                    <li><strong>Costos de transporte:</strong> Fletes de materia prima y producto terminado</li>
+                    <li><strong>Costo de mano de obra:</strong> Salarios, beneficios, disponibilidad</li>
+                    <li><strong>Costos de energía:</strong> Electricidad, gas, vapor, agua industrial</li>
+                    <li><strong>Impuestos y cargas fiscales:</strong> Impuesto predial, tasas municipales</li>
+                    <li><strong>Infraestructura existente:</strong> Vías, puertos, aeropuertos, redes</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:3px solid var(--warn);">
+                <h4 class="h4" style="margin-top:0;color:var(--warn);">Factores Subjetivos (Cualitativos)</h4>
+                <ul class="content-list">
+                    <li><strong>Regulaciones ambientales:</strong> Zonificación, permisos, límites de emisión</li>
+                    <li><strong>Riesgos naturales:</strong> Sismicidad, inundabilidad, volcánico</li>
+                    <li><strong>Aceptación comunitaria:</strong> Actitud de la población vecina</li>
+                    <li><strong>Seguridad ciudadana:</strong> Tasa de criminalidad de la zona</li>
+                    <li><strong>Clima:</strong> Temperatura, humedad, vientos dominantes</li>
+                    <li><strong>Proximidad a servicios de emergencia:</strong> Bomberos, hospitales</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="h3">Jerarquía de la Decisión de Localización</h3>
+        <div class="flow-steps">
+            <div class="flow-step" style="min-width:140px;"><div class="step-num">NIVEL 1</div><div class="step-label">Región / País</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step" style="min-width:140px;"><div class="step-num">NIVEL 2</div><div class="step-label">Zona / Provincia</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step" style="min-width:140px;"><div class="step-num">NIVEL 3</div><div class="step-label">Ciudad / Cantón</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step" style="min-width:140px;"><div class="step-num">NIVEL 4</div><div class="step-label">Sitio específico</div></div>
+        </div>
+        <p style="color:var(--text-muted);font-size:13px;text-align:center;margin-top:8px;">Cada nivel utiliza métodos de evaluación progresivamente más detallados.</p>
+
+        <div class="callout green">
+            <i class="fas fa-check-circle"></i>
+            <p><strong>Principio clave:</strong> A medida que se avanza en la jerarquía, los costos de cambio aumentan exponencialmente. Un error en el nivel 1 (país) es muchísimo más costoso que uno en el nivel 4 (sitio).</p>
+        </div>
+
+        <hr class="divider">
+        <h3 class="h3">Restricciones de Seguridad en la Localización</h3>
+        <div class="card">
+            <div class="card-header"><div class="card-icon red"><i class="fas fa-shield-alt"></i></div><div class="card-title">Normativas y Distancias Mínimas</div></div>
+            <p>En la industria de proceso (química, petroquímica, gas), las regulaciones exigen distancias mínimas entre instalaciones y centros poblados:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Norma / Referencia</th><th>Requisito</th><th>Aplicación</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>NFPA 30</strong></td><td>Distancias entre tanques de almacenamiento</td><td>Industria petrolera</td></tr>
+                        <tr><td><strong>API RP 752</strong></td><td>Edificios ocupados cerca de procesos peligrosos</td><td>Refinerías, plantas químicas</td></tr>
+                        <tr><td><strong>IEC 60079-10-1</strong></td><td>Clasificación de zonas explosivas</td><td>Plantas con gases inflamables</td></tr>
+                        <tr><td><strong>Regulación ambiental</strong></td><td>Distancia a cuerpos de agua, áreas protegidas</td><td>Toda industria</td></tr>
+                        <tr><td><strong>Código de Trabajo EC</strong></td><td>Distancia a centros poblados para industrias peligrosas</td><td>Ecuador</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== MÉTODOS DE LOCALIZACIÓN ======================== -->
+    <div class="section" id="sec-metodosloc">
+        <div class="section-badge"><i class="fas fa-balance-scale"></i> Unidad 2.2</div>
+        <h2 class="section-title">Métodos Cuantitativos de Localización</h2>
+        <p class="section-desc">Herramientas matemáticas que permiten comparar sitios candidatos de manera objetiva y fundamentada.</p>
+
+        <!-- MÉTODO 1: PUNTO DE EQUILIBRIO -->
+        <h3 class="h3">Método 1: Punto de Equilibrio por Volumen</h3>
+        <div class="card">
+            <div class="card-header"><div class="card-icon green"><i class="fas fa-chart-line"></i></div><div class="card-title">Análisis de Costos Totales</div></div>
+            <p>Compara los costos totales de cada ubicación en función del volumen de producción. El sitio con menor costo total para el volumen esperado es el óptimo.</p>
+
+            <div class="formula-box">
+                <div class="formula-label">Costo Total para el sitio j</div>
+                $$CT_j = CF_j + CV_j \cdot Q$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(CF_j\) = Costos fijos del sitio j, \(CV_j\) = Costo variable unitario del sitio j, \(Q\) = Volumen de producción</p>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula-label">Punto de equilibrio entre dos sitios A y B</div>
+                $$Q^* = \frac{CF_B - CF_A}{CV_A - CV_B}$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Si \(Q > Q^*\), conviene el sitio con menor costo variable. Si \(Q < Q^*\), conviene el sitio con menores costos fijos.</p>
+            </div>
+
+            <div class="callout amber">
+                <i class="fas fa-lightbulb"></i>
+                <p><strong>Limitación:</strong> Solo considera costos. No incluye factores cualitativos como riesgo sísmico, aceptación comunitaria o regulaciones ambientales. Se recomienda usarlo en combinación con otros métodos.</p>
+            </div>
+        </div>
+
+        <!-- MÉTODO 2: FACTORES PONDERADOS -->
+        <h3 class="h3">Método 2: Factores Ponderados</h3>
+        <div class="card">
+            <div class="card-header"><div class="card-icon blue"><i class="fas fa-weight-hanging"></i></div><div class="card-title">Sistema de Calificación por Puntos</div></div>
+            <p>Asigna ponderaciones a cada factor según su importancia relativa y califica cada sitio candidato en cada factor.</p>
+
+            <div class="formula-box">
+                <div class="formula-label">Puntuación total del sitio j</div>
+                $$P_j = \sum_{i=1}^{n} w_i \cdot r_{ij}$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(w_i\) = peso del factor \(i\) (\(\sum w_i = 1\)), \(r_{ij}\) = calificación del sitio \(j\) en el factor \(i\) (escala 1-10)</p>
+            </div>
+
+            <h4 class="h4">Ejemplo ilustrativo</h4>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Factor</th><th>Peso \(w_i\)</th><th>Sitio A \(r_{iA}\)</th><th>Sitio B \(r_{iB}\)</th><th>Sitio C \(r_{iC}\)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Costo del terreno</td><td>0.20</td><td>8</td><td>6</td><td>9</td></tr>
+                        <tr><td>Mano de obra</td><td>0.15</td><td>7</td><td>9</td><td>5</td></tr>
+                        <tr><td>Transporte</td><td>0.20</td><td>6</td><td>8</td><td>7</td></tr>
+                        <tr><td>Riesgo sísmico</td><td>0.15</td><td>5</td><td>8</td><td>4</td></tr>
+                        <tr><td>Regulación ambiental</td><td>0.15</td><td>7</td><td>7</td><td>6</td></tr>
+                        <tr><td>Servicios de emergencia</td><td>0.15</td><td>6</td><td>9</td><td>5</td></tr>
+                        <tr style="background:rgba(16,185,129,0.05);"><td><strong>Total \(P_j\)</strong></td><td><strong>1.00</strong></td><td class="text-success"><strong>6.55</strong></td><td class="text-success"><strong>7.75</strong></td><td><strong>6.15</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout green">
+                <i class="fas fa-check-circle"></i>
+                <p><strong>Resultado:</strong> El Sitio B obtiene la mayor puntuación (7.75), principalmente por su ventaja en riesgo sísmico, transporte y servicios de emergencia — factores críticos para seguridad industrial.</p>
+            </div>
+        </div>
+
+        <!-- MÉTODO 3: CENTRO DE GRAVEDAD -->
+        <h3 class="h3">Método 3: Centro de Gravedad</h3>
+        <div class="card">
+            <div class="card-header"><div class="card-icon amber"><i class="fas fa-crosshairs"></i></div><div class="card-title">Método del Centro de Gravedad (Weber)</div></div>
+            <p>Determina la ubicación óptima que minimiza la distancia total ponderada a los puntos de origen/destino. Se usa para ubicar almacenes, centros de distribución o plantas que atienden múltiples puntos.</p>
+
+            <div class="formula-box">
+                <div class="formula-label">Coordenadas del punto óptimo</div>
+                $$X^* = \frac{\displaystyle\sum_{i=1}^{n} w_i \cdot x_i}{\displaystyle\sum_{i=1}^{n} w_i} \qquad Y^* = \frac{\displaystyle\sum_{i=1}^{n} w_i \cdot y_i}{\displaystyle\sum_{i=1}^{n} w_i}$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \((x_i, y_i)\) = coordenadas del punto \(i\), \(w_i\) = peso (volumen, frecuencia, costo de transporte) asociado al punto \(i\).</p>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula-label">Distancia euclidiana entre dos puntos</div>
+                $$d_{ij} = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}$$             </div>
+            <div class="formula-box">
+                <div class="formula-label">Distancia rectilínea (Manhattan)</div>
+                $$d_{ij} = |x_i - x_j| + |y_i - y_j|$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">La distancia rectilínea es más realista en entornos urbanos con cuadrícula de calles.</p>
+            </div>
+
+            <div class="callout amber">
+                <i class="fas fa-lightbulb"></i>
+                <p><strong>En seguridad industrial:</strong> Este método se usa para ubicar estaciones de primeros auxilios, puntos de reunión, o extintores de manera que minimicen el tiempo de respuesta a las áreas de mayor riesgo.</p>
+            </div>
+        </div>
+
+        <!-- MÉTODO 4: BROWN-GIBSON -->
+        <h3 class="h3">Método 4: Modelo de Brown y Gibson</h3>
+        <div class="card">
+            <div class="card-header"><div class="card-icon red"><i class="fas fa-star-half-alt"></i></div><div class="card-title">Modelo Combinado Objetivo-Subjetivo</div></div>
+            <p>Combina factores objetivos (cuantificables) y subjetivos (cualitativos) en una sola medida de desempeño. Es el método más completo para localización industrial.</p>
+
+            <div class="formula-box">
+                <div class="formula-label">Medida de Factibilidad del sitio j</div>
+                $$FOM_j = \underbrace{\left[ \prod_{i \in O} \left(\frac{FO_{ij}}{\sum_j FO_{ij}}\right)^{w_i}\right]}_{\text{Factor Objetivo (FO)}} \times \underbrace{\left[ \sum_{i \in S} w_i \cdot FS_{ij} \right]}_{\text{Factor Subjetivo (FS)}}$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(O\) = conjunto de factores objetivos, \(S\) = conjunto de factores subjetivos, \(w_i\) = peso del factor, \(FO_{ij}\) = valor objetivo del sitio j en el factor i, \(FS_{ij}\) = calificación subjetiva (0 a 1) del sitio j en el factor i.</p>
+            </div>
+
+            <div class="formula-box">
+                <div class="formula-label">Normalización del Factor Objetivo</div>
+                $$NO_{ij} = \frac{FO_{ij}}{\displaystyle\sum_{j=1}^{m} FO_{ij}}$$                 <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Para costos, se invierte: \(NO_{ij} = \frac{1/FO_{ij}}{\sum_j 1/FO_{ij}}\) (menor costo = mayor puntuación).</p>
+            </div>
+
+            <div class="callout green">
+                <i class="fas fa-check-circle"></i>
+                <p><strong>Ventaja:</strong> A diferencia del método de factores ponderados simple, Brown-Gibson utiliza producto para factores objetivos (evita que un sitio muy malo en un factor sea compensado por ser excelente en otro). Esto es crucial en seguridad: un sitio con riesgo sísmico inaceptable NO debe ser compensado por costo bajo.</p>
+            </div>
+        </div>
+
+        <!-- Tabla comparativa -->
+        <hr class="divider">
+        <h3 class="h3">Comparación de Métodos</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Método</th><th>Tipo de factores</th><th>Complejidad</th><th>Mejor uso</th></tr></thead>
+                <tbody>
+                    <tr><td>Punto de equilibrio</td><td>Solo objetivos</td><td>Baja</td><td>Comparación preliminar de 2-3 sitios</td></tr>
+                    <tr><td>Factores ponderados</td><td>Mixto</td><td>Media</td><td>Decisiones con múltiples criterios cualitativos</td></tr>
+                    <tr><td>Centro de gravedad</td><td>Solo objetivos (distancia)</td><td>Media</td><td>Ubicación de almacenes/distribución</td></tr>
+                    <tr><td>Brown-Gibson</td><td>Mixto (separado)</td><td>Alta</td><td>Decisión final de localización de plantas</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ======================== DISTRIBUCIÓN DE PLANTA ======================== -->
+    <div class="section" id="sec-distribucion">
+        <div class="section-badge"><i class="fas fa-th-large"></i> Unidad 2.3</div>
+        <h2 class="section-title">Distribución de Planta</h2>
+        <p class="section-desc">La distribución de planta es la disposición física de los elementos industriales (maquinaria, áreas de trabajo, servicios) para lograr flujo eficiente, seguridad y confort.</p>
+
+        <div class="card">
+            <div class="card-header"><div class="card-icon green"><i class="fas fa-cubes"></i></div><div class="card-title">Definición</div></div>
+            <p>La <strong>distribución de planta (layout)</strong> es la integración de máquinas, equipos, áreas de trabajo, pasillos, servicios auxiliares y zonas de almacenamiento, dispuestos de forma que se optimice el flujo de materiales y personas, se minimicen los riesgos y se maximice la productividad.</p>
+            <div class="callout red">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong>En seguridad industrial:</strong> Una distribución deficiente es causa raíz de numerosos accidentes: atropellos en pasillos estrechos, mezcla de operaciones incompatibles, obstáculos en rutas de evacuación, exposición cruzada a riesgos químicos.</p>
+            </div>
+        </div>
+
+        <h3 class="h3">Tipos de Distribución</h3>
+        <div class="grid-2">
+            <div class="card" style="border-top:3px solid var(--accent);">
+                <h4 class="h4" style="margin-top:0;color:var(--accent);">1. Por Producto (en línea)</h4>
+                <p>Las máquinas se disponen en la secuencia del proceso. Alta producción, bajo volumen de variedad.</p>
+                <ul class="content-list" style="margin-top:8px;">
+                    <li>Automotriz, ensamblaje electrónico</li>
+                    <li>Flujo directo, mínimo manejo de materiales</li>
+                    <li>Riesgo: parada total si falla una estación</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:3px solid var(--info);">
+                <h4 class="h4" style="margin-top:0;color:var(--info);">2. Por Proceso (funcional)</h4>
+                <p>Máquinas similares se agrupan. Alta variedad, bajos volúmenes.</p>
+                <ul class="content-list" style="margin-top:8px;">
+                    <li>Talleres de mantenimiento, hospitales</li>
+                    <li>Flexibilidad, uso eficiente de equipos</li>
+                    <li>Riesgo: mayor manejo de materiales, cruces de flujo</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:3px solid var(--warn);">
+                <h4 class="h4" style="margin-top:0;color:var(--warn);">3. Por Posición Fija</h4>
+                <p>El producto no se mueve; los recursos se llevan hasta él.</p>
+                <ul class="content-list" style="margin-top:8px;">
+                    <li>Construcción, shipbuilding, montaje de turbinas</li>
+                    <li>Producto muy grande o frágil</li>
+                    <li>Riesgo: espacios confinados, trabajo en altura</li>
+                </ul>
+            </div>
+            <div class="card" style="border-top:3px solid #a78bfa;">
+                <h4 class="h4" style="margin-top:0;color:#a78bfa;">4. Celular (tecnología de grupo)</h4>
+                <p>Familias de partes se procesan en celdas dedicadas. Híbrido entre producto y proceso.</p>
+                <ul class="content-list" style="margin-top:8px;">
+                    <li>Manufactura de familias de componentes</li>
+                    <li>Reduce WIP, mejora tiempos de entrega</li>
+                    <li>Riesgo: requiere análisis previo de familias</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3 class="h3">Principios de Distribución de Planta</h3>
+        <div class="grid-2">
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--accent);font-size:20px;margin-bottom:6px;"><i class="fas fa-integral"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Integración total</div>
+                <div style="font-size:13px;color:var(--text-muted);">Hombre, máquina, material y servicio deben integrarse en el mejor arreglo.</div>
+            </div>
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--accent);font-size:20px;margin-bottom:6px;"><i class="fas fa-compress-arrows-alt"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Mínima distancia</div>
+                <div style="font-size:13px;color:var(--text-muted);">El movimiento debe ser el más corto posible entre operaciones.</div>
+            </div>
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--accent);font-size:20px;margin-bottom:6px;"><i class="fas fa-exchange-alt"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Flujo</div>
+                <div style="font-size:13px;color:var(--text-muted);">El layout debe tener una secuencia lógica de operaciones sin retrocesos.</div>
+            </div>
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--accent);font-size:20px;margin-bottom:6px;"><i class="fas fa-cube"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Espacio cúbico</div>
+                <div style="font-size:13px;color:var(--text-muted);">Aprovechar el volumen total disponible (piso, paredes, techo).</div>
+            </div>
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--danger);font-size:20px;margin-bottom:6px;"><i class="fas fa-hard-hat"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Seguridad y satisfacción</div>
+                <div style="font-size:13px;color:var(--text-muted);">Priorizar la seguridad del trabajador y las condiciones de trabajo.</div>
+            </div>
+            <div class="card" style="padding:18px;">
+                <div style="color:var(--accent);font-size:20px;margin-bottom:6px;"><i class="fas fa-sync-alt"></i></div>
+                <div style="font-size:14px;font-weight:700;margin-bottom:4px;">Flexibilidad</div>
+                <div style="font-size:13px;color:var(--text-muted);">El layout debe adaptarse a cambios en producto, proceso o volumen.</div>
+            </div>
+        </div>
+
+        <hr class="divider">
+        <h3 class="h3">Métricas de Eficiencia de la Distribución</h3>
+
+        <div class="formula-box">
+            <div class="formula-label">Distancia Total de Recorrido</div>
+            $$D_{total} = \sum_{i=1}^{n} d_i \cdot f_i$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(d_i\) = distancia del recorrido \(i\), \(f_i\) = frecuencia del recorrido \(i\).</p>
+        </div>
+
+        <div class="formula-box">
+            <div class="formula-label">Eficiencia del Recorrido</div>
+            $$\eta_{recorrido} = \frac{D_{minima}}{D_{real}} \times 100\%$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(D_{minima}\) = distancia teórica si el flujo fuera perfectamente secuencial. Valores superiores al 70% se consideran aceptables.</p>
+        </div>
+
+        <div class="formula-box">
+            <div class="formula-label">Índice de Eficiencia de la Distribución</div>
+            $$IED = \frac{\displaystyle\sum_{i,j} f_{ij} \cdot d_{ij}^{optimo}}{\displaystyle\sum_{i,j} f_{ij} \cdot d_{ij}^{actual}} \times 100\%$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(f_{ij}\) = flujo entre áreas \(i\) y \(j\), \(d_{ij}\) = distancia entre áreas. Compara el layout actual vs. el óptimo teórico.</p>
+        </div>
+    </div>
+
+    <!-- ======================== SLP Y CUAL ======================== -->
+    <div class="section" id="sec-slp">
+        <div class="section-badge"><i class="fas fa-project-diagram"></i> Unidad 2.4</div>
+        <h2 class="section-title">SLP de Muther y Diagrama CUAL</h2>
+        <p class="section-desc">El Systematic Layout Planning (SLP) de Richard Muther es el método más utilizado para diseñar distribuciones de planta de manera sistemática.</p>
+
+        <div class="card">
+            <div class="card-header"><div class="card-icon green"><i class="fas fa-sitemap"></i></div><div class="card-title">Fases del SLP</div></div>
+            <div class="flow-steps" style="margin-top:16px;">
+                <div class="flow-step"><div class="step-num">1</div><div class="step-label">Datos básicos<br><span style="font-size:11px;color:var(--text-muted);">Producto, cantidad, ruta, servicios</span></div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">2</div><div class="step-label">Diagrama de flujo<br><span style="font-size:11px;color:var(--text-muted);">Operaciones y recorridos</span></div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">3</div><div class="step-label">Diagrama CUAL<br><span style="font-size:11px;color:var(--text-muted);">Relaciones entre áreas</span></div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">4</div><div class="step-label">Diagrama de bloques<br><span style="font-size:11px;color:var(--text-muted);">Distribución espacial</span></div></div>
+                <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="flow-step"><div class="step-num">5</div><div class="step-label">Layout detallado<br><span style="font-size:11px;color:var(--text-muted);">Implementación</span></div></div>
+            </div>
+        </div>
+
+        <h3 class="h3">Diagrama de Relaciones CUAL</h3>
+        <p style="color:var(--text-secondary);margin-bottom:16px;">El diagrama CUAL (Cercanía de Áreas Ubicadas en el Layout) representa las relaciones de cercanía entre cada par de áreas. Es el corazón del SLP.</p>
+
+        <div class="card">
+            <div class="card-header"><div class="card-icon blue"><i class="fas fa-th"></i></div><div class="card-title">Código de Cercanía</div></div>
+            <div class="cual-legend">
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-a"></div> A — Absolutamente necesario</div>
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-e"></div> E — Especialmente importante</div>
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-i"></div> I — Importante</div>
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-o"></div> O — Ordinario</div>
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-u"></div> U — Sin importancia</div>
+                <div class="cual-legend-item"><div class="cual-legend-swatch cual-x"></div> X — Indeseable</div>
+            </div>
+        </div>
+
+        <h4 class="h4">Ejemplo: Planta de Tratamiento de Residuos Peligrosos</h4>
+        <div class="cual-grid">
+            <div class="cual-cell cual-diag"></div>
+            <div class="cual-cell cual-header">1. Recepción</div>
+            <div class="cual-cell cual-header">2. Almacén</div>
+            <div class="cual-cell cual-header">3. Tratamiento</div>
+            <div class="cual-cell cual-header">4. Lab.</div>
+            <div class="cual-cell cual-header">5. Oficinas</div>
+            <div class="cual-cell cual-header">6. Emerg.</div>
+            <div class="cual-cell cual-header" style="background:transparent;">1</div>
+            <div class="cual-cell cual-diag">—</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-e">E</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-header" style="background:transparent;">2</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-diag">—</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-o">O</div>
+            <div class="cual-cell cual-x">X</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-header" style="background:transparent;">3</div>
+            <div class="cual-cell cual-e">E</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-diag">—</div>
+            <div class="cual-cell cual-e">E</div>
+            <div class="cual-cell cual-x">X</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-header" style="background:transparent;">4</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-o">O</div>
+            <div class="cual-cell cual-e">E</div>
+            <div class="cual-cell cual-diag">—</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-header" style="background:transparent;">5</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-x">X</div>
+            <div class="cual-cell cual-x">X</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-diag">—</div>
+            <div class="cual-cell cual-o">O</div>
+            <div class="cual-cell cual-header" style="background:transparent;">6</div>
+            <div class="cual-cell cual-i">I</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-a">A</div>
+            <div class="cual-cell cual-u">U</div>
+            <div class="cual-cell cual-o">O</div>
+            <div class="cual-cell cual-diag">—</div>
+        </div>
+
+        <div class="callout red">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><strong>Observaciones críticas de seguridad:</strong> Almacén (2) tiene relación X (indeseable) con Oficinas (5) — los residuos no deben estar cerca de personal administrativo. Tratamiento (3) tiene X con Oficinas (5) — áreas de proceso peligroso separadas de áreas ocupadas. Emergencias (6) tiene A con Tratamiento (3) — debe estar adyacente al área de mayor riesgo.</p>
+        </div>
+
+        <h3 class="h3">Conversión CUAL a Valores Numéricos</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Código</th><th>Valor numérico</th><th>Justificación</th></tr></thead>
+                <tbody>
+                    <tr><td class="text-success"><strong>A</strong></td><td>4</td><td>Vínculo absolutamente necesario</td></tr>
+                    <tr><td class="text-info"><strong>E</strong></td><td>3</td><td>Especialmente importante</td></tr>
+                    <tr><td class="text-warn"><strong>I</strong></td><td>2</td><td>Importante</td></tr>
+                    <tr><td><strong>O</strong></td><td>1</td><td>Ordinario, sin preferencia</td></tr>
+                    <tr><td><strong>U</strong></td><td>0</td><td>Sin importancia</td></tr>
+                    <tr><td class="text-danger"><strong>X</strong></td><td>-1</td><td>Indeseable, requiere separación</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="formula-box">
+            <div class="formula-label">Puntuación de Cercanía Total del área k</div>
+            $$TC_k = \sum_{j \neq k} v_{kj}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(v_{kj}\) = valor numérico de la relación entre áreas \(k\) y \(j\). Las áreas con mayor \(TC_k\) deben ubicarse en posiciones centrales.</p>
+        </div>
+
+        <div class="formula-box">
+            <div class="formula-label">Eficiencia del Diagrama CUAL</div>
+            $$\eta_{CUAL} = \frac{\displaystyle\sum_{i<j} v_{ij}^{layout}}{\displaystyle\sum_{i<j} |v_{ij}|} \times 100\%$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Compara la suma de valores positivos logrados en el layout vs. el total posible. Un valor del 80%+ indica un buen diseño.</p>
+        </div>
+
+        <hr class="divider">
+        <h3 class="h3">Ejemplo de Cálculo de TC (del diagrama anterior)</h3>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Área</th><th>Relaciones</th><th>Cálculo</th><th>\(TC_k\)</th></tr></thead>
+                <tbody>
+                    <tr><td>1. Recepción</td><td>A, E, I, U, I</td><td>4 + 3 + 2 + 0 + 2</td><td class="text-success"><strong>11</strong></td></tr>
+                    <tr><td>2. Almacén</td><td>A, A, O, X, U</td><td>4 + 4 + 1 + (-1) + 0</td><td class="text-success"><strong>8</strong></td></tr>
+                    <tr><td>3. Tratamiento</td><td>E, A, E, X, A</td><td>3 + 4 + 3 + (-1) + 4</td><td class="text-success"><strong>13</strong></td></tr>
+                    <tr><td>4. Lab.</td><td>I, O, E, I, U</td><td>2 + 1 + 3 + 2 + 0</td><td><strong>8</strong></td></tr>
+                    <tr><td>5. Oficinas</td><td>U, X, X, I, O</td><td>0 + (-1) + (-1) + 2 + 1</td><td class="text-danger"><strong>1</strong></td></tr>
+                    <tr><td>6. Emerg.</td><td>I, U, A, U, O</td><td>2 + 0 + 4 + 0 + 1</td><td><strong>7</strong></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="callout green">
+            <i class="fas fa-check-circle"></i>
+            <p><strong>Interpretación:</strong> Tratamiento (TC=13) y Recepción (TC=11) son las áreas más interconectadas → deben ubicarse en posiciones centrales. Oficinas (TC=1) es la menos interconectada → puede ubicarse periféricamente, lejos de áreas peligrosas (coincide con la relación X).</p>
+        </div>
+    </div>
+
+    <!-- ======================== EJERCICIOS ======================== -->
+    <div class="section" id="sec-ejercicios">
+        <div class="section-badge"><i class="fas fa-calculator"></i> Práctica</div>
+        <h2 class="section-title">Ejercicios de Aplicación</h2>
+        <p class="section-desc">Resuelva los siguientes ejercicios interactuando. Ingrese sus respuestas y verifique si son correctas.</p>
+
+        <div class="score-bar">
+            <div><div class="score-label">Progreso</div><div class="score-value" id="scoreDisplay">0 / 13</div></div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill" id="scoreBar" style="width:0%"></div></div>
+        </div>
+
+        <!-- EJERCICIO 1: PUNTO DE EQUILIBRIO -->
+        <div class="exercise-card">
+            <div class="exercise-num">Ejercicio 1</div>
+            <div class="exercise-title">Punto de Equilibrio — Planta de Tratamiento de Agua</div>
+            <div class="exercise-context">
+                <p>Se evalúan 3 sitios para una planta de tratamiento de aguas residuales industriales:</p>
+                <p><strong>Sitio A:</strong> CF = $180,000/año; CV = $12.50/m³ tratado</p>
+                <p><strong>Sitio B:</strong> CF = $250,000/año; CV = $9.80/m³ tratado</p>
+                <p><strong>Sitio C:</strong> CF = $320,000/año; CV = $8.20/m³ tratado</p>
+                <p>El volumen esperado de operación es <strong>Q = 28,000 m³/año</strong>.</p>
+            </div>
+            <div class="question">
+                <p>a) Costo total del Sitio A para Q = 28,000 m³/año (redondee al entero):</p>
+                <div class="input-row"><label>CT_A =</label><input type="number" class="input-field" id="e1a" step="1" placeholder="$..."><span class="input-unit">$/año</span></div>
+                <div class="feedback" id="fb-e1a"></div>
+            </div>
+            <div class="question">
+                <p>b) Costo total del Sitio B (redondee al entero):</p>
+                <div class="input-row"><label>CT_B =</label><input type="number" class="input-field" id="e1b" step="1" placeholder="$..."><span class="input-unit">$/año</span></div>
+                <div class="feedback" id="fb-e1b"></div>
+            </div>
+            <div class="question">
+                <p>c) Costo total del Sitio C (redondee al entero):</p>
+                <div class="input-row"><label>CT_C =</label><input type="number" class="input-field" id="e1c" step="1" placeholder="$..."><span class="input-unit">$/año</span></div>
+                <div class="feedback" id="fb-e1c"></div>
+            </div>
+            <div class="question">
+                <p>d) Punto de equilibrio entre A y B (redondee al entero, sin coma):</p>
+                <div class="input-row"><label>Q* =</label><input type="number" class="input-field" id="e1d" step="1" placeholder="m³/año"><span class="input-unit">m³/año</span></div>
+                <div class="feedback" id="fb-e1d"></div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-primary" onclick="checkEx1()"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-outline" onclick="toggleSol('sol1')"><i class="fas fa-eye"></i> Solución</button>
+            </div>
+            <div class="solution-box" id="sol1">
+                <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+                <p>\(CT_A = 180{,}000 + 12.50 \times 28{,}000 = 180{,}000 + 350{,}000 = \$530{,}000\)</p>
+                <p>\(CT_B = 250{,}000 + 9.80 \times 28{,}000 = 250{,}000 + 274{,}400 = \$524{,}400\)</p>
+                <p>\(CT_C = 320{,}000 + 8.20 \times 28{,}000 = 320{,}000 + 229{,}600 = \$549{,}600\)</p>
+                <p>\(Q^*_{AB} = \frac{250{,}000 - 180{,}000}{12.50 - 9.80} = \frac{70{,}000}{2.70} = 25{,}926 \text{ m³/año}\)</p>
+                <p>Como Q=28,000 > Q*=25,926, el Sitio B (menor CV) es más económico que A. Pero C tiene mayor costo total, así que el óptimo es <strong>B</strong>.</p>
+            </div>
+        </div>
+
+        <!-- EJERCICIO 2: CENTRO DE GRAVEDAD -->
+        <div class="exercise-card">
+            <div class="exercise-num">Ejercicio 2</div>
+            <div class="exercise-title">Centro de Gravedad — Ubicación de Almacén de EPP</div>
+            <div class="exercise-context">
+                <p>Una empresa de seguridad industrial necesita ubicar un almacén central de EPP que atiende a 4 plantas:</p>
+                <p><strong>Planta 1:</strong> Coordenadas (2, 8), Demanda: 150 cajas/mes</p>
+                <p><strong>Planta 2:</strong> Coordenadas (6, 12), Demanda: 80 cajas/mes</p>
+                <p><strong>Planta 3:</strong> Coordenadas (10, 4), Demanda: 200 cajas/mes</p>
+                <p><strong>Planta 4:</strong> Coordenadas (14, 10), Demanda: 120 cajas/mes</p>
+            </div>
+            <div class="question">
+                <p>a) Coordenada X óptima (redondee a 2 decimales):</p>
+                <div class="input-row"><label>X* =</label><input type="number" class="input-field" id="e2a" step="0.01" placeholder="0.00"></div>
+                <div class="feedback" id="fb-e2a"></div>
+            </div>
+            <div class="question">
+                <p>b) Coordenada Y óptima (redondee a 2 decimales):</p>
+                <div class="input-row"><label>Y* =</label><input type="number" class="input-field" id="e2b" step="0.01" placeholder="0.00"></div>
+                <div class="feedback" id="fb-e2b"></div>
+            </div>
+            <div class="question">
+                <p>c) Distancia euclidiana del almacén a la Planta 3 (redondee a 2 decimales):</p>
+                <div class="input-row"><label>d =</label><input type="number" class="input-field" id="e2c" step="0.01" placeholder="0.00"><span class="input-unit">unidades</span></div>
+                <div class="feedback" id="fb-e2c"></div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-primary" onclick="checkEx2()"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-outline" onclick="toggleSol('sol2')"><i class="fas fa-eye"></i> Solución</button>
+            </div>
+            <div class="solution-box" id="sol2">
+                <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+                <p>\(\sum w_i = 150 + 80 + 200 + 120 = 550\)</p>
+                <p>\(X^* = \frac{150 \times 2 + 80 \times 6 + 200 \times 10 + 120 \times 14}{550} = \frac{300 + 480 + 2000 + 1680}{550} = \frac{4460}{550} = 8.11\)</p>
+                <p>\(Y^* = \frac{150 \times 8 + 80 \times 12 + 200 \times 4 + 120 \times 10}{550} = \frac{1200 + 960 + 800 + 1200}{550} = \frac{4160}{550} = 7.56\)</p>
+                <p>\(d_{3} = \sqrt{(8.11 - 10)^2 + (7.56 - 4)^2} = \sqrt{(-1.89)^2 + (3.56)^2} = \sqrt{3.5721 + 12.6736} = \sqrt{16.2457} = 4.03\)</p>
+            </div>
+        </div>
+
+        <!-- EJERCICIO 3: CUAL -->
+        <div class="exercise-card">
+            <div class="exercise-num">Ejercicio 3</div>
+            <div class="exercise-title">Diagrama CUAL — Planta de Fabricación de Extintores</div>
+            <div class="exercise-context">
+                <p>Relaciones CUAL entre 5 áreas de una planta de fabricación de extintores:</p>
+                <p>1-2: A &nbsp;|&nbsp; 1-3: E &nbsp;|&nbsp; 1-4: U &nbsp;|&nbsp; 1-5: X</p>
+                <p>2-3: A &nbsp;|&nbsp; 2-4: I &nbsp;|&nbsp; 2-5: U</p>
+                <p>3-4: E &nbsp;|&nbsp; 3-5: X</p>
+                <p>4-5: O</p>
+            </div>
+            <div class="question">
+                <p>a) Puntuación TC del Área 1 (Recepción de materia prima):</p>
+                <div class="input-row"><label>TC₁ =</label><input type="number" class="input-field" id="e3a" step="1" placeholder="0"></div>
+                <div class="feedback" id="fb-e3a"></div>
+            </div>
+            <div class="question">
+                <p>b) Puntuación TC del Área 3 (Llenado y presurización):</p>
+                <div class="input-row"><label>TC₃ =</label><input type="number" class="input-field" id="e3b" step="1" placeholder="0"></div>
+                <div class="feedback" id="fb-e3b"></div>
+            </div>
+            <div class="question">
+                <p>c) Puntuación TC del Área 5 (Oficinas):</p>
+                <div class="input-row"><label>TC₅ =</label><input type="number" class="input-field" id="e3c" step="1" placeholder="0"></div>
+                <div class="feedback" id="fb-e3c"></div>
+            </div>
+            <div class="question">
+                <p>d) Suma de todos los valores absolutos del diagrama (es decir, Σ|v_ij| para todos los pares):</p>
+                <div class="input-row"><label>Σ|v| =</label><input type="number" class="input-field" id="e3d" step="1" placeholder="0"></div>
+                <div class="feedback" id="fb-e3d"></div>
+            </div>
+            <div class="exercise-actions">
+                <button class="btn btn-primary" onclick="checkEx3()"><i class="fas fa-check"></i> Verificar</button>
+                <button class="btn btn-outline" onclick="toggleSol('sol3')"><i class="fas fa-eye"></i> Solución</button>
+            </div>
+            <div class="solution-box" id="sol3">
+                <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+                <p>Valores: A=4, E=3, I=2, O=1, U=0, X=-1</p>
+                <p>\(TC_1 = 4 + 3 + 0 + (-1) = 6\)</p>
+                <p>\(TC_2 = 4 + 4 + 2 + 0 = 10\)</p>
+                <p>\(TC_3 = 3 + 4 + 3 + (-1) = 9\)</p>
+                <p>\(TC_4 = 0 + 2 + 3 + 1 = 6\)</p>
+                <p>\(TC_5 = (-1) + 0 + (-1) + 1 = -1\)</p>
+                <p>\(\sum|v_{ij}| = |4|+|3|+|0|+|-1|+|4|+|2|+|0|+|3|+|-1|+|1| = 4+3+0+1+4+2+0+3+1+1 = 19\)</p>
+                <p>El Área 2 (Almacén) y Área 3 (Llenado) son las más interconectadas. Oficinas (TC=-1) debe estar alejada de áreas peligrosas (tiene X con Recepción y Llenado).</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== TAREAS ======================== -->
+    <div class="section" id="sec-tareas">
+        <div class="section-badge"><i class="fas fa-tasks"></i> Evaluación</div>
+        <h2 class="section-title">Tareas del Tema</h2>
+        <p class="section-desc">Desarrolle las siguientes tareas de manera individual. Sus respuestas se guardan localmente.</p>
+
+        <div class="task-card" id="task1">
+            <div class="task-header" onclick="toggleTask('task1')">
+                <div class="task-icon green"><i class="fas fa-balance-scale"></i></div>
+                <div class="task-info"><div class="task-name">Tarea 1: Modelo de Brown-Gibson Completo</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+                <i class="fas fa-chevron-down task-chevron"></i>
+            </div>
+            <div class="task-body"><div class="task-desc">
+                <p>Aplique el modelo de Brown-Gibson para seleccionar entre 3 sitios candidatos para una <strong>planta de reciclaje de residuos electrónicos</strong>.</p>
+                <p><strong>Factores objetivos (con datos reales que usted debe inventar coherentemente):</strong></p>
+                <ul class="content-list"><li>Costo del terreno ($/m²)</li><li>Costo de mano de obra ($/mes por operario)</li><li>Costo de energía ($/kWh)</li></ul>
+                <p><strong>Factores subjetivos (califique 0 a 1):</strong></p>
+                <ul class="content-list"><li>Riesgo de inundación</li><li>Aceptación comunitaria</li><li>Proximidad a vías principales</li><li>Disponibilidad de servicios de emergencia</li></ul>
+                <p><strong>Instrucciones:</strong></p>
+                <ul class="numbered-list"><li>Defina ponderaciones para todos los factores</li><li>Calcule los factores objetivos normalizados (recuerde invertir para costos)</li><li>Calcule el factor subjetivo para cada sitio</li><li>Calcule el FOM para cada sitio y seleccione el óptimo</li><li>Redacte un análisis de sensibilidad: ¿qué pasa si el peso del riesgo de inundación aumenta al doble?</li></ul>
+                <textarea class="task-textarea" id="task1-text" placeholder="Desarrolle su modelo Brown-Gibson aquí..." style="min-height:200px;"></textarea>
+                <div class="task-actions">
+                    <button class="btn btn-primary btn-sm" onclick="saveTask('task1')"><i class="fas fa-save"></i> Guardar</button>
+                    <button class="btn btn-outline btn-sm" onclick="downloadTask('task1','Tarea1_BrownGibson')"><i class="fas fa-download"></i> Descargar</button>
+                    <span class="saved-indicator" id="saved-task1"><i class="fas fa-check"></i> Guardado</span>
+                </div>
+            </div></div>
+        </div>
+
+        <div class="task-card" id="task2">
+            <div class="task-header" onclick="toggleTask('task2')">
+                <div class="task-icon blue"><i class="fas fa-th-large"></i></div>
+                <div class="task-info"><div class="task-name">Tarea 2: Diseño de Distribución con SLP</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+                <i class="fas fa-chevron-down task-chevron"></i>
+            </div>
+            <div class="task-body"><div class="task-desc">
+                <p>Diseñe la distribución de una <strong>planta de envasado de productos químicos agroindustriales</strong> con las siguientes áreas:</p>
+                <ul class="content-list"><li>1. Recepción de materia prima</li><li>2. Almacén de productos químicos</li><li>3. Zona de mezclado</li><li>4. Línea de envasado</li><li>5. Laboratorio de control de calidad</li><li>6. Almacén de producto terminado</li><li>7. Oficinas administrativas</li><li>8. Vestidores y comedores</li><li>9. Estación de primeros auxilios</li><li>10. Patio de tanques</li></ul>
+                <p><strong>Instrucciones:</strong></p>
+                <ul class="numbered-list"><li>Elabore el diagrama CUAL completo (10×10) justificando cada relación desde la perspectiva de seguridad industrial</li><li>Calcule TC para cada área</li><li>Proponga al menos 2 distribuciones alternativas (diagrama de bloques descriptivo)</li><li>Calcule la eficiencia CUAL de cada alternativa</li><li>Seleccione la mejor y justifique</li></ul>
+                <textarea class="task-textarea" id="task2-text" placeholder="Desarrolle su diseño SLP aquí..." style="min-height:250px;"></textarea>
+                <div class="task-actions">
+                    <button class="btn btn-primary btn-sm" onclick="saveTask('task2')"><i class="fas fa-save"></i> Guardar</button>
+                    <button class="btn btn-outline btn-sm" onclick="downloadTask('task2','Tarea2_SLP_CUAL')"><i class="fas fa-download"></i> Descargar</button>
+                    <span class="saved-indicator" id="saved-task2"><i class="fas fa-check"></i> Guardado</span>
+                </div>
+            </div></div>
+        </div>
+
+        <div class="task-card" id="task3">
+            <div class="task-header" onclick="toggleTask('task3')">
+                <div class="card-icon red" style="width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;"><i class="fas fa-route"></i></div>
+                <div class="task-info"><div class="task-name">Tarea 3: Análisis de Eficiencia de un Layout Existente</div><div class="task-meta">Valor: 20 puntos · Entrega individual</div></div>
+                <i class="fas fa-chevron-down task-chevron"></i>
+            </div>
+            <div class="task-body"><div class="task-desc">
+                <p>Se proporciona el siguiente layout de un taller de mantenimiento de equipos de protección personal en una mina:</p>
+                <div class="exercise-context" style="font-family:monospace;font-size:13px;line-height:1.4;white-space:pre;overflow-x:auto;">+----------+----------+----------+
+|  A       |  B       |  C       |
+|  Recepción|  Almacén |  Taller  |
++----------+----------+----------+
+|  D       |  E       |  F       |
+|  Lavandería| Vestidor|  Lab QC  |
++----------+----------+----------+
+|  G       |  H       |  I       |
+|  Despacho |  Oficinas|  Prim.Aux|
++----------+----------+----------+</div>
+                <p>Distancia entre celdas adyacentes (horizontal o vertical) = <strong>15 m</strong>. Distancia diagonal = <strong>21.2 m</strong>.</p>
+                <p>Flujo de materiales/personas por día:</p>
+                <div class="exercise-context">
+                    <p>A→B: 20 viajes | A→C: 15 | B→C: 25 | B→D: 5 | C→D: 10 | C→E: 8 | D→E: 12 | D→G: 3 | E→F: 6 | E→H: 15 | F→I: 4 | G→H: 10 | H→I: 8</p>
+                </div>
+                <ul class="numbered-list"><li>Calcule la distancia de cada recorrido (usando distancia Manhattan)</li><li>Calcule la distancia total de recorrido diaria</li><li>Proponga un mejoramiento del layout intercambiando al menos 2 áreas</li><li>Recalcule la distancia total con el nuevo layout</li><li>Calcule la eficiencia del recorrido mejorada</li></ul>
+                <textarea class="task-textarea" id="task3-text" placeholder="Desarrolle su análisis de eficiencia aquí..." style="min-height:200px;"></textarea>
+                <div class="task-actions">
+                    <button class="btn btn-primary btn-sm" onclick="saveTask('task3')"><i class="fas fa-save"></i> Guardar</button>
+                    <button class="btn btn-outline btn-sm" onclick="downloadTask('task3','Tarea3_EficienciaLayout')"><i class="fas fa-download"></i> Descargar</button>
+                    <span class="saved-indicator" id="saved-task3"><i class="fas fa-check"></i> Guardado</span>
+                </div>
+            </div></div>
+        </div>
+    </div>
+
+    <!-- ======================== TAREA APLICADA ======================== -->
+    <div class="section" id="sec-tareaaplicada">
+        <div class="section-badge"><i class="fas fa-hard-hat"></i> Aplicación Real</div>
+        <h2 class="section-title">Tarea Aplicada: Caso de Seguridad Industrial</h2>
+        <p class="section-desc">Integre todos los conocimientos del tema en un caso real de la carrera.</p>
+
+        <div class="case-header">
+            <div class="case-tag"><i class="fas fa-oil-can"></i> Caso de Estudio</div>
+            <h3 class="case-title">Localización y Distribución de Terminal de Almacenamiento de Combustibles — Puerto Libertad</h3>
+            <p class="case-desc">ECUAPETROL S.A. requiere determinar la ubicación y diseñar la distribución de una terminal de almacenamiento y distribución de combustibles (gasolina, diésel, jet fuel) en la zona de Puerto Libertad, provincia de Santa Elena. La terminal abastecerá a la zona 5 (Santa Elena, Guayas, Manabí) y debe cumplir todas las normativas de seguridad industrial y ambiental.</p>
+        </div>
+
+        <div class="case-phase">
+            <div class="phase-label"><i class="fas fa-map-marked-alt"></i> Fase 1 — Evaluación de Sitios Candidatos</div>
+            <div class="phase-content">
+                <p style="color:var(--text-secondary);font-size:15px;margin-bottom:16px;">Se identificaron 3 sitios candidatos. La empresa requiere evaluarlos con múltiples métodos.</p>
+                <div class="grid-3">
+                    <div class="card" style="border-top:3px solid var(--accent);padding:20px;">
+                        <h4 class="h4" style="margin-top:0;color:var(--accent);font-size:15px;">Sitio A — Sector El Progreso</h4>
+                        <p style="font-size:13px;">Terreno: 50,000 m² a $35/m². Costo mano obra: $450/mes. Energía: $0.12/kWh. Distancia al puerto: 3 km. Sismicidad: media. Zona de inundación: no. Comunidad: favorable.</p>
+                    </div>
+                    <div class="card" style="border-top:3px solid var(--info);padding:20px;">
+                        <h4 class="h4" style="margin-top:0;color:var(--info);font-size:15px;">Sitio B — Sector La Libertad</h4>
+                        <p style="font-size:13px;">Terreno: 45,000 m² a $55/m². Costo mano obra: $420/mes. Energía: $0.10/kWh. Distancia al puerto: 1.5 km. Sismicidad: baja. Zona de inundación: sí (marginal). Comunidad: neutral.</p>
+                    </div>
+                    <div class="card" style="border-top:3px solid var(--warn);padding:20px;">
+                        <h4 class="h4" style="margin-top:0;color:var(--warn);font-size:15px;">Sitio C — Sector Ancón</h4>
+                        <p style="font-size:13px;">Terreno: 60,000 m² a $22/m². Costo mano obra: $380/mes. Energía: $0.14/kWh. Distancia al puerto: 8 km. Sismicidad: alta. Zona de inundación: no. Comunidad: desfavorable.</p>
+                    </div>
+                </div>
+                <div class="callout red">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p><strong>Datos adicionales de seguridad:</strong> La capacidad proyectada es 2,000,000 de barriles. Se requieren tanques de almacenamiento según NFPA 30 (distancias entre tanques = 1/6 del diámetro del tanque mayor, mínimo 1m). Debe haber distancia mínima de 100m a poblaciones según regulación.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-phase">
+            <div class="phase-label"><i class="fas fa-calculator"></i> Fase 2 — Datos para Cálculos</div>
+            <div class="phase-content">
+                <p style="color:var(--text-primary);font-weight:600;margin-bottom:12px;">Factores objetivos (anuales, para Q = 50,000 m³ de combustible movido/año):</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Factor objetivo</th><th>Sitio A</th><th>Sitio B</th><th>Sitio C</th></tr></thead>
+                        <tbody>
+                            <tr><td>Costo del terreno (compra total)</td><td>$1,750,000</td><td>$2,475,000</td><td>$1,320,000</td></tr>
+                            <tr><td>Costo de transporte marítimo-a-planta</td><td>$180,000/año</td><td>$90,000/año</td><td>$480,000/año</td></tr>
+                            <tr><td>Costo de mano de obra (40 operarios)</td><td>$216,000/año</td><td>$201,600/año</td><td>$182,400/año</td></tr>
+                            <tr><td>Costo de energía</td><td>$72,000/año</td><td>$60,000/año</td><td>$84,000/año</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="color:var(--text-primary);font-weight:600;margin:16px 0 12px;">Factores subjetivos (calificación 0 a 1, donde 1 es la mejor condición):</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Factor subjetivo</th><th>Sitio A</th><th>Sitio B</th><th>Sitio C</th></tr></thead>
+                        <tbody>
+                            <tr><td>Riesgo sísmico (1=bajo riesgo)</td><td>0.6</td><td>0.9</td><td>0.2</td></tr>
+                            <tr><td>Riesgo de inundación (1=sin riesgo)</td><td>1.0</td><td>0.3</td><td>1.0</td></tr>
+                            <tr><td>Aceptación comunitaria</td><td>0.8</td><td>0.5</td><td>0.2</td></tr>
+                            <tr><td>Servicios de emergencia cercanos</td><td>0.6</td><td>0.9</td><td>0.3</td></tr>
+                            <tr><td>Cumplimiento normativo ambiental</td><td>0.8</td><td>0.6</td><td>0.7</td></tr>
+                            <tr><td>Acceso a vías de evacuación</td><td>0.7</td><td>0.8</td><td>0.5</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-phase">
+            <div class="phase-label"><i class="fas fa-th-large"></i> Fase 3 — Distribución de la Terminal</div>
+            <div class="phase-content">
+                <p style="color:var(--text-secondary);font-size:15px;margin-bottom:16px;">Una vez seleccionado el sitio, se requiere diseñar la distribución interna. Las áreas principales son:</p>
+                <div class="grid-2">
+                    <div>
+                        <ul class="numbered-list">
+                            <li><strong>Patio de tanques</strong> (gasolina, diésel, jet fuel) — 20,000 m²</li>
+                            <li><strong>Isla de descarga marítima</strong> (tuberías, válvulas, bombeo) — 3,000 m²</li>
+                            <li><strong>Planta de tratamiento de efluentes</strong> — 2,500 m²</li>
+                            <li><strong>Sala de bombas y compresores</strong> — 1,500 m²</li>
+                            <li><strong>Área de carga de camiones</strong> (4 posiciones) — 4,000 m²</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul class="numbered-list" style="counter-reset:item 5;">
+                            <li><strong>Almacén de productos químicos</strong> — 800 m²</li>
+                            <li><strong>Taller de mantenimiento</strong> — 1,200 m²</li>
+                            <li><strong>Oficinas y sala de control</strong> — 600 m²</li>
+                            <li><strong>Vestidores, comedor, servicios</strong> — 500 m²</li>
+                            <li><strong>Estación de emergencia y brigada</strong> — 400 m²</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="callout red">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p><strong>Restricciones de distribución por seguridad:</strong> Oficinas a mínimo 60m del patio de tanques. Estación de emergencia con acceso directo a todas las áreas. Almacén químico separado de tanques por dique de contención. Zonas de carga de camiones con acceso controlado e independiente.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="case-phase">
+            <div class="phase-label"><i class="fas fa-clipboard-check"></i> Fase 4 — Instrucciones de Entrega</div>
+            <div class="phase-content">
+                <p style="color:var(--text-primary);font-size:15px;font-weight:600;margin-bottom:16px;">Con los datos proporcionados, desarrolle las siguientes partes:</p>
+
+                <h4 class="h4">Parte A: Localización — Punto de Equilibrio (15%)</h4>
+                <ul class="content-list">
+                    <li>Estime costos fijos anuales (amortización del terreno a 20 años + infraestructura base) y costos variables unitarios ($/m³) para cada sitio.</li>
+                    <li>Grafique las 3 rectas de costo total (puede describir la gráfica textualmente indicando los puntos de intersección).</li>
+                    <li>Determine el sitio óptimo según este método.</li>
+                </ul>
+
+                <h4 class="h4">Parte B: Localización — Brown-Gibson (30%)</h4>
+                <ul class="content-list">
+                    <li>Asigne ponderaciones a los 10 factores (4 objetivos + 6 subjetivos). Justifique las ponderaciones desde la perspectiva de seguridad industrial.</li>
+                    <li>Calcule los factores objetivos normalizados (recuerde: para costos, menor es mejor → invertir).</li>
+                    <li>Calcule el factor subjetivo para cada sitio.</li>
+                    <li>Calcule el FOM para cada sitio y seleccione el óptimo.</li>
+                    <li>Compare con el resultado del método de punto de equilibrio. ¿Coinciden? ¿Por qué?</li>
+                </ul>
+
+                <h4 class="h4">Parte C: Distribución — Diagrama CUAL (30%)</h4>
+                <ul class="content-list">
+                    <li>Elabore el diagrama CUAL completo (10×10) para la terminal, justificando cada relación con criterios de seguridad industrial y operativo.</li>
+                    <li>Calcule TC para cada área.</li>
+                    <li>Proponga un diagrama de bloques (descriptivo) de la distribución, indicando distancias estimadas entre áreas críticas.</li>
+                    <li>Verifique que cumple las restricciones de distancia mínima indicadas.</li>
+                </ul>
+
+                <h4 class="h4">Parte D: Informe Ejecutivo (25%)</h4>
+                <ul class="content-list">
+                    <li>Redacte un informe ejecutivo (mínimo 600 palabras) dirigido a la Gerencia General de ECUAPETROL.</li>
+                    <li>Incluya: metodología utilizada, sitio recomendado con justificación, distribución propuesta, análisis de riesgos del layout, y plan de mitigación.</li>
+                    <li>Proponga al menos 3 medidas específicas de seguridad industrial derivadas de la distribución propuesta.</li>
+                </ul>
+
+                <div class="callout red">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p><strong>Criterio de aprobación:</strong> Mínimo 70/100. La Parte B y C son obligatorias y se evalúan rigor matemático y coherencia en las justificaciones de seguridad. La Parte D evalúa redacción profesional, uso de datos cuantitativos y viabilidad de las medidas propuestas.</p>
+                </div>
+
+                <h4 class="h4">Desarrollo de la Tarea</h4>
+                <textarea class="task-textarea" id="taskReal-text" placeholder="Desarrolle las cuatro partes de la tarea aplicada aquí. Organice su respuesta con encabezados claros para cada parte (Parte A, Parte B, Parte C, Parte D)..." style="min-height:400px;"></textarea>
+                <div class="task-actions">
+                    <button class="btn btn-primary" onclick="saveTask('taskReal')"><i class="fas fa-save"></i> Guardar Progreso</button>
+                    <button class="btn btn-outline" onclick="downloadTask('taskReal','TareaAplicada_TerminalCombustibles')"><i class="fas fa-download"></i> Descargar como TXT</button>
+                    <span class="saved-indicator" id="saved-taskReal"><i class="fas fa-check"></i> Guardado</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+// Canvas de fondo
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+let nodes = [];
+const NODE_COUNT = 45;
+const MAX_DIST = 140;
+
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+for(let i=0;i<NODE_COUNT;i++){
+    nodes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*0.35,vy:(Math.random()-0.5)*0.35,r:Math.random()*2+1});
+}
+
+function animateCanvas(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for(let n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;}
+    for(let i=0;i<nodes.length;i++){
+        for(let j=i+1;j<nodes.length;j++){
+            const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,dist=Math.sqrt(dx*dx+dy*dy);
+            if(dist<MAX_DIST){const alpha=(1-dist/MAX_DIST)*0.12;ctx.strokeStyle=`rgba(16,185,129,${alpha})`;ctx.lineWidth=0.5;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}
+        }
+    }
+    for(let n of nodes){ctx.fillStyle='rgba(16,185,129,0.25)';ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}
+    requestAnimationFrame(animateCanvas);
+}
+const mq=window.matchMedia('(prefers-reduced-motion: reduce)');
+if(!mq.matches)animateCanvas();
+
+// Navegación
+const navItems=document.querySelectorAll('.nav-item');
+const sections=document.querySelectorAll('.section');
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('sidebarOverlay');
+const menuToggle=document.getElementById('menuToggle');
+
+function switchSection(id){
+    sections.forEach(s=>s.classList.remove('active'));
+    const t=document.getElementById('sec-'+id);if(t)t.classList.add('active');
+    navItems.forEach(n=>n.classList.remove('active'));
+    const ni=document.querySelector(`.nav-item[data-section="${id}"]`);if(ni)ni.classList.add('active');
+    sidebar.classList.remove('open');overlay.classList.remove('open');
+    window.scrollTo({top:0,behavior:'smooth'});
+    renderMath();
+}
+navItems.forEach(i=>i.addEventListener('click',()=>switchSection(i.dataset.section)));
+menuToggle.addEventListener('click',()=>{sidebar.classList.toggle('open');overlay.classList.toggle('open');});
+overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('open');});
+
+// KaTeX
+function renderMath(){
+    if(typeof renderMathInElement==='function'){
+        renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});
+    }
+}
+document.addEventListener('DOMContentLoaded',()=>{renderMath();loadSaved();});
+setTimeout(renderMath,1000);setTimeout(renderMath,3000);
+
+// Verificar respuestas
+function checkVal(id,correct,tol,fid){
+    const inp=document.getElementById(id),fb=document.getElementById(fid),v=parseFloat(inp.value);
+    if(isNaN(v)){inp.classList.remove('correct','incorrect');fb.classList.remove('show','correct','incorrect');return false;}
+    if(Math.abs(v-correct)<=tol){inp.classList.add('correct');inp.classList.remove('incorrect');fb.innerHTML='<i class="fas fa-check-circle"></i> Correcto';fb.classList.add('show','correct');fb.classList.remove('incorrect');return true;}
+    else{inp.classList.add('incorrect');inp.classList.remove('correct');fb.innerHTML=`<i class="fas fa-times-circle"></i> Incorrecto. Respuesta: ${correct}`;fb.classList.add('show','incorrect');fb.classList.remove('correct');return false;}
+}
+
+const TOTAL_Q=13;
+function updateScore(){let s=0;document.querySelectorAll('.input-field.correct').forEach(()=>s++);document.getElementById('scoreDisplay').textContent=s+' / '+TOTAL_Q;document.getElementById('scoreBar').style.width=((s/TOTAL_Q)*100)+'%';}
+
+function checkEx1(){
+    let c=0;
+    if(checkVal('e1a',530000,2,'fb-e1a'))c++;
+    if(checkVal('e1b',524400,2,'fb-e1b'))c++;
+    if(checkVal('e1c',549600,2,'fb-e1c'))c++;
+    if(checkVal('e1d',25926,2,'fb-e1d'))c++;
+    updateScore();
+    showToast(c===4?'Ejercicio 1: Todas correctas':'Ejercicio 1: '+c+'/4 correctas',c===4?'success':'info');
+}
+function checkEx2(){
+    let c=0;
+    if(checkVal('e2a',8.11,0.02,'fb-e2a'))c++;
+    if(checkVal('e2b',7.56,0.02,'fb-e2b'))c++;
+    if(checkVal('e2c',4.03,0.05,'fb-e2c'))c++;
+    updateScore();
+    showToast(c===3?'Ejercicio 2: Todas correctas':'Ejercicio 2: '+c+'/3 correctas',c===3?'success':'info');
+}
+function checkEx3(){
+    let c=0;
+    if(checkVal('e3a',6,0,'fb-e3a'))c++;
+    if(checkVal('e3b',9,0,'fb-e3b'))c++;
+    if(checkVal('e3c',-1,0,'fb-e3c'))c++;
+    if(checkVal('e3d',19,0,'fb-e3d'))c++;
+    updateScore();
+    showToast(c===4?'Ejercicio 3: Todas correctas':'Ejercicio 3: '+c+'/4 correctas',c===4?'success':'info');
+}
+
+function toggleSol(id){document.getElementById(id).classList.toggle('show');}
+
+// Tareas
+function toggleTask(id){document.getElementById(id).classList.toggle('open');}
+function saveTask(id){
+    const ta=document.getElementById(id+'-text');
+    if(ta){localStorage.setItem('upse_loc_'+id,ta.value);const ind=document.getElementById('saved-'+id);if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),3000);}showToast('Progreso guardado','success');}
+}
+function downloadTask(id,name){
+    const ta=document.getElementById(id+'-text');
+    if(ta&&ta.value.trim()){const b=new Blob([ta.value],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name+'.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);showToast('Archivo descargado','success');}
+    else showToast('No hay contenido para descargar','error');
+}
+function loadSaved(){
+    ['task1','task2','task3','taskReal'].forEach(id=>{const s=localStorage.getItem('upse_loc_'+id);const ta=document.getElementById(id+'-text');if(s&&ta)ta.value=s;});
+}
+
+// Toast
+function showToast(msg,type){
+    const c=document.getElementById('toastContainer'),t=document.createElement('div');
+    t.className='toast '+type;
+    const ic=type==='success'?'fa-check-circle':type==='error'?'fa-exclamation-circle':'fa-info-circle';
+    t.innerHTML=`<i class="fas ${ic}"></i> ${msg}`;c.appendChild(t);
+    setTimeout(()=>{if(t.parentNode)t.parentNode.removeChild(t);},3200);
+}
+</script>
+</body>
+</html>
