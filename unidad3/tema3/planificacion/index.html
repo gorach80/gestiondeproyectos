@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tema 4: Planificación Productiva y Logística | UPSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{
+            --bg-primary:#0c1220;--bg-secondary:#111a2e;--bg-card:#162038;--bg-card-hover:#1c2a4a;
+            --bg-input:#0e1628;--accent:#14b8a6;--accent-light:#2dd4bf;--accent-dark:#0d9488;
+            --accent-glow:rgba(20,184,166,.12);--danger:#ef4444;--danger-bg:rgba(239,68,68,.08);
+            --success:#10b981;--success-bg:rgba(16,185,129,.08);--info:#38bdf8;--info-bg:rgba(56,189,248,.08);
+            --warn:#f59e0b;--warn-bg:rgba(245,158,11,.08);--text-primary:#f1f5f9;--text-secondary:#94a3b8;
+            --text-muted:#64748b;--border:#1e3050;--border-light:#253a5c;--sidebar-w:290px;
+            --radius:12px;--radius-sm:8px;--shadow:0 4px 24px rgba(0,0,0,.3);
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        html{scroll-behavior:smooth}
+        body{font-family:'Source Sans 3',sans-serif;background:var(--bg-primary);color:var(--text-primary);min-height:100vh;overflow-x:hidden;line-height:1.7}
+        h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif;line-height:1.2}
+        a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-light)}
+        #bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.3}
+
+        .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;background:linear-gradient(180deg,#080d18,#0c1525);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+        .sidebar-header{padding:24px 20px 20px;border-bottom:1px solid var(--border)}
+        .sidebar-logo{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+        .sidebar-logo .logo-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:800;font-family:'Outfit';text-align:center;line-height:1.1}
+        .sidebar-logo .logo-text{font-family:'Outfit';font-weight:700;font-size:14px;color:var(--text-primary);line-height:1.2}
+        .sidebar-logo .logo-text small{display:block;font-size:11px;font-weight:400;color:var(--text-muted);margin-top:2px}
+        .sidebar-subtitle{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+        .sidebar-nav{flex:1;overflow-y:auto;padding:12px 10px}
+        .sidebar-nav::-webkit-scrollbar{width:4px}.sidebar-nav::-webkit-scrollbar-track{background:transparent}.sidebar-nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+        .nav-section-label{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);padding:16px 12px 6px;font-weight:600}
+        .nav-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;font-size:14px;color:var(--text-secondary);margin-bottom:2px;position:relative;border:1px solid transparent}
+        .nav-item:hover{background:var(--accent-glow);color:var(--text-primary)}
+        .nav-item.active{background:var(--accent-glow);color:var(--accent);border-color:rgba(20,184,166,.2);font-weight:600}
+        .nav-item.active::before{content:'';position:absolute;left:-10px;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent);border-radius:0 3px 3px 0}
+        .nav-item i{width:20px;text-align:center;font-size:14px}
+        .nav-item .nav-badge{margin-left:auto;font-size:10px;background:var(--accent);color:#000;padding:1px 7px;border-radius:10px;font-weight:700}
+        .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);font-size:11px;color:var(--text-muted)}
+        .sidebar-footer .prof-name{color:var(--text-secondary);font-weight:600;font-size:12px}
+
+        .menu-toggle{display:none;position:fixed;top:16px;left:16px;z-index:200;width:44px;height:44px;border-radius:10px;background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);font-size:18px;cursor:pointer;align-items:center;justify-content:center;transition:all .2s}
+        .menu-toggle:hover{background:var(--accent-glow);border-color:var(--accent)}
+        .sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;backdrop-filter:blur(2px)}
+
+        .main-content{margin-left:var(--sidebar-w);min-height:100vh;position:relative;z-index:1}
+        .section{display:none;padding:48px 48px 80px;max-width:960px;margin:0 auto;animation:fadeInUp .4s ease}
+        .section.active{display:block}
+        @keyframes fadeInUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+        .section-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);background:var(--accent-glow);padding:6px 14px;border-radius:20px;border:1px solid rgba(20,184,166,.2);margin-bottom:16px}
+        .section-title{font-size:34px;font-weight:800;color:var(--text-primary);margin-bottom:8px;letter-spacing:-.5px}
+        .section-desc{font-size:17px;color:var(--text-secondary);margin-bottom:40px;max-width:700px;line-height:1.7}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px;margin-bottom:24px;transition:all .25s}
+        .card:hover{border-color:var(--border-light);background:var(--bg-card-hover)}
+        .card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+        .card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .card-icon.teal{background:var(--accent-glow);color:var(--accent)}
+        .card-icon.red{background:var(--danger-bg);color:var(--danger)}
+        .card-icon.green{background:var(--success-bg);color:var(--success)}
+        .card-icon.blue{background:var(--info-bg);color:var(--info)}
+        .card-icon.amber{background:var(--warn-bg);color:var(--warn)}
+        .card-title{font-size:18px;font-weight:700}
+        .card p{color:var(--text-secondary);margin-bottom:12px}.card p:last-child{margin-bottom:0}
+
+        .h3{font-size:22px;font-weight:700;margin:36px 0 14px;color:var(--text-primary)}
+        .h4{font-size:17px;font-weight:600;margin:24px 0 10px;color:var(--text-primary)}
+        .text-accent{color:var(--accent)}.text-danger{color:var(--danger)}.text-success{color:var(--success)}.text-info{color:var(--info)}.text-warn{color:var(--warn)}.text-muted{color:var(--text-muted)}
+
+        .content-list{padding-left:0;list-style:none;margin:12px 0}
+        .content-list li{padding:6px 0 6px 28px;position:relative;color:var(--text-secondary);font-size:15px}
+        .content-list li::before{content:'';position:absolute;left:8px;top:14px;width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:.7}
+        .numbered-list{padding-left:0;list-style:none;margin:12px 0;counter-reset:item}
+        .numbered-list li{padding:6px 0 6px 32px;position:relative;color:var(--text-secondary);font-size:15px;counter-increment:item}
+        .numbered-list li::before{content:counter(item);position:absolute;left:4px;top:6px;width:22px;height:22px;border-radius:6px;background:var(--accent-glow);color:var(--accent);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+
+        .table-wrap{overflow-x:auto;margin:16px 0;border-radius:var(--radius);border:1px solid var(--border)}
+        table{width:100%;border-collapse:collapse;font-size:14px}
+        thead{background:rgba(20,184,166,.06)}
+        th{padding:12px 16px;text-align:left;font-weight:600;color:var(--accent);font-size:13px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);white-space:nowrap}
+        td{padding:10px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary)}
+        tbody tr:hover{background:rgba(20,184,166,.03)}tbody tr:last-child td{border-bottom:none}
+
+        .formula-box{background:linear-gradient(135deg,rgba(20,184,166,.06),rgba(20,184,166,.02));border:1px solid rgba(20,184,166,.15);border-left:4px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;padding:20px 24px;margin:20px 0;overflow-x:auto}
+        .formula-box .formula-label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+        .formula-box .katex-display{margin:8px 0!important}
+
+        .callout{border-radius:var(--radius);padding:20px 24px;margin:20px 0;display:flex;gap:14px;align-items:flex-start}
+        .callout i{margin-top:3px;font-size:18px;flex-shrink:0}
+        .callout.teal{background:var(--accent-glow);border:1px solid rgba(20,184,166,.2)}.callout.teal i{color:var(--accent)}
+        .callout.red{background:var(--danger-bg);border:1px solid rgba(239,68,68,.2)}.callout.red i{color:var(--danger)}
+        .callout.green{background:var(--success-bg);border:1px solid rgba(16,185,129,.2)}.callout.green i{color:var(--success)}
+        .callout.blue{background:var(--info-bg);border:1px solid rgba(56,189,248,.2)}.callout.blue i{color:var(--info)}
+        .callout.amber{background:var(--warn-bg);border:1px solid rgba(245,158,11,.2)}.callout.amber i{color:var(--warn)}
+        .callout p{color:var(--text-secondary);margin:0;font-size:14px}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;margin:20px 0}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:20px 0}
+
+        .stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;transition:all .25s}
+        .stat-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+        .stat-number{font-family:'Outfit';font-size:32px;font-weight:800;color:var(--accent);line-height:1}
+        .stat-label{font-size:13px;color:var(--text-muted);margin-top:6px}
+
+        .hero{text-align:center;padding:60px 20px 40px;position:relative}
+        .hero-icon{width:80px;height:80px;margin:0 auto 24px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:34px;color:#000;box-shadow:0 8px 32px rgba(20,184,166,.25);animation:float 4s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        .hero h1{font-size:40px;font-weight:900;margin-bottom:12px;letter-spacing:-1px}.hero h1 span{color:var(--accent)}
+        .hero p{font-size:18px;color:var(--text-secondary);max-width:620px;margin:0 auto 36px}
+
+        .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0}
+        .obj-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px 20px;display:flex;gap:12px;align-items:flex-start;transition:all .2s}
+        .obj-item:hover{border-color:var(--accent)}
+        .obj-num{width:28px;height:28px;border-radius:8px;background:var(--accent-glow);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;font-family:'Outfit';flex-shrink:0}
+        .obj-text{font-size:14px;color:var(--text-secondary)}
+
+        .flow-steps{display:flex;gap:0;align-items:center;flex-wrap:wrap;margin:20px 0;justify-content:center}
+        .flow-step{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;text-align:center;min-width:110px;transition:all .2s}
+        .flow-step:hover{border-color:var(--accent)}
+        .flow-step .step-num{font-family:'Outfit';font-size:11px;font-weight:700;color:var(--accent);margin-bottom:4px}
+        .flow-step .step-label{font-size:13px;color:var(--text-secondary);font-weight:500}
+        .flow-arrow{color:var(--accent);font-size:18px;padding:0 4px;flex-shrink:0}
+
+        .exercise-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:32px;position:relative}
+        .exercise-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));border-radius:var(--radius) var(--radius) 0 0}
+        .exercise-num{font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px}
+        .exercise-title{font-size:20px;font-weight:700;margin-bottom:16px}
+        .exercise-context{background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:20px}
+        .exercise-context p{color:var(--text-secondary);font-size:14px;margin-bottom:8px}.exercise-context p:last-child{margin-bottom:0}
+        .question{margin:20px 0;padding:16px 20px;background:rgba(20,184,166,.03);border-radius:var(--radius-sm);border-left:3px solid var(--accent)}
+        .question p{color:var(--text-primary);font-size:15px;margin-bottom:10px;font-weight:500}
+        .input-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+        .input-row label{font-size:14px;color:var(--text-secondary);white-space:nowrap}
+        .input-field{background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 14px;color:var(--text-primary);font-size:15px;font-family:'Source Sans 3';width:140px;transition:all .2s;outline:none}
+        .input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        .input-field.correct{border-color:var(--success);background:var(--success-bg)}
+        .input-field.incorrect{border-color:var(--danger);background:var(--danger-bg)}
+        .input-unit{font-size:14px;color:var(--text-muted)}
+
+        .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:'Outfit';cursor:pointer;border:1px solid transparent;transition:all .2s;outline:none}
+        .btn-primary{background:var(--accent);color:#000;border-color:var(--accent)}
+        .btn-primary:hover{background:var(--accent-light);transform:translateY(-1px);box-shadow:0 4px 16px rgba(20,184,166,.3)}
+        .btn-outline{background:transparent;color:var(--text-secondary);border-color:var(--border)}
+        .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+        .btn-sm{padding:7px 16px;font-size:13px}
+
+        .feedback{margin-top:12px;padding:12px 16px;border-radius:var(--radius-sm);font-size:14px;display:none;align-items:center;gap:8px}
+        .feedback.show{display:flex}
+        .feedback.correct{background:var(--success-bg);color:var(--success);border:1px solid rgba(16,185,129,.2)}
+        .feedback.incorrect{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,.2)}
+
+        .solution-box{display:none;margin-top:16px;padding:20px;background:var(--bg-secondary);border:1px solid var(--border);border-radius:var(--radius-sm)}
+        .solution-box.show{display:block;animation:fadeInUp .3s ease}
+        .solution-box h4{color:var(--accent);font-size:15px;margin-bottom:12px}
+        .solution-box p{color:var(--text-secondary);font-size:14px;margin-bottom:6px}
+        .exercise-actions{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+
+        .score-bar{display:flex;align-items:center;gap:16px;padding:16px 24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:28px}
+        .score-bar .score-label{font-size:14px;color:var(--text-secondary)}
+        .score-bar .score-value{font-family:'Outfit';font-size:22px;font-weight:800;color:var(--accent)}
+        .progress-bar-bg{flex:1;height:8px;background:var(--bg-input);border-radius:4px;overflow:hidden}
+        .progress-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent));border-radius:4px;transition:width .5s ease}
+
+        .task-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:24px}
+        .task-header{padding:24px 28px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:background .2s}
+        .task-header:hover{background:var(--bg-card-hover)}
+        .task-header .task-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+        .task-header .task-info{flex:1}
+        .task-header .task-name{font-size:17px;font-weight:700}
+        .task-header .task-meta{font-size:13px;color:var(--text-muted);margin-top:2px}
+        .task-header .task-chevron{color:var(--text-muted);transition:transform .3s;font-size:14px}
+        .task-card.open .task-chevron{transform:rotate(180deg)}
+        .task-body{display:none;padding:0 28px 28px;border-top:1px solid var(--border)}
+        .task-card.open .task-body{display:block;animation:fadeInUp .3s ease}
+        .task-body .task-desc{padding-top:20px}
+        .task-body .task-desc p{color:var(--text-secondary);font-size:15px;margin-bottom:12px}
+
+        textarea.task-textarea{width:100%;min-height:120px;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 18px;color:var(--text-primary);font-family:'Source Sans 3';font-size:14px;line-height:1.7;resize:vertical;outline:none;margin:12px 0;transition:border-color .2s}
+        textarea.task-textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        textarea.task-textarea::placeholder{color:var(--text-muted)}
+        .task-actions{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+        .saved-indicator{display:none;align-items:center;gap:6px;font-size:13px;color:var(--success);margin-left:8px}
+        .saved-indicator.show{display:inline-flex}
+
+        .case-header{background:linear-gradient(135deg,rgba(20,184,166,.1),rgba(20,184,166,.02));border:1px solid rgba(20,184,166,.2);border-radius:var(--radius);padding:32px;margin-bottom:28px;position:relative;overflow:hidden}
+        .case-header::after{content:'';position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,.08),transparent 70%)}
+        .case-tag{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#000;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+        .case-title{font-size:24px;font-weight:800;margin-bottom:8px}
+        .case-desc{color:var(--text-secondary);font-size:15px;max-width:650px}
+
+        .case-phase{margin-bottom:28px}
+        .phase-label{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit';font-size:13px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding:4px 12px;background:var(--accent-glow);border-radius:6px}
+        .phase-content{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+        .divider{border:none;border-top:1px solid var(--border);margin:36px 0}
+
+        .toast-container{position:fixed;top:20px;right:20px;z-index:1000;display:flex;flex-direction:column;gap:10px}
+        .toast{padding:14px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;color:#fff;display:flex;align-items:center;gap:10px;animation:slideR .3s ease,fadeO .3s ease 2.7s forwards;box-shadow:var(--shadow)}
+        .toast.success{background:#059669}.toast.error{background:#dc2626}.toast.info{background:#0284c7}
+        @keyframes slideR{from{transform:translateX(100px);opacity:0}to{transform:translateX(0);opacity:1}}
+        @keyframes fadeO{to{opacity:0;transform:translateX(40px)}}
+
+        .katex{color:var(--text-primary)}
+        .katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .minner,.katex .mop{color:var(--text-primary)}
+        .mini-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;transition:all .2s}
+        .mini-card:hover{border-color:var(--accent)}
+
+        @media(max-width:1024px){.grid-3{grid-template-columns:1fr 1fr}.grid-4{grid-template-columns:1fr 1fr}}
+        @media(max-width:768px){
+            .sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sidebar-overlay.open{display:block}
+            .menu-toggle{display:flex}.main-content{margin-left:0}.section{padding:72px 20px 60px}
+            .hero h1{font-size:26px}.section-title{font-size:24px}
+            .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}.obj-grid{grid-template-columns:1fr}
+            .exercise-card{padding:20px}.input-row{flex-direction:column;align-items:flex-start}.input-field{width:100%}
+            .flow-steps{flex-direction:column}.flow-arrow{transform:rotate(90deg)}
+        }
+        @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div class="toast-container" id="toastContainer"></div>
+<button class="menu-toggle" id="menuToggle" aria-label="Abrir menú"><i class="fas fa-bars"></i></button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo"><div class="logo-icon">T4</div><div class="logo-text">Planificación Productiva y Logística<small>UPSE · Seguridad Industrial</small></div></div>
+        <div class="sidebar-subtitle">Tema 4 — Plataforma Educativa</div>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Contenido</div>
+        <div class="nav-item active" data-section="inicio"><i class="fas fa-home"></i> Inicio</div>
+        <div class="nav-item" data-section="fundamentos"><i class="fas fa-industry"></i> Planificación de Producción</div>
+        <div class="nav-item" data-section="capacidad"><i class="fas fa-tachometer-alt"></i> Capacidad y Productividad</div>
+        <div class="nav-item" data-section="logistica"><i class="fas fa-truck-loading"></i> Logística e Inventarios</div>
+        <div class="nav-section-label">Práctica</div>
+        <div class="nav-item" data-section="ejercicios"><i class="fas fa-flask"></i> Ejercicios<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareas"><i class="fas fa-tasks"></i> Tareas<span class="nav-badge">3</span></div>
+        <div class="nav-item" data-section="tareaaplicada"><i class="fas fa-hard-hat"></i> Tarea Aplicada<span class="nav-badge" style="background:var(--danger);color:#fff;">Real</span></div>
+    </nav>
+    <div class="sidebar-footer"><div class="prof-name"><i class="fas fa-user-tie" style="margin-right:6px;color:var(--accent);"></i> Docente UPSE</div><div style="margin-top:4px;">Ing. en Seguridad Industrial</div></div>
+</aside>
+
+<main class="main-content">
+
+<!-- INICIO -->
+<div class="section active" id="sec-inicio">
+    <div class="hero">
+        <div class="hero-icon"><i class="fas fa-industry"></i></div>
+        <h1>Planificación <span>Productiva</span> y Logística</h1>
+        <p>Tema 4 de Gestión de Proyectos. Domine los métodos de planificación de la producción, gestión de capacidad, y modelos de inventario aplicados a la seguridad industrial.</p>
+    </div>
+    <div class="grid-4">
+        <div class="stat-card"><div class="stat-number">15+</div><div class="stat-label">Fórmulas con LaTeX</div></div>
+        <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Modelos de inventario</div></div>
+        <div class="stat-card"><div class="stat-number">3</div><div class="stat-label">Ejercicios interactivos</div></div>
+        <div class="stat-card"><div class="stat-number">1</div><div class="stat-label">Caso aplicado real</div></div>
+    </div>
+    <h3 class="h3">Objetivos de Aprendizaje</h3>
+    <div class="obj-grid">
+        <div class="obj-item"><div class="obj-num">1</div><div class="obj-text">Comprender los fundamentos de la planificación de la producción y su relación con la seguridad operacional.</div></div>
+        <div class="obj-item"><div class="obj-num">2</div><div class="obj-text">Aplicar el cálculo de capacidad productiva, utilización y eficiencia con fórmulas estandarizadas.</div></div>
+        <div class="obj-item"><div class="obj-num">3</div><div class="obj-text">Calcular el EOQ, punto de reorden y stock de seguridad para insumos críticos de seguridad.</div></div>
+        <div class="obj-item"><div class="obj-num">4</div><div class="obj-text">Aplicar el OEE como indicador integral de eficiencia de equipos.</div></div>
+        <div class="obj-item"><div class="obj-num">5</div><div class="obj-text">Dimensionar lotes óptimos de producción y equilibrar líneas de ensamble.</div></div>
+        <div class="obj-item"><div class="obj-num">6</div><div class="obj-text">Integrar la planificación logística en la cadena de suministro de EPP y materiales de seguridad.</div></div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent);">
+        <h4 class="h4" style="margin-top:0;"><i class="fas fa-stream text-accent" style="margin-right:8px;"></i>Flujo del Tema</h4>
+        <div class="flow-steps">
+            <div class="flow-step"><div class="step-num">PASO 1</div><div class="step-label">Fundamentos de planificación</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 2</div><div class="step-label">Capacidad y OEE</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 3</div><div class="step-label">Modelos de inventario</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 4</div><div class="step-label">Balanceo de líneas</div></div>
+            <div class="flow-arrow"><i class="fas fa-chevron-right"></i></div>
+            <div class="flow-step"><div class="step-num">PASO 5</div><div class="step-label">Caso aplicado</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- FUNDAMENTOS -->
+<div class="section" id="sec-fundamentos">
+    <div class="section-badge"><i class="fas fa-industry"></i> Unidad 4.1</div>
+    <h2 class="section-title">Planificación de la Producción</h2>
+    <p class="section-desc">Proceso de determinación de qué, cuánto, cuándo y cómo producir, asegurando la disponibilidad de recursos y el cumplimiento de estándares de seguridad.</p>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon teal"><i class="fas fa-bullseye"></i></div><div class="card-title">Definición y Alcance</div></div>
+        <p>La <strong>planificación de la producción</strong> es el proceso que coordina los recursos (materiales, mano de obra, equipos, tiempo) para fabricar productos o prestar servicios cumpliendo especificaciones de calidad, costo y plazo. En seguridad industrial, incluye la planificación de la fabricación de EPP, mezcla de productos químicos de seguridad, y servicios de mantenimiento preventivo.</p>
+        <div class="callout red"><i class="fas fa-exclamation-triangle"></i><p><strong>Riesgo de una planificación deficiente:</strong> Sobrecarga de equipos que genera fallos, escasez de insumos de seguridad en momentos críticos, presión sobre tiempos que induce a omitir protocolos de seguridad, y fatiga laboral por turnos mal planificados.</p></div>
+    </div>
+
+    <h3 class="h3">Jerarquía de la Planificación</h3>
+    <div class="grid-2">
+        <div class="card" style="border-top:3px solid var(--accent);"><h4 class="h4" style="margin-top:0;color:var(--accent);">Planificación Estratégica (Largo Plazo)</h4><p>Horizonte: 1-5 años. Define la capacidad instalada, inversiones en planta, nuevos productos. Se vincula con el plan estratégico de la empresa y el plan maestro de seguridad.</p></div>
+        <div class="card" style="border-top:3px solid var(--info);"><h4 class="h4" style="margin-top:0;color:var(--info);">Planificación Táctica (Mediano Plazo)</h4><p>Horizonte: 3-18 meses. Plan Agregado de Producción (APP): niveles de producción por familia de productos, contratación de personal, inventarios anticipados.</p></div>
+        <div class="card" style="border-top:3px solid var(--warn);"><h4 class="h4" style="margin-top:0;color:var(--warn);">Planificación Operativa (Corto Plazo)</h4><p>Horizonte: 1 día a 3 meses. Programa Maestro de Producción (MPS), MRP, secuenciación de órdenes, despacho diario. Detalla qué se produce cada día, en qué orden y con qué recursos.</p></div>
+        <div class="card" style="border-top:3px solid var(--success);"><h4 class="h4" style="margin-top:0;color:var(--success);">Ejecución y Control</h4><p>Horizonte: tiempo real. Seguimiento de órdenes, control de calidad, ajustes ante desviaciones. Incluye paradas de emergencia por seguridad, reportes de incidentes en producción.</p></div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Tipos de Sistemas de Producción</h3>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Tipo</th><th>Volumen</th><th>Variedad</th><th>Ejemplo en Seguridad</th><th>Planificación</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Continuo</strong></td><td>Alto</td><td>Baja</td><td>Fabricación de extintores en línea</td><td>Programación basada en tasa de producción</td></tr>
+                <tr><td><strong>Por lotes</strong></td><td>Medio</td><td>Media</td><td>Lotes de productos químicos para tratamiento de agua</td><td>MRP, tamaño de lote óptimo</td></tr>
+                <tr><td><strong>Por pedido</strong></td><td>Bajo</td><td>Alta</td><td>Sistemas de protección personal a medida</td><td>Planificación por proyecto, MTO</td></tr>
+                <tr><td><strong>Híbrido</strong></td><td>Variable</td><td>Variable</td><td>Fabricación de EPP estándar + personalizado</td><td>Combinación de MTS + MTO</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Programa Maestro de Producción (MPS)</h3>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">El MPS despliega el plan agregado en productos individuales con cantidades y fechas específicas.</p>
+    <div class="callout teal"><i class="fas fa-info-circle"></i><p><strong>En seguridad industrial:</strong> El MPS debe considerar que la producción de EPP y equipos de seguridad tiene <em>demandas derivadas</em> (dependen de la contratación, rotación y normativas) y <em>demandas independientes</em> (reposición por desgaste, ventas a terceros).</p></div>
+
+    <h3 class="h3">Lógica MRP (Material Requirements Planning)</h3>
+    <div class="formula-box">
+        <div class="formula-label">Requerimiento Neto del período t</div>
+        $$RN_t = \max\{0,\; GB_t - IH_{t-1} - RR_t\}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(GB_t\) = requerimiento bruto del período \(t\), \(IH_{t-1}\) = inventario disponible al inicio del período, \(RR_t\) = recepciones programadas del período.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Órdenes Planificadas</div>
+        $$OP_t = \begin{cases} RN_t & \text{si } RN_t > 0 \\ 0 & \text{si } RN_t = 0 \end{cases} \quad ; \quad IH_t = IH_{t-1} + RR_t + OP_{t-LT} - GB_t$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(LT\) = lead time (tiempo de reposición). Las órdenes planificadas en el período \(t\) se reciben en \(t+LT\).</p>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon blue"><i class="fas fa-table"></i></div><div class="card-title">Ejemplo MRP — Casco de Seguridad Modelo X</div></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Período</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr></thead>
+                <tbody>
+                    <tr><td>Req. Bruto (GB)</td><td>50</td><td>30</td><td>80</td><td>40</td><td>60</td><td>35</td></tr>
+                    <tr><td>Inv. Inicial</td><td>20</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>Recib. Programadas</td><td>0</td><td>0</td><td>80</td><td>40</td><td>60</td><td>35</td></tr>
+                    <tr style="background:rgba(20,184,166,.05);"><td><strong>Req. Neto (RN)</strong></td><td class="text-warn"><strong>30</strong></td><td>30</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>Órdenes Planificadas</td><td>30</td><td>30</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>Órdenes Liberadas (LT=1)</td><td>—</td><td>30</td><td>30</td><td>0</td><td>0</td><td>0</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:8px;">LT=1: la orden del período 2 se libera en el período 1, se recibe en el 2. Tamaño de lote = requerimiento neto (lot-for-lot).</p>
+    </div>
+</div>
+
+<!-- CAPACIDAD Y PRODUCTIVIDAD -->
+<div class="section" id="sec-capacidad">
+    <div class="section-badge"><i class="fas fa-tachometer-alt"></i> Unidad 4.2</div>
+    <h2 class="section-title">Capacidad Productiva y Productividad</h2>
+    <p class="section-desc">Métricas fundamentales para medir y planificar la capacidad de producción y la eficiencia de los recursos.</p>
+
+    <h3 class="h3">Medidas de Capacidad</h3>
+    <div class="grid-2">
+        <div class="formula-box">
+            <div class="formula-label">Capacidad de Diseño (Nominal)</div>
+            $$C_{diseno} = n \times T \times r$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(n\) = número de equipos/estaciones, \(T\) = tiempo disponible (horas/período), \(r\) = tasa de producción por equipo (unidades/hora).</p>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Capacidad Efectiva</div>
+            $$C_{efectiva} = C_{diseno} \times \eta_{utilizacion} \times \eta_{rendimiento}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(\eta_{utilizacion}\) = fracción de tiempo operativo, \(\eta_{rendimiento}\) = eficiencia del proceso respecto al nominal.</p>
+        </div>
+    </div>
+
+    <div class="formula-box">
+        <div class="formula-label">Utilización de la Capacidad</div>
+        $$U\% = \frac{Produccion\_real}{C_{efectiva}} \times 100\%$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">U > 85%: zona de riesgo (poca flexibilidad, estrés en equipos). U < 60%: capacidad ociosa. Rango óptimo: 70%-85%.</p>
+    </div>
+
+    <div class="callout red">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p><strong>En seguridad industrial:</strong> Operar sistemáticamente por encima del 85% de capacidad efectiva incrementa la probabilidad de fallos de equipo, errores humanos por fatiga, y omisión de procedimientos de seguridad por presión de tiempo. Es un indicador predictivo de incidentes.</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Eficiencia Total de los Equipos (OEE)</h3>
+    <p style="color:var(--text-secondary);margin-bottom:16px;">El OEE es el indicador más utilizado a nivel mundial para medir la eficiencia productiva real de un equipo o línea.</p>
+
+    <div class="formula-box">
+        <div class="formula-label">OEE — Fórmula Principal</div>
+        $$OEE = A \times P \times Q$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Donde \(A\) = Disponibilidad, \(P\) = Rendimiento, \(Q\) = Calidad. Se expresa en porcentaje. Mundo clase: OEE ≥ 85%.</p>
+    </div>
+
+    <div class="grid-3">
+        <div class="formula-box" style="border-left-color:var(--success);">
+            <div class="formula-label" style="color:var(--success);">Disponibilidad (A)</div>
+            $$A = \frac{T_{produccion}}{T_{planificado}} = \frac{T_{planificado} - T_{paradas}}{T_{planificado}}$$         </div>
+        <div class="formula-box" style="border-left-color:var(--info);">
+            <div class="formula-label" style="color:var(--info);">Rendimiento (P)</div>
+            $$P = \frac{Produccion\_real}{Produccion\_teorica} = \frac{n_{real} \times t_{ciclo}}{T_{produccion}}$$         </div>
+        <div class="formula-box" style="border-left-color:var(--warn);">
+            <div class="formula-label" style="color:var(--warn);">Calidad (Q)</div>
+            $$Q = \frac{n_{buenas}}{n_{totales}} = 1 - \frac{n_{defectuosas}}{n_{totales}}$$         </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon teal"><i class="fas fa-chart-bar"></i></div><div class="card-title">Ejemplo OEE — Línea de Envasado de Productos Químicos</div></div>
+        <div class="exercise-context">
+            <p>Turno de 8 horas (480 min). Paradas planificadas: 30 min. Paradas no planificadas: 52 min.</p>
+            <p>Tasa teórica: 12 envases/min. Producción real: 4,100 envases. Defectuosos: 164.</p>
+        </div>
+        <div class="grid-2">
+            <div class="formula-box" style="margin-bottom:0;">
+                $$A = \frac{480 - 30 - 52}{480 - 30} = \frac{398}{450} = 0.884$$             </div>
+            <div class="formula-box" style="margin-bottom:0;">
+                $$P = \frac{4100}{450 \times 12} = \frac{4100}{5400} = 0.759$$             </div>
+        </div>
+        <div class="formula-box">
+            $$Q = \frac{4100 - 164}{4100} = \frac{3936}{4100} = 0.960$$         </div>
+        <div class="formula-box" style="border-left-color:var(--danger);">
+            <div class="formula-label" style="color:var(--danger);">OEE Resultante</div>
+            $$OEE = 0.884 \times 0.759 \times 0.960 = 0.645 = 64.5\%$$             <p style="color:var(--danger);font-size:13px;margin-top:6px;margin-bottom:0;">OEE de 64.5% está por debajo del estándar mundial (85%). Las mayores pérdidas están en Rendimiento (24.1%) — posible causa: velocidad reducida por problemas de seguridad en la línea.</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Pérdidas OEE (Las 6 Grandes Pérdidas)</h3>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Factor</th><th>Pérdida</th><th>Ejemplo</th></tr></thead>
+            <tbody>
+                <tr><td rowspan="2"><strong>Disponibilidad</strong></td><td>Fallos de equipo</td><td>Ruptura de bomba de llenado</td></tr>
+                <tr><td>Ajustes y preparaciones</td><td>Cambio de formato de envase</td></tr>
+                <tr><td rowspan="2"><strong>Rendimiento</strong></td><td>Paradas menores</td><td>Atasco en transportador, ajuste de sensor</td></tr>
+                <tr><td>Velocidad reducida</td><td>Operación a menor velocidad por condición insegura</td></tr>
+                <tr><td rowspan="2"><strong>Calidad</strong></td><td>Defectos de arranque</td><td>Primeros envases fuera de especificación</td></tr>
+                <tr><td>Defectos en producción</td><td>Fugas en sellos, etiquetado incorrecto</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Balanceo de Líneas de Ensamble</h3>
+    <div class="formula-box">
+        <div class="formula-label">Tiempo de Ciclo Objetivo (C)</div>
+        $$C = \frac{T_{disponible}}{D_{requerida}}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(T_{disponible}\) = tiempo de producción disponible por período, \(D_{requerida}\) = demanda requerida en el mismo período.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Número Mínimo de Estaciones</div>
+        $$N_{min} = \frac{\displaystyle\sum_{i=1}^{k} t_i}{C}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(t_i\) = tiempo de la tarea \(i\), \(k\) = número total de tareas. Redondear hacia arriba.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Eficiencia del Balanceo</div>
+        $$\eta_{balanceo} = \frac{\displaystyle\sum_{i=1}^{k} t_i}{N_{real} \times C_{max}} \times 100\%$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(N_{real}\) = estaciones realmente usadas, \(C_{max}\) = tiempo de la estación más cargada. Eficiencia > 90% es aceptable.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">HolGura de Balanceo</div>
+        $$H = N_{real} \times C_{max} - \sum_{i=1}^{k} t_i$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Tiempo ocioso total por ciclo. \(H = 0\) indica un balanceo perfecto (raramente alcanzable).</p>
+    </div>
+</div>
+
+<!-- LOGÍSTICA E INVENTARIOS -->
+<div class="section" id="sec-logistica">
+    <div class="section-badge"><i class="fas fa-truck-loading"></i> Unidad 4.3</div>
+    <h2 class="section-title">Logística y Gestión de Inventarios</h2>
+    <p class="section-desc">Modelos cuantitativos para la gestión óptima de inventarios de insumos, materiales de seguridad y productos terminados.</p>
+
+    <div class="card">
+        <div class="card-header"><div class="card-icon teal"><i class="fas fa-boxes-stacked"></i></div><div class="card-title">Inventarios en Seguridad Industrial</div></div>
+        <p>La gestión de inventarios en seguridad industrial es <strong>crítica</strong>: un stockout de extintores, EPP, o reactivos de tratamiento puede tener consecuencias legales y de seguridad inmediatas. Pero un sobrestock incrementa costos y puede generar caducidad de productos (químicos, filtros, cartuchos).</p>
+        <div class="callout red"><i class="fas fa-exclamation-triangle"></i><p><strong>Regla:</strong> Los insumos de seguridad y emergencia SIEMPRE deben tener stock de seguridad, sin importar el costo. Los modelos de inventario se adaptan para garantizar niveles mínimos obligatorios por normativa.</p></div>
+    </div>
+
+    <h3 class="h3">Costos Asociados al Inventario</h3>
+    <div class="grid-2">
+        <div class="card" style="border-top:3px solid var(--danger);padding:18px;">
+            <h4 class="h4" style="margin-top:0;color:var(--danger);font-size:15px;">Costos de Mantener Inventario</h4>
+            <ul class="content-list" style="margin-top:6px;">
+                <li>Costo de capital inmovilizado</li>
+                <li>Almacenamiento y seguros</li>
+                <li>Obsolescencia y caducidad</li>
+                <li>Deterioro y merma</li>
+            </ul>
+        </div>
+        <div class="card" style="border-top:3px solid var(--info);padding:18px;">
+            <h4 class="h4" style="margin-top:0;color:var(--info);font-size:15px;">Costos de No Mantener Inventario</h4>
+            <ul class="content-list" style="margin-top:6px;">
+                <li>Costo de stockout (parada, multa)</li>
+                <li>Costo de pedido/emergencia</li>
+                <li>Pérdida de clientes o contratos</li>
+                <li>Riesgo de seguridad por falta de insumos</li>
+            </ul>
+        </div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Modelo EOQ — Cantidad Económica de Pedido</h3>
+    <div class="card">
+        <div class="card-header"><div class="card-icon green"><i class="fas fa-cube"></i></div><div class="card-title">Economic Order Quantity</div></div>
+        <p>El EOQ determina el tamaño de lote que minimiza la suma de costos de pedido y costos de mantenimiento del inventario.</p>
+        <div class="formula-box">
+            <div class="formula-label">EOQ — Fórmula Clásica</div>
+            $$Q^* = \sqrt{\frac{2 \cdot D \cdot S}{H}}$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(D\) = demanda anual (unidades/año), \(S\) = costo de realizar un pedido ($/pedido), \(H\) = costo de mantener una unidad por año ($/unidad·año). Si se conoce el costo unitario \(C\) y la tasa de mantenimiento \(h\): \(H = h \times C\).</p>
+        </div>
+        <div class="grid-2">
+            <div class="formula-box" style="margin-bottom:0;">
+                <div class="formula-label">Número de Pedidos por Año</div>
+                $$N = \frac{D}{Q^*}$$             </div>
+            <div class="formula-box" style="margin-bottom:0;">
+                <div class="formula-label">Tiempo entre Pedidos (TBO)</div>
+                $$TBO = \frac{Q^*}{D} \times 365 \text{ días}$$             </div>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Costo Total Anual del Inventario</div>
+            $$CT = \frac{D}{Q^*} \cdot S + \frac{Q^*}{2} \cdot H + D \cdot C$$             <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Los dos primeros términos son los costos relevantes (se minimizan con EOQ). El tercero es el costo de compra, constante independientemente del tamaño de lote.</p>
+        </div>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Punto de Reorden (ROP) y Stock de Seguridad</h3>
+    <div class="formula-box">
+        <div class="formula-label">Punto de Reorden — Demanda Determinística</div>
+        $$ROP = d \times L$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(d\) = demanda diaria, \(L\) = lead time en días. Cuando el inventario llega a ROP, se lanza el pedido.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Punto de Reorden con Stock de Seguridad</div>
+        $$ROP = \bar{d} \times L + SS$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(\bar{d}\) = demanda diaria promedio, \(SS\) = stock de seguridad.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Stock de Seguridad — Nivel de Servicio</div>
+        $$SS = Z \times \sigma_d \times \sqrt{L}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(Z\) = valor Z de la normal estándar para el nivel de servicio deseado (ej: Z=1.65 para 95%), \(\sigma_d\) = desviación estándar de la demanda diaria, \(L\) = lead time en días.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Stock de Seguridad con Incertidumbre en Demanda y Lead Time</div>
+        $$SS = Z \times \sqrt{L \cdot \sigma_d^2 + \bar{d}^2 \cdot \sigma_L^2}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(\sigma_L\) = desviación estándar del lead time. Se usa cuando tanto la demanda como el tiempo de entrega son variables.</p>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Nivel de Servicio</th><th>Z (normal estándar)</th><th>Aplicación Típica</th></tr></thead>
+            <tbody>
+                <tr><td>90%</td><td>1.28</td><td>Artículos de uso general</td></tr>
+                <tr><td>95%</td><td>1.65</td><td>Materiales de producción normales</td></tr>
+                <tr><td>97.5%</td><td>1.96</td><td>Insumos críticos de producción</td></tr>
+                <tr><td>99%</td><td>2.33</td><td><strong class="text-danger">EPP y materiales de seguridad</strong></td></tr>
+                <tr><td>99.9%</td><td>3.09</td><td><strong class="text-danger">Sistemas de emergencia</strong></td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="callout red">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p><strong>En seguridad industrial:</strong> Los EPP, detectores de gas, extintores, y reactivos de tratamiento de emergencia requieren niveles de servicio de 99% o superior. Un stockout de un cartucho de filtro puede dejar a un trabajador sin protección respiratoria.</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">EOQ con Descuentos por Volumen</h3>
+    <div class="formula-box">
+        <div class="formula-label">Procedimiento</div>
+        $$CT_j = \frac{D}{Q_j} \cdot S + \frac{Q_j}{2} \cdot h \cdot C_j + D \cdot C_j$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Para cada rango de precio \(C_j\): calcular \(Q^*_j\) con la fórmula EOQ. Si \(Q^*_j\) no está en el rango válido, usar el límite más cercano. Evaluar \(CT_j\) para todos los rangos y seleccionar el de menor costo total.</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Modelo de Producción Económica (EPQ)</h3>
+    <div class="formula-box">
+        <div class="formula-label">Economic Production Quantity</div>
+        $$Q^*_{EPQ} = \sqrt{\frac{2 \cdot D \cdot S}{H} \cdot \frac{p}{p - d}}$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">\(p\) = tasa de producción (unidades/día), \(d\) = tasa de demanda (unidades/día), \(p > d\). A diferencia del EOQ, la producción es gradual (no llega todo el lote de una vez). El inventario máximo es \(I_{max} = Q^* \times (1 - d/p)\).</p>
+    </div>
+
+    <hr class="divider">
+    <h3 class="h3">Tiempo de Ciclo Logístico</h3>
+    <div class="formula-box">
+        <div class="formula-label">Manufacturing Cycle Time (MCT)</div>
+        $$MCT = \sum_{i=1}^{n} (t_{proc_i} + t_{insp_i} + t_{move_i} + t_{espera_i})$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Tiempos de procesamiento, inspección, movimiento y espera para todas las operaciones del producto. El tiempo de espera suele ser el 60-80% del MCT.</p>
+    </div>
+    <div class="formula-box">
+        <div class="formula-label">Ratio de Valor Agregado</div>
+        $$RVA = \frac{\displaystyle\sum_{i=1}^{n} t_{proc_i}}{MCT} \times 100\%$$         <p style="color:var(--text-muted);font-size:13px;margin-top:8px;margin-bottom:0;">Porcentaje del tiempo total que realmente agrega valor. En industria típica: 5-10%. En manufactura esbelta (lean): 20-30%+.</p>
+    </div>
+</div>
+
+<!-- EJERCICIOS -->
+<div class="section" id="sec-ejercicios">
+    <div class="section-badge"><i class="fas fa-flask"></i> Práctica</div>
+    <h2 class="section-title">Ejercicios de Aplicación</h2>
+    <p class="section-desc">Resuelva los siguientes ejercicios. Ingrese sus respuestas y verifique.</p>
+    <div class="score-bar">
+        <div><div class="score-label">Progreso</div><div class="score-value" id="scoreDisplay">0 / 15</div></div>
+        <div class="progress-bar-bg"><div class="progress-bar-fill" id="scoreBar" style="width:0%"></div></div>
+    </div>
+
+    <!-- EJ 1: OEE -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 1</div>
+        <div class="exercise-title">OEE y Capacidad — Línea de Fabricación de Guantes de Seguridad</div>
+        <div class="exercise-context">
+            <p>Línea opera 2 turnos de 8 horas (960 min/día). Paradas planificadas: 60 min. Paradas no planificadas: 88 min.</p>
+            <p>Tasa teórica: 25 pares/min. Producción real: 18,200 pares. Defectuosos: 546 pares.</p>
+        </div>
+        <div class="question"><p>a) Disponibilidad (redondee a 3 decimales):</p><div class="input-row"><label>A =</label><input type="number" class="input-field" id="e1a" step="0.001" placeholder="0.000"></div><div class="feedback" id="fb-e1a"></div></div>
+        <div class="question"><p>b) Rendimiento (redondee a 3 decimales):</p><div class="input-row"><label>P =</label><input type="number" class="input-field" id="e1b" step="0.001" placeholder="0.000"></div><div class="feedback" id="fb-e1b"></div></div>
+        <div class="question"><p>c) Calidad (redondee a 3 decimales):</p><div class="input-row"><label>Q =</label><input type="number" class="input-field" id="e1c" step="0.001" placeholder="0.000"></div><div class="feedback" id="fb-e1c"></div></div>
+        <div class="question"><p>d) OEE en % (redondee a 1 decimal, sin el signo %):</p><div class="input-row"><label>OEE =</label><input type="number" class="input-field" id="e1d" step="0.1" placeholder="0.0"><span class="input-unit">%</span></div><div class="feedback" id="fb-e1d"></div></div>
+        <div class="question"><p>e) Utilización de capacidad si la capacidad efectiva es 21,600 pares/día (redondee a 1 decimal, sin %):</p><div class="input-row"><label>U =</label><input type="number" class="input-field" id="e1e" step="0.1" placeholder="0.0"><span class="input-unit">%</span></div><div class="feedback" id="fb-e1e"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx1()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol1')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol1">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(T_{plan} = 960 - 60 = 900\) min</p>
+            <p>\(A = (900 - 88) / 900 = 812/900 = 0.902\)</p>
+            <p>\(P = 18200 / (900 \times 25) = 18200/22500 = 0.809\)</p>
+            <p>\(Q = (18200-546)/18200 = 17654/18200 = 0.970\)</p>
+            <p>\(OEE = 0.902 \times 0.809 \times 0.970 = 0.708 = 70.8\%\)</p>
+            <p>\(U = 17654 / 21600 \times 100 = 81.7\%\)</p>
+        </div>
+    </div>
+
+    <!-- EJ 2: EOQ Y ROP -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 2</div>
+        <div class="exercise-title">EOQ, ROP y Stock de Seguridad — Filtros de Aire para Máscaras</div>
+        <div class="exercise-context">
+            <p><strong>Demanda anual:</strong> 4,800 filtros. <strong>Costo por pedido:</strong> $120. <strong>Costo unitario:</strong> $15.</p>
+            <p><strong>Tasa de mantenimiento:</strong> 20% del costo unitario por año. <strong>Lead time:</strong> 14 días.</p>
+            <p><strong>Desviación estándar de demanda diaria:</strong> 5.2 filtros. <strong>Nivel de servicio:</strong> 99% (Z=2.33).</p>
+            <p>Días laborables al año: 240.</p>
+        </div>
+        <div class="question"><p>a) Costo de mantenimiento unitario anual H (redondee a 2 decimales):</p><div class="input-row"><label>H =</label><input type="number" class="input-field" id="e2a" step="0.01" placeholder="0.00"><span class="input-unit">$/año</span></div><div class="feedback" id="fb-e2a"></div></div>
+        <div class="question"><p>b) EOQ (redondee al entero más cercano):</p><div class="input-row"><label>Q* =</label><input type="number" class="input-field" id="e2b" step="1" placeholder="unidades"><span class="input-unit">filtros</span></div><div class="feedback" id="fb-e2b"></div></div>
+        <div class="question"><p>c) Stock de seguridad (redondee al entero más cercano, hacia arriba):</p><div class="input-row"><label>SS =</label><input type="number" class="input-field" id="e2c" step="1" placeholder="unidades"><span class="input-unit">filtros</span></div><div class="feedback" id="fb-e2c"></div></div>
+        <div class="question"><p>d) Punto de reorden (redondee al entero más cercano):</p><div class="input-row"><label>ROP =</label><input type="number" class="input-field" id="e2d" step="1" placeholder="unidades"><span class="input-unit">filtros</span></div><div class="feedback" id="fb-e2d"></div></div>
+        <div class="question"><p>e) Número de pedidos por año (redondee a 1 decimal):</p><div class="input-row"><label>N =</label><input type="number" class="input-field" id="e2e" step="0.1" placeholder="0.0"><span class="input-unit">pedidos/año</span></div><div class="feedback" id="fb-e2e"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx2()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol2')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol2">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(H = 0.20 \times 15 = \$3.00\)</p>
+            <p>\(Q^* = \sqrt{2 \times 4800 \times 120 / 3.00} = \sqrt{384000} = 620 \text{ filtros}\)</p>
+            <p>\(\bar{d} = 4800/240 = 20\) filtros/día</p>
+            <p>\(SS = 2.33 \times 5.2 \times \sqrt{14} = 2.33 \times 5.2 \times 3.742 = 45.4 \rightarrow 46\) filtros</p>
+            <p>\(ROP = 20 \times 14 + 46 = 280 + 46 = 326\) filtros</p>
+            <p>\(N = 4800 / 620 = 7.7\) pedidos/año</p>
+        </div>
+    </div>
+
+    <!-- EJ 3: BALANCEO -->
+    <div class="exercise-card">
+        <div class="exercise-num">Ejercicio 3</div>
+        <div class="exercise-title">Balanceo de Línea — Ensamble de Kits de Primeros Auxilios</div>
+        <div class="exercise-context">
+            <p>Se ensamblan kits de primeros auxilios. Demanda: 480 kits/día. Tiempo disponible: 480 min/día.</p>
+            <p>Tareas y tiempos (min): A=0.4, B=0.6, C=0.3, D=0.8, E=0.5, F=0.3, G=0.7, H=0.4</p>
+            <p>Precedencias: A→B→D→G; A→C→E→G; D→F→H; E→H</p>
+        </div>
+        <div class="question"><p>a) Tiempo de ciclo objetivo en minutos (redondee a 2 decimales):</p><div class="input-row"><label>C =</label><input type="number" class="input-field" id="e3a" step="0.01" placeholder="0.00"><span class="input-unit">min</span></div><div class="feedback" id="fb-e3a"></div></div>
+        <div class="question"><p>b) Suma total de tiempos de tareas (minutos, redondee a 1 decimal):</p><div class="input-row"><label>Σt =</label><input type="number" class="input-field" id="e3b" step="0.1" placeholder="0.0"><span class="input-unit">min</span></div><div class="feedback" id="fb-e3b"></div></div>
+        <div class="question"><p>c) Número mínimo de estaciones (redondee hacia arriba, entero):</p><div class="input-row"><label>N_min =</label><input type="number" class="input-field" id="e3c" step="1" placeholder="0"><span class="input-unit">estaciones</span></div><div class="feedback" id="fb-e3c"></div></div>
+        <div class="question"><p>d) Si se asignan 4 estaciones con tiempos [1.0, 1.1, 1.0, 0.9] min, eficiencia de balanceo (redondee a 1 decimal, sin %):</p><div class="input-row"><label>η =</label><input type="number" class="input-field" id="e3d" step="0.1" placeholder="0.0"><span class="input-unit">%</span></div><div class="feedback" id="fb-e3d"></div></div>
+        <div class="question"><p>e) Holgura total del balanceo (minutos, redondee a 1 decimal):</p><div class="input-row"><label>H =</label><input type="number" class="input-field" id="e3e" step="0.1" placeholder="0.0"><span class="input-unit">min</span></div><div class="feedback" id="fb-e3e"></div></div>
+        <div class="exercise-actions">
+            <button class="btn btn-primary" onclick="checkEx3()"><i class="fas fa-check"></i> Verificar</button>
+            <button class="btn btn-outline" onclick="toggleSol('sol3')"><i class="fas fa-eye"></i> Solución</button>
+        </div>
+        <div class="solution-box" id="sol3">
+            <h4><i class="fas fa-key" style="margin-right:6px;"></i>Solución</h4>
+            <p>\(C = 480/480 = 1.00\) min/kit</p>
+            <p>\(\sum t = 0.4+0.6+0.3+0.8+0.5+0.3+0.7+0.4 = 4.0\) min</p>
+            <p>\(N_{min} = 4.0/1.0 = 4\) estaciones</p>
+            <p>Una asignación posible: Est.1(A+B=1.0), Est.2(C+D=1.1), Est.3(E+G=1.2→excede C), otra: Est.1(A+B=1.0), Est.2(C+E=0.8), Est.3(D+F=1.1), Est.4(G+H=1.1). Cmax=1.1</p>
+            <p>\(\eta = 4.0 / (4 \times 1.1) \times 100 = 4.0/4.4 \times 100 = 90.9\%\)</p>
+            <p>\(H = 4 \times 1.1 - 4.0 = 4.4 - 4.0 = 0.4\) min</p>
+        </div>
+    </div>
+</div>
+
+<!-- TAREAS -->
+<div class="section" id="sec-tareas">
+    <div class="section-badge"><i class="fas fa-tasks"></i> Evaluación</div>
+    <h2 class="section-title">Tareas del Tema</h2>
+    <p class="section-desc">Desarrolle las siguientes tareas de manera individual.</p>
+
+    <div class="task-card" id="task1">
+        <div class="task-header" onclick="toggleTask('task1')">
+            <div class="task-icon teal"><i class="fas fa-tachometer-alt"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 1: Análisis OEE con Plan de Mejora</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Una línea de fabricación de chalecos reflectantes de alta visibilidad opera 3 turnos (1,440 min/día). Datos del último mes (22 días):</p>
+            <div class="exercise-context">
+                <p>Paradas planificadas totales: 16.5 horas. Paradas no planificadas: 38.2 horas.</p>
+                <p>Tasa teórica: 18 unidades/min. Producción real del mes: 385,000 unidades.</p>
+                <p>Unidades rechazadas: 11,550. Tiempo de ciclo real promedio: 0.062 min/unidad.</p>
+            </div>
+            <ul class="numbered-list">
+                <li>Calcule A, P, Q y OEE del mes</li>
+                <li>Descomponga las pérdidas en las 6 grandes pérdidas con estimaciones razonables</li>
+                <li>Identifique las 3 mayores pérdidas y proponga acciones correctivas específicas para cada una, considerando seguridad</li>
+                <li>Proyecte el OEE mejorado si las 3 acciones correctivas eliminan el 50% de sus pérdidas respectivas</li>
+            </ul>
+            <textarea class="task-textarea" id="task1-text" placeholder="Desarrolle su análisis OEE aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task1')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task1','Tarea1_AnalisisOEE')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task1"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="task-card" id="task2">
+        <div class="task-header" onclick="toggleTask('task2')">
+            <div class="task-icon blue"><i class="fas fa-boxes-stacked"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 2: Sistema de Gestión de Inventarios de Seguridad</div><div class="task-meta">Valor: 25 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Diseñe el sistema de inventarios para el almacén de seguridad de una planta petroquímica. Seleccione <strong>5 insumos críticos</strong> (ej: cartuchos de filtro, guantes químicos, extintores CO₂, absorbentes de derrames, detectores de gas portátiles) y para cada uno:</p>
+            <ul class="numbered-list">
+                <li>Defina D, S, H (con datos coherentes y realistas que usted invente)</li>
+                <li>Calcule EOQ, N, TBO</li>
+                <li>Defina nivel de servicio justificado, calcule SS y ROP</li>
+                <li>Compare con el modelo EPQ si aplica (para el caso de producción interna)</li>
+                <li>Elabore una tabla resumen con política de inventario completa para los 5 insumos</li>
+            </ul>
+            <textarea class="task-textarea" id="task2-text" placeholder="Desarrolle su sistema de inventarios aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task2')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task2','Tarea2_InventariosSeguridad')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task2"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+
+    <div class="task-card" id="task3">
+        <div class="task-header" onclick="toggleTask('task3')">
+            <div class="task-icon green"><i class="fas fa-project-diagram"></i></div>
+            <div class="task-info"><div class="task-name">Tarea 3: Balanceo de Línea y MRP Integrado</div><div class="task-meta">Valor: 20 puntos · Entrega individual</div></div>
+            <i class="fas fa-chevron-down task-chevron"></i>
+        </div>
+        <div class="task-body"><div class="task-desc">
+            <p>Para una línea de ensamble de <strong>linternas de seguridad intrínsecamente seguras</strong> con 10 tareas, precedencias dadas por usted:</p>
+            <ul class="numbered-list">
+                <li>Asigne tiempos a cada tarea (entre 0.2 y 1.2 min, coherentes con el ensamble)</li>
+                <li>Defina demanda y tiempo disponible, calcule C y N_min</li>
+                <li>Realice el balanceo de línea (asignación de tareas a estaciones respetando precedencias)</li>
+                <li>Calcule eficiencia y holgura del balanceo</li>
+                <li>Elabore la tabla MRP para el componente principal (LED, batería, carcasa) durante 8 semanas, con demanda del MPS dada por usted</li>
+            </ul>
+            <textarea class="task-textarea" id="task3-text" placeholder="Desarrolle su balanceo y MRP aquí..." style="min-height:200px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary btn-sm" onclick="saveTask('task3')"><i class="fas fa-save"></i> Guardar</button>
+                <button class="btn btn-outline btn-sm" onclick="downloadTask('task3','Tarea3_Balanceo_MRP')"><i class="fas fa-download"></i> Descargar</button>
+                <span class="saved-indicator" id="saved-task3"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div></div>
+    </div>
+</div>
+
+<!-- TAREA APLICADA -->
+<div class="section" id="sec-tareaaplicada">
+    <div class="section-badge"><i class="fas fa-hard-hat"></i> Aplicación Real</div>
+    <h2 class="section-title">Tarea Aplicada: Caso de Seguridad Industrial</h2>
+    <p class="section-desc">Integre todos los conocimientos del tema en un caso real de la carrera.</p>
+
+    <div class="case-header">
+        <div class="case-tag"><i class="fas fa-hard-hat"></i> Caso de Estudio</div>
+        <h3 class="case-title">Planificación Productiva y Logística de EPPSEC S.A. — Fábrica de EPP en Milagro</h3>
+        <p class="case-desc">EPPSEC S.A. es una empresa fabricante de equipos de protección personal ubicada en Milagro, que abastece a las industrias de la zona 5. Debe planificar su producción, capacidad y logística para el próximo semestre.</p>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-box-open"></i> Fase 1 — Portafolio y Demanda</div>
+        <div class="phase-content">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Producto</th><th>Precio Venta</th><th>Costo Variable</th><th>Demanda (unid/mes)</th><th>Línea</th></tr></thead>
+                    <tbody>
+                        <tr><td>Casco de seguridad tipo I</td><td>$18.50</td><td>$9.20</td><td>8,500</td><td>Inyección</td></tr>
+                        <tr><td>Casco de seguridad tipo II</td><td>$28.00</td><td>$14.50</td><td>4,200</td><td>Inyección</td></tr>
+                        <tr><td>Guante de nitrilo (par)</td><td>$4.50</td><td>$2.10</td><td>45,000</td><td>Inmersión</td></tr>
+                        <tr><td>Chaleco reflectante clase 2</td><td>$22.00</td><td>$11.80</td><td>3,800</td><td>Confección</td></tr>
+                        <tr><td>Protector auditivo tipo plug</td><td>$3.20</td><td>$1.40</td><td>62,000</td><td>Inyección</td></tr>
+                        <tr><td>Lentes de seguridad</td><td>$8.50</td><td>$3.90</td><td>12,000</td><td>Ensamble</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="callout amber"><i class="fas fa-lightbulb"></i><p><strong>Estacionalidad:</strong> La demanda de cascos y chalecos aumenta un 40% en los meses de enero-febrero (inicio de obras) y disminuye 25% en julio-agosto.</p></div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-cogs"></i> Fase 2 — Datos de Capacidad por Línea</div>
+        <div class="phase-content">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Línea</th><th>Equipos</th><th>Horas/mes (2 turnos)</th><th>Tasa Nominal</th><th>Paradas planificadas</th><th>Paradas no plan. (promedio)</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>Inyección</strong></td><td>4 inyectoras</td><td>960 h/mes</td><td>120 und/h</td><td>40 h/mes</td><td>55 h/mes</td></tr>
+                        <tr><td><strong>Inmersión</strong></td><td>2 líneas</td><td>960 h/mes</td><td>3,000 pares/h</td><td>30 h/mes</td><td>42 h/mes</td></tr>
+                        <tr><td><strong>Confección</strong></td><td>8 estaciones</td><td>960 h/mes</td><td>160 und/h</td><td>50 h/mes</td><td>35 h/mes</td></tr>
+                        <tr><td><strong>Ensamble</strong></td><td>3 estaciones</td><td>960 h/mes</td><td>200 und/h</td><td>20 h/mes</td><td>28 h/mes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-truck"></i> Fase 3 — Datos de Inventario (Materia Prima Principal)</div>
+        <div class="phase-content">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Material</th><th>Demanda Anual</th><th>Costo/Pedido</th><th>Costo Unitario</th><th>h (%)</th><th>Lead Time (días)</th><th>σ_d (diaria)</th></tr></thead>
+                    <tbody>
+                        <tr><td>Poliestireno (para cascos)</td><td>48,000 kg</td><td>$350</td><td>$2.80/kg</td><td>25%</td><td>21</td><td>85 kg</td></tr>
+                        <tr><td>Nitrilo (para guantes)</td><td>6,200 kg</td><td>$180</td><td>$4.50/kg</td><td>20%</td><td>14</td><td>12 kg</td></tr>
+                        <tr><td>Tela reflectante</td><td>9,500 m</td><td>$220</td><td>$3.20/m</td><td>15%</td><td>18</td><td>35 m</td></tr>
+                        <tr><td>PC policarbonato (lentes)</td><td>2,400 kg</td><td>$450</td><td>$8.50/kg</td><td>22%</td><td>28</td><td>8 kg</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="case-phase">
+        <div class="phase-label"><i class="fas fa-clipboard-check"></i> Fase 4 — Instrucciones de Entrega</div>
+        <div class="phase-content">
+            <p style="color:var(--text-primary);font-size:15px;font-weight:600;margin-bottom:16px;">Desarrolle las siguientes partes:</p>
+
+            <h4 class="h4">Parte A: Análisis de Capacidad (20%)</h4>
+            <ul class="content-list">
+                <li>Calcule la capacidad de diseño, efectiva y utilización de CADA línea de producción</li>
+                <li>Verifique si hay cuello de botella (línea con mayor utilización)</li>
+                <li>Proponga cómo redistribuir la carga si alguna línea excede el 85%</li>
+            </ul>
+
+            <h4 class="h4">Parte B: OEE de la Línea de Inyección (20%)</h4>
+            <ul class="content-list">
+                <li>Calcule OEE considerando los datos de paradas de la línea de inyección</li>
+                <li>Producción real mensual de la línea: 98,500 unidades (cascos tipo I + II + protectores auditivos combinados)</li>
+                <li>Defectuosos: 2,955 unidades</li>
+                <li>Descomponga pérdidas y proponga 3 acciones de mejora con impacto cuantificado en OEE</li>
+            </ul>
+
+            <h4 class="h4">Parte C: Gestión de Inventarios de Materia Prima (25%)</h4>
+            <ul class="content-list">
+                <li>Calcule EOQ, SS (nivel de servicio 99%, Z=2.33), ROP, N y TBO para los 4 materiales</li>
+                <li>Días laborables: 300/año</li>
+                <li>Elabore la política completa de inventarios en tabla resumen</li>
+                <li>Para el poliestireno, analice si un descuento del 8% en pedidos ≥10,000 kg es conveniente</li>
+            </ul>
+
+            <h4 class="h4">Parte D: Balanceo de Línea de Confección (15%)</h4>
+            <ul class="content-list">
+                <li>Las 8 estaciones de confección del chaleco tienen estos tiempos: 0.35, 0.28, 0.42, 0.31, 0.38, 0.25, 0.40, 0.33 min (por chaleco)</li>
+                <li>Calcule C, N_min, eficiencia actual y holgura</li>
+                <li>Proponga un re-balanceo que mejore la eficiencia al menos 5 puntos porcentuales</li>
+            </ul>
+
+            <h4 class="h4">Parte E: Informe Ejecutivo (20%)</h4>
+            <ul class="content-list">
+                <li>Redacte un informe ejecutivo (mínimo 600 palabras) para la Gerencia de EPPSEC</li>
+                <li>Incluya: diagnóstico de capacidad, OEE, situación de inventarios, propuesta de balanceo, y plan de acción para el semestre</li>
+                <li>Proponga al menos 3 mejoras de logística que reduzcan el MCT de la cadena completa</li>
+            </ul>
+
+            <div class="callout red">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p><strong>Criterio de aprobación:</strong> Mínimo 70/100. Las Partes A, B y C son obligatorias y se evalúan rigor matemático. La Parte E evalúa redacción profesional, coherencia de las recomendaciones, y vinculación con seguridad industrial.</p>
+            </div>
+
+            <h4 class="h4">Desarrollo de la Tarea</h4>
+            <textarea class="task-textarea" id="taskReal-text" placeholder="Desarrolle las cinco partes de la tarea aplicada aquí. Organice con encabezados claros (Parte A, B, C, D, E)..." style="min-height:400px;"></textarea>
+            <div class="task-actions">
+                <button class="btn btn-primary" onclick="saveTask('taskReal')"><i class="fas fa-save"></i> Guardar Progreso</button>
+                <button class="btn btn-outline" onclick="downloadTask('taskReal','TareaAplicada_EPPSEC_Planificacion')"><i class="fas fa-download"></i> Descargar como TXT</button>
+                <span class="saved-indicator" id="saved-taskReal"><i class="fas fa-check"></i> Guardado</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</main>
+
+<script>
+const canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d');
+let nodes=[];const NC=38,MD=125;
+function rC(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+rC();window.addEventListener('resize',rC);
+for(let i=0;i<NC;i++)nodes.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,r:Math.random()*1.6+.8});
+function an(){ctx.clearRect(0,0,canvas.width,canvas.height);for(let n of nodes){n.x+=n.vx;n.y+=n.vy;if(n.x<0||n.x>canvas.width)n.vx*=-1;if(n.y<0||n.y>canvas.height)n.vy*=-1;}for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<MD){ctx.strokeStyle=`rgba(20,184,166,${(1-d/MD)*.1})`;ctx.lineWidth=.5;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();}}for(let n of nodes){ctx.fillStyle='rgba(20,184,166,.2)';ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fill();}requestAnimationFrame(an);}
+if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches)an();
+
+const nI=document.querySelectorAll('.nav-item'),sc=document.querySelectorAll('.section'),sb=document.getElementById('sidebar'),ov=document.getElementById('sidebarOverlay'),mt=document.getElementById('menuToggle');
+function sw(id){sc.forEach(s=>s.classList.remove('active'));const t=document.getElementById('sec-'+id);if(t)t.classList.add('active');nI.forEach(n=>n.classList.remove('active'));const ni=document.querySelector(`.nav-item[data-section="${id}"]`);if(ni)ni.classList.add('active');sb.classList.remove('open');ov.classList.remove('open');window.scrollTo({top:0,behavior:'smooth'});rM();}
+nI.forEach(i=>i.addEventListener('click',()=>sw(i.dataset.section)));
+mt.addEventListener('click',()=>{sb.classList.toggle('open');ov.classList.toggle('open');});
+ov.addEventListener('click',()=>{sb.classList.remove('open');ov.classList.remove('open');});
+
+function rM(){if(typeof renderMathInElement==='function')renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});}
+document.addEventListener('DOMContentLoaded',()=>{rM();lS();});setTimeout(rM,1000);setTimeout(rM,3000);
+
+function cV(id,cor,tol,fid){const inp=document.getElementById(id),fb=document.getElementById(fid),v=parseFloat(inp.value);if(isNaN(v)){inp.classList.remove('correct','incorrect');fb.classList.remove('show','correct','incorrect');return false;}if(Math.abs(v-cor)<=tol){inp.classList.add('correct');inp.classList.remove('incorrect');fb.innerHTML='<i class="fas fa-check-circle"></i> Correcto';fb.classList.add('show','correct');fb.classList.remove('incorrect');return true;}else{inp.classList.add('incorrect');inp.classList.remove('correct');fb.innerHTML=`<i class="fas fa-times-circle"></i> Incorrecto. Respuesta: ${cor}`;fb.classList.add('show','incorrect');fb.classList.remove('correct');return false;}}
+const TQ=15;
+function uS(){let s=0;document.querySelectorAll('.input-field.correct').forEach(()=>s++);document.getElementById('scoreDisplay').textContent=s+' / '+TQ;document.getElementById('scoreBar').style.width=((s/TQ)*100)+'%';}
+
+function checkEx1(){let c=0;if(cV('e1a',.902,.001,'fb-e1a'))c++;if(cV('e1b',.809,.001,'fb-e1b'))c++;if(cV('e1c',.970,.001,'fb-e1c'))c++;if(cV('e1d',70.8,.2,'fb-e1d'))c++;if(cV('e1e',81.7,.2,'fb-e1e'))c++;uS();sT(c===5?'Ej.1: Todas correctas':'Ej.1: '+c+'/5',c===5?'success':'info');}
+function checkEx2(){let c=0;if(cV('e2a',3,.01,'fb-e2a'))c++;if(cV('e2b',620,2,'fb-e2b'))c++;if(cV('e2c',46,1,'fb-e2c'))c++;if(cV('e2d',326,1,'fb-e2d'))c++;if(cV('e2e',7.7,.1,'fb-e2e'))c++;uS();sT(c===5?'Ej.2: Todas correctas':'Ej.2: '+c+'/5',c===5?'success':'info');}
+function checkEx3(){let c=0;if(cV('e3a',1,.01,'fb-e3a'))c++;if(cV('e3b',4,.1,'fb-e3b'))c++;if(cV('e3c',4,0,'fb-e3c'))c++;if(cV('e3d',90.9,.2,'fb-e3d'))c++;if(cV('e3e',.4,.1,'fb-e3e'))c++;uS();sT(c===5?'Ej.3: Todas correctas':'Ej.3: '+c+'/5',c===5?'success':'info');}
+
+function toggleSol(id){document.getElementById(id).classList.toggle('show');}
+function toggleTask(id){document.getElementById(id).classList.toggle('open');}
+function saveTask(id){const ta=document.getElementById(id+'-text');if(ta){localStorage.setItem('upse_pp_'+id,ta.value);const ind=document.getElementById('saved-'+id);if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),3000);}sT('Progreso guardado','success');}}
+function downloadTask(id,nm){const ta=document.getElementById(id+'-text');if(ta&&ta.value.trim()){const b=new Blob([ta.value],{type:'text/plain;charset=utf-8'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=nm+'.txt';document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);sT('Archivo descargado','success');}else sT('No hay contenido','error');}
+function lS(){['task1','task2','task3','taskReal'].forEach(id=>{const s=localStorage.getItem('upse_pp_'+id);const ta=document.getElementById(id+'-text');if(s&&ta)ta.value=s;});}
+function sT(m,t){const c=document.getElementById('toastContainer'),e=document.createElement('div');e.className='toast '+t;const i=t==='success'?'fa-check-circle':t==='error'?'fa-exclamation-circle':'fa-info-circle';e.innerHTML=`<i class="fas ${i}"></i> ${m}`;c.appendChild(e);setTimeout(()=>{if(e.parentNode)e.parentNode.removeChild(e);},3200);}
+</script>
+</body>
+</html>
