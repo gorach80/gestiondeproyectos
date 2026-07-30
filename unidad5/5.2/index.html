@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tema 5.2: Evaluación Financiera con PE | UPSE</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg-p:#0c1220;--bg-s:#111a2e;--bg-c:#162038;--bg-ch:#1c2a4a;--bg-i:#0e1628;--acc:#dc2626;--acc-l:#ef4444;--acc-d:#b91c1c;--acc-g:rgba(220,38,38,.12);--dng:#ef4444;--dng-b:rgba(239,68,68,.08);--suc:#10b981;--suc-b:rgba(16,185,129,.08);--inf:#38bdf8;--inf-b:rgba(56,189,248,.08);--wrn:#f59e0b;--wrn-b:rgba(245,158,11,.08);--tp:#f1f5f9;--ts:#94a3b8;--tm:#64748b;--bd:#1e3050;--bl:#253a5c;--r:12px;--rs:8px;--sw:260px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg-p);color:var(--tp);min-height:100vh;overflow-x:hidden;line-height:1.7}
+h1,h2,h3,h4,h5,h6{font-family:'Outfit',sans-serif;line-height:1.2}
+a{color:var(--acc);text-decoration:none}a:hover{color:var(--acc-l)}
+.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:rgba(8,13,24,0.75);backdrop-filter:blur(16px);border-right:1px solid rgba(255,255,255,0.06);z-index:100;display:flex;flex-direction:column;transition:transform .35s cubic-bezier(.4,0,.2,1);overflow-y:auto}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid var(--bd)}
+.sb-logo{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sb-logo .ico{width:36px;height:36px;background:linear-gradient(135deg,var(--acc),var(--acc-d));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;font-weight:800;font-family:'Outfit';text-align:center;line-height:1}
+.sb-logo .txt{font-family:'Outfit';font-weight:700;font-size:13px;color:var(--tp);line-height:1.2}
+.sb-logo .txt small{display:block;font-size:10px;font-weight:400;color:var(--tm);margin-top:1px}
+.sb-sub{font-size:10px;color:var(--tm);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;padding:0 16px 8px}
+.sb-nav{padding:8px 8px 16px}
+.ni{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:13px;color:var(--ts);margin-bottom:1px;position:relative;border:1px solid transparent}
+.ni:hover{background:var(--acc-g);color:var(--tp)}
+.ni.active{background:var(--acc-g);color:var(--acc);border-color:rgba(220,38,38,.2);font-weight:600}
+.ni.active::before{content:'';position:absolute;left:-8px;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--acc);border-radius:0 3px 3px 0}
+.ni i{width:16px;text-align:center;font-size:12px;flex-shrink:0}
+.ni .nb{margin-left:auto;font-size:10px;background:var(--acc);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700}
+.ni .nbd{margin-left:auto;font-size:10px;background:var(--dng);color:#fff;padding:1px 6px;border-radius:8px;font-weight:700}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--bd);font-size:10px;color:var(--tm);margin-top:auto}
+.menu-t{display:none;position:fixed;top:12px;left:12px;z-index:200;width:40px;height:40px;border-radius:8px;background:var(--bg-c);border:1px solid var(--bd);color:var(--tp);font-size:16px;cursor:pointer;align-items:center;justify-content:center}
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;backdrop-filter:blur(2px)}
+.mc{margin-left:var(--sw);min-height:100vh;position:relative;z-index:1}
+.sec{display:none;padding:40px 40px 80px;max-width:920px;margin:0 auto;animation:fiu .4s ease}
+.sec.active{display:block}
+@keyframes fiu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--acc);background:var(--acc-g);padding:5px 12px;border-radius:16px;border:1px solid rgba(220,38,38,.2);margin-bottom:14px}
+.st{font-size:30px;font-weight:800;color:var(--tp);margin-bottom:6px;letter-spacing:-.4px}
+.sd{font-size:16px;color:var(--ts);margin-bottom:32px;max-width:680px;line-height:1.7}
+.h3{font-size:20px;font-weight:700;margin:32px 0 12px;color:var(--tp)}
+.h4{font-size:16px;font-weight:600;margin:20px 0 8px;color:var(--tp)}
+.ta{color:var(--acc)}.td{color:var(--dng)}.tsu{color:var(--suc)}.ti{color:var(--inf)}.tw{color:var(--wrn)}.tm{color:var(--tm)}
+.ul{padding-left:0;list-style:none;margin:10px 0}
+.ul li{padding:5px 0 5px 24px;position:relative;color:var(--ts);font-size:14px}
+.ul li::before{content:'';position:absolute;left:6px;top:13px;width:7px;height:7px;border-radius:50%;background:var(--acc);opacity:.7}
+.tw2{overflow-x:auto;margin:14px 0;border-radius:var(--r);border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{background:rgba(220,38,38,.05)}
+th{padding:10px 14px;text-align:left;font-weight:600;color:var(--acc);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--bd);white-space:nowrap}
+td{padding:9px 14px;border-bottom:1px solid var(--bd);color:var(--ts)}
+tbody tr:hover{background:rgba(220,38,38,.02)}tbody tr:last-child td{border-bottom:none}
+.fb{background:linear-gradient(135deg,rgba(220,38,38,.05),rgba(220,38,38,.02));border:1px solid rgba(220,38,38,.13);border-left:4px solid var(--acc);border-radius:0 var(--r) var(--r) 0;padding:18px 22px;margin:18px 0;overflow-x:auto}
+.fb .fl{font-size:11px;font-weight:600;color:var(--acc);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.fb .katex-display{margin:6px 0!important}
+.co{border-radius:var(--r);padding:18px 20px;margin:18px 0;display:flex;gap:12px;align-items:flex-start}
+.co i{margin-top:2px;font-size:16px;flex-shrink:0}
+.co.r{background:var(--acc-g);border:1px solid rgba(220,38,38,.2)}.co.r i{color:var(--acc)}
+.co.g{background:var(--suc-b);border:1px solid rgba(16,185,129,.2)}.co.g i{color:var(--suc)}
+.co.b{background:var(--inf-b);border:1px solid rgba(56,189,248,.2)}.co.b i{color:var(--inf)}
+.co.a{background:var(--wrn-b);border:1px solid rgba(245,158,11,.2)}.co.a i{color:var(--wrn)}
+.co p{color:var(--ts);margin:0;font-size:13px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin:16px 0}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}
+.sc{background:var(--bg-c);border:1px solid var(--bd);border-radius:var(--r);padding:18px;text-align:center;transition:all .25s}
+.sc:hover{border-color:var(--acc);transform:translateY(-2px)}
+.sn{font-family:'Outfit';font-size:28px;font-weight:800;color:var(--acc);line-height:1}
+.sl{font-size:12px;color:var(--tm);margin-top:4px}
+.c{background:rgba(22,32,56,0.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r);padding:24px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,0.2);transition:all .25s}
+.c:hover{border-color:rgba(220,38,38,0.2);background:rgba(28,42,74,0.7);box-shadow:0 8px 32px rgba(220,38,38,0.05)}
+.ch{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.ci{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ci.r{background:var(--acc-g);color:var(--acc)}.ci.g{background:var(--suc-b);color:var(--suc)}.ci.b{background:var(--inf-b);color:var(--inf)}.ci.a{background:var(--wrn-b);color:var(--wrn)}
+.ct{font-size:16px;font-weight:700}
+.c p{color:var(--ts);margin-bottom:10px}.c p:last-child{margin-bottom:0}
+.divider{border:none;border-top:1px solid var(--bd);margin:32px 0}
+.ex{background:rgba(17,26,46,0.5);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.04);border-radius:var(--rs);padding:18px;margin-bottom:18px}
+.ex p{color:var(--ts);font-size:13px;margin-bottom:6px}.ex p:last-child{margin-bottom:0}
+.q{margin:18px 0;padding:14px 18px;background:rgba(220,38,38,.03);border-radius:var(--rs);border-left:3px solid var(--acc)}
+.q p{color:var(--tp);font-size:14px;margin-bottom:8px;font-weight:500}
+.ir{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ir label{font-size:13px;color:var(--ts);white-space:nowrap}
+.if{background:var(--bg-i);border:1px solid var(--bd);border-radius:var(--rs);padding:7px 12px;color:var(--tp);font-size:14px;font-family:'Source Sans 3';width:130px;transition:all .2s;outline:none}
+.if:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-g)}
+.if.ok{border-color:var(--suc);background:var(--suc-b)}
+.if.no{border-color:var(--dng);background:var(--dng-b)}
+.iu{font-size:13px;color:var(--tm)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--rs);font-size:13px;font-weight:600;font-family:'Outfit';cursor:pointer;border:1px solid transparent;transition:all .2s;outline:none}
+.bp{background:var(--acc);color:#fff;border-color:var(--acc)}.bp:hover{background:var(--acc-l);transform:translateY(-1px);box-shadow:0 4px 14px rgba(220,38,38,.3)}
+.bo{background:transparent;color:var(--ts);border-color:var(--bd)}.bo:hover{border-color:var(--acc);color:var(--acc)}
+.bs{padding:6px 14px;font-size:12px}
+.ea{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.fbk{margin-top:10px;padding:10px 14px;border-radius:var(--rs);font-size:13px;display:none;align-items:center;gap:6px}
+.fbk.show{display:flex}
+.fbk.ok{background:var(--suc-b);color:var(--suc);border:1px solid rgba(16,185,129,.2)}
+.fbk.no{background:var(--dng-b);color:var(--dng);border:1px solid rgba(239,68,68,.2)}
+.sol{display:none;margin-top:14px;padding:18px;background:var(--bg-s);border:1px solid var(--bd);border-radius:var(--rs)}
+.sol.show{display:block;animation:fiu .3s ease}
+.sol h4{color:var(--acc);font-size:14px;margin-bottom:10px}
+.sol p{color:var(--ts);font-size:13px;margin-bottom:5px}
+.ec{background:rgba(22,32,56,0.6);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.06);border-radius:var(--r);padding:28px;margin-bottom:28px;position:relative;box-shadow:0 8px 32px rgba(0,0,0,0.15);transition:all .25s}
+.ec:hover{border-color:rgba(220,38,38,0.25);transform:translateY(-2px);box-shadow:0 8px 32px rgba(220,38,38,0.06)}
+.ec::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--acc),var(--acc-d));border-radius:var(--r) var(--r) 0 0}
+.en{font-family:'Outfit';font-size:12px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:6px}
+.et{font-size:18px;font-weight:700;margin-bottom:14px}
+.sb-bar{display:flex;align-items:center;gap:14px;padding:14px 20px;background:rgba(22,32,56,0.5);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.05);border-radius:var(--r);margin-bottom:24px}
+.sb-bar .sbl{font-size:13px;color:var(--ts)}
+.sb-bar .sbv{font-family:'Outfit';font-size:20px;font-weight:800;color:var(--acc)}
+.pb-bg{flex:1;height:7px;background:var(--bg-i);border-radius:4px;overflow:hidden}
+.pb-f{height:100%;background:linear-gradient(90deg,var(--acc-d),var(--acc),var(--acc-l));background-size:200% 100%;border-radius:4px;transition:width .5s ease;animation:pbSweep 2s linear infinite}
+@keyframes pbSweep{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;outline:none;transition:background .2s}
+input[type="range"]:hover{background:rgba(255,255,255,0.15)}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid var(--tp);box-shadow:0 0 8px rgba(220,38,38,0.5);transition:transform .15s,background .15s}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.25);background:var(--acc-l)}
+input[type="range"]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid var(--tp);box-shadow:0 0 8px rgba(220,38,38,0.5)}
+.tc{position:fixed;top:16px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:8px}
+.tt{padding:12px 18px;border-radius:var(--rs);font-size:13px;font-weight:500;color:#fff;display:flex;align-items:center;gap:8px;animation:sir .3s ease,fo .3s ease 2.7s forwards;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.tt.s{background:#059669}.tt.e{background:#dc2626}.tt.i{background:#0284c7}
+@keyframes sir{from{transform:translateX(80px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes fo{to{opacity:0;transform:translateX(30px)}}
+canvas.graph{width:100%;height:320px;border:1px solid var(--bd);border-radius:var(--r);background:var(--bg-s);margin:16px 0;display:block}
+.graph-legend{display:flex;gap:16px;flex-wrap:wrap;margin:8px 0 16px;font-size:12px;color:var(--ts)}
+.graph-legend span{display:flex;align-items:center;gap:5px}
+.graph-legend .sw{width:16px;height:3px;border-radius:2px}
+.katex{color:var(--tp)}.katex .mord,.katex .mbin,.katex .mrel,.katex .mopen,.katex .mclose,.katex .mpunct,.katex .minner,.katex .mop{color:var(--tp)}
+.case-phase{margin-bottom:28px}
+.phase-label{display:inline-flex;align-items:center;gap:8px;font-family:'Outfit';font-size:13px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;padding:4px 12px;background:var(--acc-g);border-radius:6px}
+.phase-content{background:var(--bg-c);border:1px solid var(--bd);border-radius:var(--r);padding:28px}
+textarea.task-textarea{min-height:120px;width:100%;background:var(--bg-i);border:1px solid var(--bd);border-radius:var(--rs);padding:14px 18px;color:var(--tp);font-family:'Source Sans 3';font-size:14px;line-height:1.7;resize:vertical;outline:none;margin:12px 0;transition:border-color .2s}
+textarea.task-textarea:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--acc-g)}
+textarea.task-textarea::placeholder{color:var(--tm)}
+.task-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.saved-indicator{display:none;align-items:center;gap:6px;font-size:13px;color:var(--suc);margin-left:8px}
+.saved-indicator.show{display:inline-flex}
+@media(max-width:1024px){.g3{grid-template-columns:1fr 1fr}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){
+.sidebar{transform:translateX(-100%)}.sidebar.open{transform:translateX(0)}.sb-ov.open{display:block}
+.menu-t{display:flex}.mc{margin-left:0}.sec{padding:64px 16px 60px}
+.st{font-size:22px}.g2,.g3,.g4{grid-template-columns:1fr}
+.ec{padding:18px}.ir{flex-direction:column;align-items:flex-start}.if{width:100%}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<canvas id="bgC" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.2"></canvas>
+<div class="tc" id="tcC"></div>
+<button class="menu-t" id="mT" aria-label="Menú"><i class="fas fa-bars"></i></button>
+<div class="sb-ov" id="sbO"></div>
+
+<aside class="sidebar" id="sb">
+<div class="sb-head">
+<div class="sb-logo"><div class="ico">5.2</div><div class="txt">Evaluación Financiera<small>UPSE · Ing. Seguridad Industrial</small></div></div>
+</div>
+<div class="sb-sub">Contenido 5.2</div>
+<nav class="sb-nav">
+<div class="ni active" data-s="inicio"><i class="fas fa-home"></i> Inicio</div>
+<div class="ni" data-s="estados"><i class="fas fa-balance-scale"></i> Estados de Pérdida/Ganancia</div>
+<div class="ni" data-s="utilidad"><i class="fas fa-chart-bar"></i> Análisis de Utilidad por PE</div>
+<div class="ni" data-s="inversion"><i class="fas fa-money-bill-trend-up"></i> Evaluación de Inversión con PE</div>
+<div class="ni" data-s="comparacion"><i class="fas fa-code-compare"></i> Comparación de Opciones</div>
+<div class="ni" data-s="indicadores"><i class="fas fa-gauge-high"></i> Indicadores Financieros del PE</div>
+<div class="ni" data-s="decision"><i class="fas fa-route"></i> Modelo de Decisión</div>
+<div class="ni" data-s="ejercicios"><i class="fas fa-calculator"></i> Ejercicios<span class="nb">4</span></div>
+<div class="ni" data-s="tareaaplicada"><i class="fas fa-hard-hat"></i> Tarea Aplicada<span class="nbd">Real</span></div>
+</nav>
+<div class="sb-foot">Unidad 5 · Tema 5.2<br>Gestión de Proyectos — UPSE</div>
+</aside>
+
+<main class="mc">
+
+<!-- ============ INICIO ============ -->
+<div class="sec active" id="s-inicio">
+<div class="badge"><i class="fas fa-balance-scale"></i> Tema 5.2</div>
+<h1 class="st">Estados de Pérdida/Ganancia y Evaluación de Inversión con PE</h1>
+<p class="sd">Definir el estado de pérdida o ganancia y evaluar opciones de inversión en proyectos de seguridad industrial, mediante indicadores financieros, costos e ingresos derivados del punto de equilibrio.</p>
+<div class="g4">
+<div class="sc"><div class="sn">7</div><div class="sl">Sub-secciones</div></div>
+<div class="sc"><div class="sn">12+</div><div class="sl">Fórmulas LaTeX</div></div>
+<div class="sc"><div class="sn">2</div><div class="sl">Gráficos interactivos</div></div>
+<div class="sc"><div class="sn">3</div><div class="sl">Opciones de decisión</div></div>
+</div>
+<div class="c" style="border-left:3px solid var(--acc);">
+<h4 class="h4" style="margin-top:0;"><i class="fas fa-bullseye ta" style="margin-right:6px;"></i>¿Qué se logra en este tema?</h4>
+<p>El Tema 5.1 te enseñó a <strong>calcular</strong> el punto de equilibrio. Ahora el 5.2 te enseña a <strong>interpretar</strong> ese resultado: ¿la empresa gana o pierde? ¿Cuánto? ¿Es viable invertir? ¿Qué opción es mejor? Pasamos del cálculo mecánico a la <strong>toma de decisiones financieras</strong> aplicadas a seguridad industrial.</p>
+<div class="co r"><i class="fas fa-exclamation-triangle"></i><p><strong>Enfoque de Seguridad Industrial:</strong> Todos los ejemplos, ejercicios y la tarea aplicada usan datos del sector: servicios de inspección, monitoreo, auditorías SGSST, fabricación de EPP, consultoría en higiene industrial.</p></div>
+</div>
+<h3 class="h3">Contenido de esta Sección</h3>
+<div class="c">
+<div class="tw2">
+<table>
+<thead><tr><th>Sección</th><th>Contenido</th><th>Complejidad</th></tr></thead>
+<tbody>
+<tr><td><strong>Estados de P/G</strong></td><td>Fórmulas de utilidad, zonas de pérdida y ganancia</td><td class="tw">Fundamental</td></tr>
+<tr><td><strong>Utilidad por PE</strong></td><td>Utilidad objetivo, Q objetivo, MS integrado</td><td class="tw">Intermedio</td></tr>
+<tr><td><strong>Evaluación de Inversión</strong></td><td>PE como filtro de viabilidad, PE vs demanda</td><td class="tw">Intermedio</td></tr>
+<tr><td><strong>Comparación de Opciones</strong></td><td>Superposición de PE, punto de indiferencia</td><td class="tw">Avanzado</td></tr>
+<tr><td><strong>Indicadores Financieros</strong></td><td>Tabla consolidada de 8 indicadores del PE</td><td class="ti">Referencia</td></tr>
+<tr><td><strong>Modelo de Decisión</strong></td><td>Flujo de 5 pasos para decidir con PE</td><td class="tw">Avanzado</td></tr>
+<tr><td><strong>Tarea Aplicada</strong></td><td>Caso SEGUPARQ S.A. — continuación 4 fases</td><td class="td">Integración</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- ============ ESTADOS ============ -->
+<div class="sec" id="s-estados">
+<div class="badge"><i class="fas fa-balance-scale"></i> Fundamento</div>
+<h2 class="st">Estados de Pérdida y Ganancia</h2>
+<p class="sd">A partir del punto de equilibrio, determinar si la operación genera utilidad o pérdida según el volumen real de producción o servicios.</p>
+<div class="fb"><div class="fl">Ingreso Total</div>$$IT = PV \times Q$$</div>
+<div class="fb"><div class="fl">Costo Total</div>$$CT = CF + CV_u \times Q$$</div>
+<div class="fb"><div class="fl">Utilidad (o Pérdida)</div>$$U = IT - CT = (PV - CV_u) \times Q - CF = MC_u \times Q - CF$$</div>
+<h3 class="h3">Los Tres Estados Posibles</h3>
+<div class="g3">
+<div class="c" style="padding:18px;border-top:3px solid var(--dng);"><h4 class="h4" style="margin-top:0;color:var(--dng);font-size:14px;">Pérdida</h4><p style="font-size:13px;">\(Q &lt; Q^*\) → \(IT &lt; CT\) → \(U &lt; 0\). La empresa no cubre sus costos. Zona roja del gráfico.</p></div>
+<div class="c" style="padding:18px;border-top:3px solid var(--wrn);"><h4 class="h4" style="margin-top:0;color:var(--wrn);font-size:14px;">Punto de Equilibrio</h4><p style="font-size:13px;">\(Q = Q^*\) → \(IT = CT\) → \(U = 0\). Umbral exacto. Ni gana ni pierde.</p></div>
+<div class="c" style="padding:18px;border-top:3px solid var(--suc);"><h4 class="h4" style="margin-top:0;color:var(--suc);font-size:14px;">Ganancia</h4><p style="font-size:13px;">\(Q &gt; Q^*\) → \(IT &gt; CT\) → \(U &gt; 0\). La empresa cubre costos y genera utilidad. Zona verde.</p></div>
+</div>
+<hr class="divider">
+<h3 class="h3">Ejemplo: Servicio de Monitoreo de Gases Tóxicos</h3>
+<div class="c">
+<div class="ch"><div class="ci r"><i class="fas fa-shield-alt"></i></div><div class="ct">Caso Aplicado</div></div>
+<div class="ex">
+<p><strong>PV por monitoreo:</strong> $850 | <strong>CV_u:</strong> $340 | <strong>CF mensuales:</strong> $35,000</p>
+<p>El mes pasado realizaron <strong>Q = 60 monitoreos</strong>.</p>
+</div>
+</div>
+<div class="fb">
+<div class="fl">Cálculo del Estado</div>
+ $$MC_u = 850 - 340 = \$510 \qquad Q^* = \frac{35{,}000}{510} = 68.63 \text{ monitoreos}$$  $$IT = 850 \times 60 = \$51{,}000 \qquad CT = 35{,}000 + 340 \times 60 = \$55{,}400$$  $$U = 51{,}000 - 55{,}400 = \boxed{-\$4{,}400} \quad \textbf{PÉRDIDA}$$ </div>
+<div class="co r"><i class="fas fa-exclamation-triangle"></i><p><strong>Interpretación:</strong> Con 60 monitoreos (por debajo del PE de 69), la empresa pierde $4,400. Necesita al menos 9 monitoreos adicionales para salir de pérdidas. Cada monitoreo por encima del PE aporta $510 de utilidad neta.</p></div>
+</div>
+
+<!-- ============ UTILIDAD ============ -->
+<div class="sec" id="s-utilidad">
+<div class="badge"><i class="fas fa-chart-bar"></i> Extensión</div>
+<h2 class="st">Análisis de Utilidad Objetivo mediante PE</h2>
+<p class="sd">Determinar cuántas unidades deben venderse no solo para cubrir costos, sino para alcanzar una meta de utilidad específica.</p>
+<div class="fb"><div class="fl">Condición de Utilidad Objetivo</div>$$U_{obj} = MC_u \times Q_{obj} - CF \implies Q_{obj} = \frac{CF + U_{obj}}{MC_u}$$</div>
+<div class="fb"><div class="fl">Relación con el PE</div>$$Q_{obj} = Q^* + \frac{U_{obj}}{MC_u}$$<p style="color:var(--tm);font-size:12px;margin-top:6px;margin-bottom:0;">El Q objetivo es el PE más las unidades adicionales necesarias para generar la utilidad deseada.</p></div>
+<div class="fb"><div class="fl">Ingresos en el Q Objetivo</div>$$IT_{obj} = PV \times Q_{obj} = PE_{\$} + \frac{U_{obj}}{\%MC}$$</div>
+<h3 class="h3">Ejemplo: Consultoría en Higiene Industrial</h3>
+<div class="ex">
+<p><strong>CF = $28,000/mes</strong> | <strong>PV = $650/consultoría</strong> | <strong>CV_u = $250/consultoría</strong> | <strong>Meta de utilidad: $15,000/mes</strong></p>
+</div>
+<div class="fb">
+<div class="fl">Cálculo</div>
+ $$MC_u = 650 - 250 = \$400 \qquad Q^* = \frac{28{,}000}{400} = 70 \text{ consultorías}$$  $$Q_{obj} = \frac{28{,}000 + 15{,}000}{400} = \frac{43{,}000}{400} = 107.5 \rightarrow 108 \text{ consultorías}$$  $$IT_{obj} = 650 \times 108 = \$70{,}200 \qquad CT_{obj} = 28{,}000 + 250 \times 108 = \$55{,}000$$  $$U = 70{,}200 - 55{,}000 = \$15{,}200 \geq \$15{,}000 \quad \checkmark$$ </div>
+<div class="co g"><i class="fas fa-check-circle"></i><p><strong>Interpretación:</strong> Se necesitan 108 consultorías (38 adicionales al PE de 70). El margen de seguridad respecto al PE es: \((108-70)/108 \times 100 = 35.2\%\).</p></div>
+</div>
+
+<!-- ============ INVERSIÓN ============ -->
+<div class="sec" id="s-inversion">
+<div class="badge"><i class="fas fa-money-bill-trend-up"></i> Aplicación</div>
+<h2 class="st">Evaluación de Inversión mediante PE</h2>
+<p class="sd">Usar el punto de equilibrio como filtro de viabilidad: comparar el PE con la demanda esperada para decidir si una inversión es factible.</p>
+<h3 class="h3">Criterio de Viabilidad</h3>
+<div class="g2">
+<div class="c" style="padding:18px;border-top:3px solid var(--suc);"><h4 class="h4" style="margin-top:0;color:var(--suc);font-size:14px;">VIABLE</h4><p style="font-size:13px;">\(Q^* &lt; Q_{demanda}\) → La demanda supera el PE. Existe margen de seguridad positivo. La inversión puede generar utilidad.</p></div>
+<div class="c" style="padding:18px;border-top:3px solid var(--dng);"><h4 class="h4" style="margin-top:0;color:var(--dng);font-size:14px;">NO VIABLE</h4><p style="font-size:13px;">\(Q^* &gt; Q_{demanda}\) → La demanda no alcanza el PE. La operación generaría pérdidas. No invertir sin cambios.</p></div>
+</div>
+<div class="fb"><div class="fl">Índice de Viabilidad</div>$$IV = \frac{Q_{demanda} - Q^*}{Q^*} \times 100$$<p style="color:var(--tm);font-size:12px;margin-top:6px;margin-bottom:0;">Si \(IV &gt; 0\): viable. Si \(IV \leq 0\): no viable. Es equivalente al MS% pero referido al PE inyectado a las ventas.</p></div>
+<hr class="divider">
+<h3 class="h3">Ejemplo: Planta de Fabricación de EPP</h3>
+<div class="ex">
+<p>Se evalúa instalar una línea de producción de cascos de seguridad. <strong>Demanda esperada: 85 cascos/mes.</strong></p>
+<p><strong>CF de la inversión:</strong> $42,000/mes (depreciación, mantenimiento, personal fijo)</p>
+<p><strong>PV por casco:</strong> $780 | <strong>CV_u:</strong> $310</p>
+</div>
+<div class="fb">
+<div class="fl">Evaluación</div>
+ $$MC_u = 780 - 310 = \$470 \qquad Q^* = \frac{42{,}000}{470} = 89.36 \rightarrow 90 \text{ cascos}$$  $$IV = \frac{85 - 89.36}{89.36} \times 100 = -4.88\%$$ </div>
+<div class="co r"><i class="fas fa-exclamation-triangle"></i><p><strong>Conclusión: NO VIABLE.</strong> El PE (90 cascos) supera la demanda (85). Faltan 5 cascos para alcanzar el equilibrio. Opciones: (a) aumentar precio, (b) reducir costos, (c) no invertir.</p></div>
+<div class="co a"><i class="fas fa-lightbulb"></i><p><strong>Si se reduce CV_u a $270</strong> (negociando proveedores): \(MC_u = 510\), \(Q^* = 42{,}000/510 = 82.4 \rightarrow 83\), \(IV = (85-82.4)/82.4 = 3.2\%\). Ahora es viable, aunque con muy poco margen.</p></div>
+</div>
+
+<!-- ============ COMPARACIÓN ============ -->
+<div class="sec" id="s-comparacion">
+<div class="badge"><i class="fas fa-code-compare"></i> Análisis Avanzado</div>
+<h2 class="st">Comparación de Opciones de Inversión</h2>
+<p class="sd">Cuando existen múltiples alternativas con diferentes estructuras de costos, el PE permite identificar cuál opción es mejor según el volumen esperado.</p>
+<h3 class="h3">Metodología</h3>
+<div class="ul">
+<li>Calcular el PE de cada opción</li>
+<li>Encontrar el <strong>punto de indiferencia</strong>: volumen donde ambas opciones generan la misma utilidad</li>
+<li>Comparar la utilidad de cada opción en el volumen esperado</li>
+</div>
+<div class="fb"><div class="fl">Punto de Indiferencia (mismo PV)</div>$$CT_A = CT_B \implies CF_A + CV_{u_A} \times Q_{ind} = CF_B + CV_{u_B} \times Q_{ind}$$  $$Q_{ind} = \frac{CF_B - CF_A}{CV_{u_A} - CV_{u_B}}$$ <p style="color:var(--tm);font-size:12px;margin-top:6px;margin-bottom:0;">Si \(CV_{u_A} &lt; CV_{u_B}\) (A tiene menor costo variable), entonces para \(Q &gt; Q_{ind}\) la opción A es siempre mejor.</p></div>
+<div class="co b"><i class="fas fa-info-circle"></i><p><strong>Instrucciones del gráfico:</strong> Modifique los parámetros de cada opción y observe cómo se desplazan los PE y el punto de indiferencia.</p></div>
+<div class="g2" style="margin-bottom:16px;">
+<div class="c" style="padding:16px;border-left:3px solid var(--inf);"><label style="font-size:13px;color:var(--ts);display:block;margin-bottom:6px;">Opción A — CF: <strong id="cCFAv">$30,000</strong></label><input type="range" id="cCFA" min="5000" max="80000" step="1000" value="30000"></div>
+<div class="c" style="padding:16px;border-left:3px solid var(--inf);"><label style="font-size:13px;color:var(--ts);display:block;margin-bottom:6px;">Opción A — CV<sub>u</sub>: <strong id="cCVAv">$220</strong></label><input type="range" id="cCVA" min="50" max="600" step="10" value="220"></div>
+<div class="c" style="padding:16px;border-left:3px solid var(--wrn);"><label style="font-size:13px;color:var(--ts);display:block;margin-bottom:6px;">Opción B — CF: <strong id="cCFBv">$48,000</strong></label><input type="range" id="cCFB" min="5000" max="100000" step="1000" value="48000"></div>
+<div class="c" style="padding:16px;border-left:3px solid var(--wrn);"><label style="font-size:13px;color:var(--ts);display:block;margin-bottom:6px;">Opción B — CV<sub>u</sub>: <strong id="cCVBv">$160</strong></label><input type="range" id="cCVB" min="50" max="600" step="10" value="160"></div>
+</div>
+<div class="c" style="padding:16px;"><label style="font-size:13px;color:var(--ts);display:block;margin-bottom:6px;">Precio de Venta (ambas): <strong id="cPVv">$600</strong></label><input type="range" id="cPV" min="100" max="2000" step="10" value="600"></div>
+<div class="graph-legend">
+<span><div class="sw" style="background:var(--suc);"></div> Ingresos Totales</span>
+<span><div class="sw" style="background:var(--inf);"></div> CT Opción A (menor CF)</span>
+<span><div class="sw" style="background:var(--wrn);"></div> CT Opción B (menor CV)</span>
+<span><div class="sw" style="background:var(--acc);width:8px;height:8px;border-radius:50%;"></div> Punto de Indiferencia</span>
+</div>
+<canvas id="compGraph" class="graph"></canvas>
+<div id="compInfo" style="text-align:center;font-size:14px;color:var(--ts);margin-top:8px;"></div>
+<hr class="divider">
+<h3 class="h3">Ejemplo Numérico: Servicio de Inspección de Extintores</h3>
+<div class="ex">
+<p><strong>Opción A (manual):</strong> CF=$30,000, CV_u=$220, PV=$600</p>
+<p><strong>Opción B (semi-automatizada):</strong> CF=$48,000, CV_u=$160, PV=$600</p>
+<p><strong>Demanda esperada:</strong> 200 inspecciones/mes</p>
+</div>
+<div class="fb">
+<div class="fl">Cálculo Comparativo</div>
+ $$PE_A = \frac{30{,}000}{380} = 78.9 \rightarrow 79 \qquad PE_B = \frac{48{,}000}{440} = 109.1 \rightarrow 110$$  $$Q_{ind} = \frac{48{,}000 - 30{,}000}{220 - 160} = \frac{18{,}000}{60} = 300 \text{ inspecciones}$$  $$U_A(200) = 380 \times 200 - 30{,}000 = \$46{,}000 \qquad U_B(200) = 440 \times 200 - 48{,}000 = \$40{,}000$$ </div>
+<div class="co g"><i class="fas fa-check-circle"></i><p><strong>Resultado:</strong> Con demanda de 200 (por debajo del punto de indiferencia de 300), la <strong>Opción A gana por $6,000</strong>. Solo si la demanda supera 300 inspecciones, la Opción B sería mejor. La Opción A tiene menor PE (79 vs 110) y es la elección correcta.</p></div>
+</div>
+
+<!-- ============ INDICADORES ============ -->
+<div class="sec" id="s-indicadores">
+<div class="badge"><i class="fas fa-gauge-high"></i> Referencia</div>
+<h2 class="st">Indicadores Financieros Derivados del PE</h2>
+<p class="sd">Tabla consolidada de todos los indicadores que se obtienen a partir del análisis del punto de equilibrio.</p>
+<div class="tw2">
+<table>
+<thead><tr><th>Indicador</th><th>Fórmula</th><th>Unidad</th><th>Interpretación</th></tr></thead>
+<tbody>
+<tr><td><strong>Utilidad</strong></td><td>\(U = MC_u \times Q - CF\)</td><td>$</td><td>Ganancia neta (positiva) o pérdida (negativa)</td></tr>
+<tr><td><strong>PE en Unidades</strong></td><td>\(Q^* = CF / MC_u\)</td><td>unidades</td><td>Mínimo para no perder</td></tr>
+<tr><td><strong>PE en Valores</strong></td><td>\(PE_{\$} = CF / \%MC\)</td><td>$</td><td>Facturación mínima</td></tr>
+<tr><td><strong>Margen de Seguridad</strong></td><td>\(MS_{\%} = \frac{Q - Q^*}{Q} \times 100\)</td><td>%</td><td>Colchón sobre el PE</td></tr>
+<tr><td><strong>Índice de Viabilidad</strong></td><td>\(IV = \frac{Q - Q^*}{Q^*} \times 100\)</td><td>%</td><td>+ viable, − no viable</td></tr>
+<tr><td><strong>Q Objetivo</strong></td><td>\(Q_{obj} = \frac{CF + U_{obj}}{MC_u}\)</td><td>unidades</td><td>Volumen para meta de utilidad</td></tr>
+<tr><td><strong>Punto de Indiferencia</strong></td><td>\(Q_{ind} = \frac{CF_B - CF_A}{CV_{u_A} - CV_{u_B}}\)</td><td>unidades</td><td>Volumen donde 2 opciones son iguales</td></tr>
+<tr><td><strong>Grado de Apalancamiento Op.</strong></td><td>\(GAO = \frac{MC_u \times Q}{U}\)</td><td>veces</td><td>Sensibilidad de U ante cambios en Q</td></tr>
+</tbody>
+</table>
+</div>
+<div class="co b"><i class="fas fa-info-circle"></i><p><strong>Nota:</strong> El Grado de Apalancamiento Operativo (GAO) mide cuántas veces varía la utilidad por cada 1% de cambio en las ventas. Un GAO alto indica mayor riesgo operativo pero también mayor potencial de ganancia.</p></div>
+</div>
+
+<!-- ============ DECISIÓN ============ -->
+<div class="sec" id="s-decision">
+<div class="badge"><i class="fas fa-route"></i> Integración</div>
+<h2 class="st">Modelo de Decisión con Punto de Equilibrio</h2>
+<p class="sd">Flujo de 5 pasos para tomar decisiones de inversión en seguridad industrial utilizando el análisis del PE y sus indicadores derivados.</p>
+<div class="c" style="border-left:3px solid var(--acc);padding:20px;">
+<div class="ch"><div class="ci a"><i class="fas fa-1"></i></div><div class="ct">Paso 1 — Recopilar Datos</div></div>
+<p>Obtener CF, CV_u, PV y demanda esperada (\(Q_d\)) del proyecto o servicio de SI.</p>
+</div>
+<div class="c" style="border-left:3px solid var(--inf);padding:20px;">
+<div class="ch"><div class="ci b"><i class="fas fa-2"></i></div><div class="ct">Paso 2 — Calcular PE y Evaluar Viabilidad</div></div>
+<p>Calcular \(Q^*\) y comparar con \(Q_d\). Si \(Q^* > Q_d\) → <strong class="td">NO VIABLE</strong>, ir al Paso 4. Si \(Q^* < Q_d\) → <strong class="tsu">VIABLE</strong>, continuar.</p>
+</div>
+<div class="c" style="border-left:3px solid var(--suc);padding:20px;">
+<div class="ch"><div class="ci g"><i class="fas fa-3"></i></div><div class="ct">Paso 3 — Analizar Margen y Riesgo</div></div>
+<p>Calcular \(MS_{\%}\) e \(IV\). Si \(MS_{\%} < 20\%\) → riesgo alto, requiere monitoreo estrecho. Calcular \(Q_{obj}\) si hay meta de utilidad.</p>
+</div>
+<div class="c" style="border-left:3px solid var(--wrn);padding:20px;">
+<div class="ch"><div class="ci a"><i class="fas fa-4"></i></div><div class="ct">Paso 4 — Evaluar Alternativas (si no es viable)</div></div>
+<p>Proponer: (a) aumentar PV, (b) reducir CV_u, (c) reducir CF, (d) aumentar demanda. Recalcular PE con cada alternativa.</p>
+</div>
+<div class="c" style="border-left:3px solid var(--acc);padding:20px;">
+<div class="ch"><div class="ci r"><i class="fas fa-5"></i></div><div class="ct">Paso 5 — Comparar y Decidir</div></div>
+<p>Si hay múltiples opciones, calcular \(Q_{ind}\) y utilidad en \(Q_d\) para cada una. Seleccionar la de mayor utilidad o menor riesgo según el contexto.</p>
+</div>
+<hr class="divider">
+<h3 class="h3">Caso Integrado: Servicio de Señalización Industrial</h3>
+<div class="ex">
+<p>Una empresa de SI evalúa lanzar un servicio de señalización de zonas de riesgo.</p>
+<p><strong>Datos:</strong> CF=$32,000/mes, PV=$480/señalización, CV_u=$200, Demanda esperada=90 und/mes</p>
+</div>
+<div class="fb">
+<div class="fl">Aplicación del Modelo</div>
+ $$MC_u = 280,\quad Q^* = \frac{32{,}000}{280} = 114.3 \rightarrow 115 > 90 \quad \textbf{NO VIABLE}$$  $$\text{Paso 4a (subir PV a \$520): } Q^* = \frac{32{,}000}{320} = 100 \quad \text{aún } > 90 \text{ NO}$$  $$\text{Paso 4b (reducir CV_u a \$170): } Q^* = \frac{32{,}000}{310} = 103.2 \rightarrow 104 \quad \text{aún } > 90 \text{ NO}$$  $$\text{Paso 4c (reducir CF a \$24{,}000): } Q^* = \frac{24{,}000}{280} = 85.7 \rightarrow 86 < 90 \quad \textbf{VIABLE}$$  $$\text{Paso 3: } MS_{\%} = \frac{90-86}{90} \times 100 = 4.4\% \quad \text{Riesgo MUY ALTO}$$  $$\text{Paso 4c+4b combinado: CF=24{,}000, CV_u=170 \rightarrow Q^* = \frac{24{,}000}{310} = 77.4 \rightarrow 78$$  $$MS_{\%} = \frac{90-78}{90} \times 100 = 13.3\% \quad U = 310 \times 90 - 24{,}000 = \$3{,}900$$ </div>
+<div class="co a"><i class="fas fa-lightbulb"></i><p><strong>Decisión:</strong> Solo la combinación de reducir CF (subcontratar parte de la operación) Y negociar costos variables hace el proyecto viable, pero con MS%=13.3% (riesgo alto). Se recomienda condicionar el lanzamiento a contratos firmes que garanticen al menos 100 unidades/mes.</p></div>
+</div>
+
+<!-- ============ EJERCICIOS ============ -->
+<div class="sec" id="s-ejercicios">
+<div class="badge"><i class="fas fa-calculator"></i> Práctica</div>
+<h2 class="st">Ejercicios de Aplicación</h2>
+<div class="sb-bar">
+<div><div class="sbl">Progreso</div><div class="sbv" id="sD">0 / 4</div></div>
+<div class="pb-bg"><div class="pb-f" id="sB" style="width:0%"></div></div>
+</div>
+
+<div class="ec">
+<div class="en">Ejercicio 1</div>
+<div class="et">Estado de Pérdida/Ganancia — Monitoreo de Gases</div>
+<div class="ex"><p>CF = $35,000/mes. PV = $850/servicio. CV_u = $340/servicio. Se realizaron <strong>60 servicios</strong> en el mes.</p></div>
+<div class="q"><p>a) Ingresos totales:</p><div class="ir"><label>IT =</label><input type="number" class="if" id="e1a" step="1" placeholder="0"><span class="iu">$</span></div><div class="fbk" id="f1a"></div></div>
+<div class="q"><p>b) Costos totales:</p><div class="ir"><label>CT =</label><input type="number" class="if" id="e1b" step="1" placeholder="0"><span class="iu">$</span></div><div class="fbk" id="f1b"></div></div>
+<div class="q"><p>c) Utilidad (valor negativo si hay pérdida):</p><div class="ir"><label>U =</label><input type="number" class="if" id="e1c" step="1" placeholder="0"><span class="iu">$</span></div><div class="fbk" id="f1c"></div></div>
+<div class="ea"><button class="btn bp bs" onclick="cE1()"><i class="fas fa-check"></i> Verificar</button><button class="btn bo bs" onclick="tgS('s1')"><i class="fas fa-eye"></i> Solución</button></div>
+<div class="sol" id="s1"><h4><i class="fas fa-key" style="margin-right:5px;"></i>Solución</h4><p>\(IT = 850 \times 60 = \$51{,}000\)</p><p>\(CT = 35{,}000 + 340 \times 60 = 35{,}000 + 20{,}400 = \$55{,}400\)</p><p>\(U = 51{,}000 - 55{,}400 = -\$4{,}400\) → Pérdida</p></div>
+</div>
+
+<div class="ec">
+<div class="en">Ejercicio 2</div>
+<div class="et">Utilidad Objetivo — Consultoría SGSST</div>
+<div class="ex"><p>CF = $28,000/mes. PV = $650/consultoría. CV_u = $250/consultoría. <strong>Meta de utilidad: $15,000/mes.</strong></p></div>
+<div class="q"><p>a) PE en unidades (entero superior):</p><div class="ir"><label>Q* =</label><input type="number" class="if" id="e2a" step="1" placeholder="0"><span class="iu">consultorías</span></div><div class="fbk" id="f2a"></div></div>
+<div class="q"><p>b) Q objetivo para meta (entero superior):</p><div class="ir"><label>Q<sub>obj</sub> =</label><input type="number" class="if" id="e2b" step="1" placeholder="0"><span class="iu">consultorías</span></div><div class="fbk" id="f2b"></div></div>
+<div class="q"><p>c) Ingresos en Q objetivo (entero):</p><div class="ir"><label>IT<sub>obj</sub> =</label><input type="number" class="if" id="e2c" step="1" placeholder="0"><span class="iu">$</span></div><div class="fbk" id="f2c"></div></div>
+<div class="ea"><button class="btn bp bs" onclick="cE2()"><i class="fas fa-check"></i> Verificar</button><button class="btn bo bs" onclick="tgS('s2')"><i class="fas fa-eye"></i> Solución</button></div>
+<div class="sol" id="s2"><h4><i class="fas fa-key" style="margin-right:5px;"></i>Solución</h4><p>\(MC_u = 650 - 250 = \$400\)</p><p>\(Q^* = 28{,}000 / 400 = 70\)</p><p>\(Q_{obj} = (28{,}000 + 15{,}000) / 400 = 107.5 \rightarrow 108\)</p><p>\(IT_{obj} = 650 \times 108 = \$70{,}200\)</p></div>
+</div>
+
+<div class="ec">
+<div class="en">Ejercicio 3</div>
+<div class="et">Evaluación de Inversión — Fabricación de EPP</div>
+<div class="ex"><p>Proyecto de línea de cascos: CF=$42,000/mes, PV=$780/casco, CV_u=$310/casco. <strong>Demanda esperada: 85 cascos/mes.</strong></p></div>
+<div class="q"><p>a) PE en unidades (entero superior):</p><div class="ir"><label>Q* =</label><input type="number" class="if" id="e3a" step="1" placeholder="0"><span class="iu">cascos</span></div><div class="fbk" id="f3a"></div></div>
+<div class="q"><p>b) Índice de Viabilidad % (aceptar negativo con -):</p><div class="ir"><label>IV =</label><input type="number" class="if" id="e3b" step="0.1" placeholder="0"><span class="iu">%</span></div><div class="fbk" id="f3b"></div></div>
+<div class="q"><p>c) ¿Es viable? (0 = No, 1 = Sí):</p><div class="ir"><label>Respuesta =</label><input type="number" class="if" id="e3c" step="1" placeholder="0 o 1" style="width:80px;"></div><div class="fbk" id="f3c"></div></div>
+<div class="ea"><button class="btn bp bs" onclick="cE3()"><i class="fas fa-check"></i> Verificar</button><button class="btn bo bs" onclick="tgS('s3')"><i class="fas fa-eye"></i> Solución</button></div>
+<div class="sol" id="s3"><h4><i class="fas fa-key" style="margin-right:5px;"></i>Solución</h4><p>\(MC_u = 780 - 310 = \$470\)</p><p>\(Q^* = 42{,}000 / 470 = 89.36 \rightarrow 90\)</p><p>\(IV = (85 - 89.36) / 89.36 \times 100 = -4.88\%\)</p><p>IV &lt; 0 → <strong>0 (No viable)</strong></p></div>
+</div>
+
+<div class="ec">
+<div class="en">Ejercicio 4</div>
+<div class="et">Comparación de Opciones — Inspección de Extintores</div>
+<div class="ex">
+<p><strong>Opción A (manual):</strong> CF=$30,000, PV=$600, CV_u=$220</p>
+<p><strong>Opción B (semi-automatizada):</strong> CF=$48,000, PV=$600, CV_u=$160</p>
+</div>
+<div class="q"><p>a) PE Opción A (entero superior):</p><div class="ir"><label>Q*<sub>A</sub> =</label><input type="number" class="if" id="e4a" step="1" placeholder="0"><span class="iu">inspecciones</span></div><div class="fbk" id="f4a"></div></div>
+<div class="q"><p>b) PE Opción B (entero superior):</p><div class="ir"><label>Q*<sub>B</sub> =</label><input type="number" class="if" id="e4b" step="1" placeholder="0"><span class="iu">inspecciones</span></div><div class="fbk" id="f4b"></div></div>
+<div class="q"><p>c) Punto de indiferencia (entero):</p><div class="ir"><label>Q<sub>ind</sub> =</label><input type="number" class="if" id="e4c" step="1" placeholder="0"><span class="iu">inspecciones</span></div><div class="fbk" id="f4c"></div></div>
+<div class="ea"><button class="btn bp bs" onclick="cE4()"><i class="fas fa-check"></i> Verificar</button><button class="btn bo bs" onclick="tgS('s4')"><i class="fas fa-eye"></i> Solución</button></div>
+<div class="sol" id="s4"><h4><i class="fas fa-key" style="margin-right:5px;"></i>Solución</h4><p>\(MC_A = 380,\; MC_B = 440\)</p><p>\(Q^*_A = 30{,}000/380 = 78.95 \rightarrow 79\)</p><p>\(Q^*_B = 48{,}000/440 = 109.09 \rightarrow 110\)</p><p>\(Q_{ind} = (48{,}000 - 30{,}000)/(220 - 160) = 18{,}000/60 = 300\)</p><p>Para Q &lt; 300: A es mejor. Para Q &gt; 300: B es mejor.</p></div>
+</div>
+</div>
+
+<!-- ============ TAREA APLICADA ============ -->
+<div class="sec" id="s-tareaaplicada">
+<div class="badge"><i class="fas fa-hard-hat"></i> Aplicación Real</div>
+<h2 class="st">Tarea Aplicada: SEGUPARQ S.A. — Continuación</h2>
+<p class="sd">A partir de los resultados del Tema 5.1, evalúe estados financieros, compare opciones de expansión y tome una decisión fundamentada. Tarea de entrega obligatoria.</p>
+
+<div class="c" style="border-left:3px solid var(--acc);background:linear-gradient(135deg,rgba(220,38,38,.06),transparent);">
+<div class="ch"><div class="ci r"><i class="fas fa-industry"></i></div><div class="ct">SEGUPARQ S.A. — Parque Industrial Machala</div></div>
+<p><strong>Contexto del 5.1:</strong> Se calcularon los PE individuales para los 4 servicios. Ahora la gerencia requiere saber el estado financiero actual y evaluar 3 opciones estratégicas.</p>
+<div class="tw2">
+<table>
+<thead><tr><th>Servicio</th><th>PV ($)</th><th>CV_u ($)</th><th>MC_u ($)</th><th>CF_dir ($)</th><th>Demanda actual</th></tr></thead>
+<tbody>
+<tr><td><strong>A. Inspección equipos</strong></td><td>950</td><td>380</td><td class="tsu">570</td><td>14,000</td><td>45</td></tr>
+<tr><td><strong>B. Monitoreo atmósferas</strong></td><td>520</td><td>180</td><td>340</td><td>7,000</td><td>80</td></tr>
+<tr><td><strong>C. Auditoría SGSST</strong></td><td>2,800</td><td>950</td><td class="tsu">1,850</td><td>9,000</td><td>8</td></tr>
+<tr><td><strong>D. Mediciones higiene</strong></td><td>680</td><td>290</td><td>390</td><td>6,000</td><td>35</td></tr>
+</tbody>
+</table>
+</div>
+<p><strong>CF comunes:</strong> $22,000/mes | <strong>CF total:</strong> $58,000/mes | <strong>Capacidad:</strong> 1,200 h/mes</p>
+</div>
+
+<div class="case-phase">
+<div class="phase-label"><i class="fas fa-box-open"></i> Fase 1 — Estado Financiero Actual</div>
+<div class="phase-content">
+<p style="color:var(--ts);margin-bottom:14px;">Calcule el IT, CV total, CT y Utilidad para cada servicio con la demanda actual. Luego calcule el MS% de cada servicio respecto a su PE individual (del 5.1: A=70, B=58, C=10, D=35). Presente sus cálculos y determine qué servicios están en ganancia y cuáles en pérdida.</p>
+<textarea class="task-textarea" id="ta1" placeholder="Desarrolle aquí sus cálculos de IT, CV, CT, Utilidad y MS% para cada servicio A, B, C y D. Incluya el total consolidado..."></textarea>
+<div id="ta1-preview" class="c" style="display:none; min-height:120px; margin:12px 0; background:rgba(17,26,46,0.7); border:1px dashed rgba(255,255,255,0.15); padding:18px; border-radius:var(--rs); color:var(--tp); overflow-x:auto;"></div>
+<div class="task-actions">
+<button class="btn bp bs" onclick="saveT('ta1')"><i class="fas fa-save"></i> Guardar</button>
+<button class="btn bo bs" id="btnPreview_ta1" onclick="togglePreview('ta1')"><i class="fas fa-eye"></i> Vista Previa</button>
+<button class="btn bo bs" onclick="dlTarea()"><i class="fas fa-download"></i> Descargar todo</button>
+<span class="saved-indicator" id="saved_ta1"><i class="fas fa-check-circle"></i> Guardado</span>
+</div>
+</div>
+</div>
+
+<div class="case-phase">
+<div class="phase-label"><i class="fas fa-arrows-alt"></i> Fase 2 — Opción de Expansión (Segundo Equipo)</div>
+<div class="phase-content">
+<div class="tw2">
+<table>
+<thead><tr><th>Servicio</th><th>PV ($)</th><th>Nuevo CV_u ($)</th><th>Nuevo MC_u ($)</th><th>Nuevo CF_dir ($)</th><th>Nueva Demanda</th></tr></thead>
+<tbody>
+<tr><td><strong>A. Inspección</strong></td><td>950</td><td>340</td><td class="tsu">610</td><td>20,000</td><td>65</td></tr>
+<tr><td><strong>B. Monitoreo</strong></td><td>520</td><td>160</td><td>360</td><td>11,000</td><td>120</td></tr>
+<tr><td><strong>C. Auditoría</strong></td><td>2,800</td><td>850</td><td class="tsu">1,950</td><td>14,000</td><td>14</td></tr>
+<tr><td><strong>D. Mediciones</strong></td><td>680</td><td>260</td><td>420</td><td>9,000</td><td>55</td></tr>
+</tbody>
+</table>
+</div>
+<p style="color:var(--ts);margin:12px 0;"><strong>Nuevos CF comunes:</strong> $31,000/mes → <strong>CF total expandido:</strong> $85,000/mes. <strong>Nueva capacidad:</strong> 2,200 h/mes.</p>
+<p style="color:var(--ts);margin-bottom:14px;">Calcule la utilidad total de la operación expandida, el PE consolidado y el MS%. Compare con el estado actual.</p>
+<textarea class="task-textarea" id="ta2" placeholder="Desarrolle aquí los cálculos de la operación expandida: IT total, CV total, CT, Utilidad, PE consolidado y MS%..."></textarea>
+<div id="ta2-preview" class="c" style="display:none; min-height:120px; margin:12px 0; background:rgba(17,26,46,0.7); border:1px dashed rgba(255,255,255,0.15); padding:18px; border-radius:var(--rs); color:var(--tp); overflow-x:auto;"></div>
+<div class="task-actions">
+<button class="btn bp bs" onclick="saveT('ta2')"><i class="fas fa-save"></i> Guardar</button>
+<button class="btn bo bs" id="btnPreview_ta2" onclick="togglePreview('ta2')"><i class="fas fa-eye"></i> Vista Previa</button>
+<button class="btn bo bs" onclick="dlTarea()"><i class="fas fa-download"></i> Descargar todo</button>
+<span class="saved-indicator" id="saved_ta2"><i class="fas fa-check-circle"></i> Guardado</span>
+</div>
+</div>
+</div>
+
+<div class="case-phase">
+<div class="phase-label"><i class="fas fa-code-compare"></i> Fase 3 — Tabla Comparativa de 3 Opciones</div>
+<div class="phase-content">
+<p style="color:var(--ts);margin-bottom:14px;">Complete la siguiente tabla comparativa. <strong>Opción 1:</strong> Estado actual (mantener). <strong>Opción 2:</strong> Expansión (segundo equipo, datos de Fase 2). <strong>Opción 3:</strong> Reestructuración (eliminar servicio D, mantener A/B/C con CF total=$45,000, demandas: A=60, B=100, C=12).</p>
+<div class="tw2">
+<table>
+<thead><tr><th>Indicador</th><th>Opción 1: Mantener</th><th>Opción 2: Expandir</th><th>Opción 3: Reestructurar</th></tr></thead>
+<tbody>
+<tr><td>CF Total ($)</td><td>58,000</td><td>85,000</td><td style="color:var(--ts);">— calcular —</td></tr>
+<tr><td>IT Total ($)</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td></tr>
+<tr><td>Utilidad ($)</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td></tr>
+<tr><td>PE Consolidado (und)</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td></tr>
+<tr><td>MS%</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td></tr>
+<tr><td>Horas utilizadas</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td><td style="color:var(--ts);">— calcular —</td></tr>
+</tbody>
+</table>
+</div>
+<textarea class="task-textarea" id="ta3" placeholder="Presente los cálculos detallados que sustentan cada celda de la tabla comparativa..."></textarea>
+<div id="ta3-preview" class="c" style="display:none; min-height:120px; margin:12px 0; background:rgba(17,26,46,0.7); border:1px dashed rgba(255,255,255,0.15); padding:18px; border-radius:var(--rs); color:var(--tp); overflow-x:auto;"></div>
+<div class="task-actions">
+<button class="btn bp bs" onclick="saveT('ta3')"><i class="fas fa-save"></i> Guardar</button>
+<button class="btn bo bs" id="btnPreview_ta3" onclick="togglePreview('ta3')"><i class="fas fa-eye"></i> Vista Previa</button>
+<button class="btn bo bs" onclick="dlTarea()"><i class="fas fa-download"></i> Descargar todo</button>
+<span class="saved-indicator" id="saved_ta3"><i class="fas fa-check-circle"></i> Guardado</span>
+</div>
+</div>
+</div>
+
+<div class="case-phase">
+<div class="phase-label"><i class="fas fa-gavel"></i> Fase 4 — Decisión y Justificación</div>
+<div class="phase-content">
+<p style="color:var(--ts);margin-bottom:14px;">Aplicando el Modelo de Decisión de 5 pasos (sección "Modelo de Decisión" de este tema), justifique cuál de las 3 opciones recomienda para SEGUPARQ S.A. y por qué. Incluya: (a) análisis de viabilidad, (b) análisis de riesgo, (c) comparación de utilidades, (d) recomendación final con condiciones.</p>
+<textarea class="task-textarea" id="ta4" placeholder="Desarrolle aquí su decisión fundamentada aplicando los 5 pasos del modelo de decisión..."></textarea>
+<div id="ta4-preview" class="c" style="display:none; min-height:120px; margin:12px 0; background:rgba(17,26,46,0.7); border:1px dashed rgba(255,255,255,0.15); padding:18px; border-radius:var(--rs); color:var(--tp); overflow-x:auto;"></div>
+<div class="task-actions">
+<button class="btn bp bs" onclick="saveT('ta4')"><i class="fas fa-save"></i> Guardar</button>
+<button class="btn bo bs" id="btnPreview_ta4" onclick="togglePreview('ta4')"><i class="fas fa-eye"></i> Vista Previa</button>
+<button class="btn bo bs" onclick="dlTarea()"><i class="fas fa-download"></i> Descargar todo</button>
+<span class="saved-indicator" id="saved_ta4"><i class="fas fa-check-circle"></i> Guardado</span>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+
+<script>
+/* ===== FONDO ANIMADO ===== */
+(function(){
+const c=document.getElementById('bgC'),x=c.getContext('2d');
+let W,H,pts=[];
+function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;pts=[];for(let i=0;i<50;i++)pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.5})}
+function draw(){x.clearRect(0,0,W,H);for(let i=0;i<pts.length;i++){const a=pts[i];a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1;for(let j=i+1;j<pts.length;j++){const b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);if(d<140){x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.strokeStyle='rgba(220,38,38,'+(0.1*(1-d/140))+')';x.lineWidth=.5;x.stroke()}}x.beginPath();x.arc(a.x,a.y,a.r,0,Math.PI*2);x.fillStyle='rgba(220,38,38,0.2)';x.fill()}requestAnimationFrame(draw)}
+window.addEventListener('resize',resize);
+if(!window.matchMedia('(prefers-reduced-motion:reduce)').matches){resize();draw()}
+})();
+
+/* ===== NAVEGACIÓN ===== */
+const navItems=document.querySelectorAll('.ni[data-s]');
+const secs=document.querySelectorAll('.sec');
+const sb=document.getElementById('sb'),sbO=document.getElementById('sbO'),mT=document.getElementById('mT');
+function rK(el){if(typeof renderMathInElement==='function')renderMathInElement(el||document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})}
+navItems.forEach(n=>{n.addEventListener('click',()=>{
+navItems.forEach(i=>i.classList.remove('active'));n.classList.add('active');
+secs.forEach(s=>s.classList.remove('active'));document.getElementById('s-'+n.dataset.s).classList.add('active');
+sb.classList.remove('open');sbO.classList.remove('open');
+setTimeout(()=>rK(document.getElementById('s-'+n.dataset.s)),60);
+window.scrollTo({top:0,behavior:'smooth'});
+})});
+mT.addEventListener('click',()=>{sb.classList.toggle('open');sbO.classList.toggle('open')});
+sbO.addEventListener('click',()=>{sb.classList.remove('open');sbO.classList.remove('open')});
+
+/* ===== TOAST ===== */
+function toast(m,t){const d=document.createElement('div');d.className='tt '+(t||'i');d.innerHTML='<i class="fas fa-'+(t==='s'?'check-circle':t==='e'?'times-circle':'info-circle')+'"></i> '+m;document.getElementById('tcC').appendChild(d);setTimeout(()=>d.remove(),3200)}
+
+/* ===== EJERCICIOS ===== */
+const TQ=4;
+let celActive=false;
+function triggerCelebration(){
+    if(celActive) return;
+    celActive=true;
+    toast('¡Excelente! Has completado todos los ejercicios con éxito.','s');
+    const canvas=document.createElement('canvas');
+    canvas.style.position='fixed';
+    canvas.style.top='0';
+    canvas.style.left='0';
+    canvas.style.width='100%';
+    canvas.style.height='100%';
+    canvas.style.pointerEvents='none';
+    canvas.style.zIndex='9999';
+    document.body.appendChild(canvas);
+    const ctx=canvas.getContext('2d');
+    let W=canvas.width=window.innerWidth;
+    let H=canvas.height=window.innerHeight;
+    window.addEventListener('resize',()=>{
+        W=canvas.width=window.innerWidth;
+        H=canvas.height=window.innerHeight;
+    });
+    let particles=[];
+    const colors=['#10b981','#38bdf8','#f59e0b','#ef4444','#a855f7','#ec4899'];
+    for(let i=0;i<150;i++){
+        particles.push({
+            x: W/2,
+            y: H + 20,
+            vx: (Math.random() - 0.5) * 15,
+            vy: -Math.random() * 20 - 10,
+            r: Math.random() * 6 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            angle: Math.random() * 360,
+            spin: (Math.random() - 0.5) * 0.2
+        });
+    }
+    let frame=0;
+    function anim(){
+        ctx.clearRect(0,0,W,H);
+        let active=false;
+        for(let p of particles){
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.4;
+            p.vx *= 0.98;
+            p.angle += p.spin;
+            if(p.y < H + 20){
+                active=true;
+                ctx.fillStyle=p.color;
+                ctx.save();
+                ctx.translate(p.x,p.y);
+                ctx.rotate(p.angle * Math.PI / 180);
+                ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r);
+                ctx.restore();
+            }
+        }
+        frame++;
+        if(active && frame < 200){
+            requestAnimationFrame(anim);
+        }else{
+            if(canvas.parentNode) document.body.removeChild(canvas);
+            celActive=false;
+        }
+    }
+    anim();
+}
+
+function vF(id,ans,tol){const inp=document.getElementById(id),v=parseFloat(inp.value),fb=document.getElementById('f'+id.slice(1));if(isNaN(v)||Math.abs(v-ans)>tol){inp.classList.remove('ok');inp.classList.add('no');fb.className='fbk show no';fb.innerHTML='<i class="fas fa-times-circle"></i> Incorrecto';return false}else{inp.classList.remove('no');inp.classList.add('ok');fb.className='fbk show ok';fb.innerHTML='<i class="fas fa-check-circle"></i> Correcto';return true}}
+
+function cE1(){const a=vF('e1a',51000,200),b=vF('e1b',55400,200),c=vF('e1c',-4400,200);uP();if(a&&b&&c){toast('Ejercicio 1 completo','s')}}
+function cE2(){const a=vF('e2a',70,1),b=vF('e2b',108,1),c=vF('e2c',70200,300);uP();if(a&&b&&c){toast('Ejercicio 2 completo','s')}}
+function cE3(){const a=vF('e3a',90,1),b=vF('e3b',-4.9,0.5),c=vF('e3c',0,0);uP();if(a&&b&&c){toast('Ejercicio 3 completo','s')}}
+function cE4(){const a=vF('e4a',79,1),b=vF('e4b',110,1),c=vF('e4c',300,5);uP();if(a&&b&&c){toast('Ejercicio 4 completo','s')}}
+
+function uP(){
+    let s=0;
+    const e1 = document.getElementById('e1a').classList.contains('ok') && document.getElementById('e1b').classList.contains('ok') && document.getElementById('e1c').classList.contains('ok');
+    const e2 = document.getElementById('e2a').classList.contains('ok') && document.getElementById('e2b').classList.contains('ok') && document.getElementById('e2c').classList.contains('ok');
+    const e3 = document.getElementById('e3a').classList.contains('ok') && document.getElementById('e3b').classList.contains('ok') && document.getElementById('e3c').classList.contains('ok');
+    const e4 = document.getElementById('e4a').classList.contains('ok') && document.getElementById('e4b').classList.contains('ok') && document.getElementById('e4c').classList.contains('ok');
+    if(e1) s++;
+    if(e2) s++;
+    if(e3) s++;
+    if(e4) s++;
+    document.getElementById('sD').textContent=s+' / '+TQ;
+    document.getElementById('sB').style.width=(s/TQ*100)+'%';
+    if(s===TQ) triggerCelebration();
+}
+
+/* ===== SOLUCIONES ===== */
+function tgS(id){const s=document.getElementById(id),open=s.classList.toggle('show');if(open)setTimeout(()=>rK(s),40)}
+
+/* ===== TAREA CON VISTA PREVIA ===== */
+function togglePreview(id){
+    const ta = document.getElementById(id);
+    const prev = document.getElementById(id + '-preview');
+    const btn = document.getElementById('btnPreview_' + id);
+    if(prev.style.display === 'none'){
+        prev.innerHTML = compileMarkdown(ta.value);
+        prev.style.display = 'block';
+        ta.style.display = 'none';
+        btn.innerHTML = '<i class="fas fa-edit"></i> Editar';
+        if(typeof renderMathInElement === 'function'){
+            renderMathInElement(prev, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\(', right: '\\)', display: false},
+                    {left: '\\[', right: '\\]', display: true}
+                ],
+                throwOnError: false
+            });
+        }
+    } else {
+        prev.style.display = 'none';
+        ta.style.display = 'block';
+        btn.innerHTML = '<i class="fas fa-eye"></i> Vista Previa';
+    }
+}
+function compileMarkdown(text){
+    if(!text) return '<p style="color:var(--tm);font-style:italic;">No hay contenido escrito aún.</p>';
+    let html = text.replace(/\r\n/g, '\n');
+    html = html.replace(/^#### (.*?)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.*?)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.*?)$/gm, '<h1>$1</h1>');
+    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+    html = html.replace(/__(.*?)__/g, '<strong>$1</strong>');
+    html = html.replace(/_(.*?)_/g, '<em>$1</em>');
+    const lines = html.split('\n');
+    let inTable = false;
+    let tableHtml = '';
+    let inList = false;
+    let listHtml = '';
+    let result = [];
+    for(let i=0; i<lines.length; i++){
+        let line = lines[i].trim();
+        if(line.startsWith('- ') || line.startsWith('* ')){
+            if(inTable){
+                tableHtml += '</tbody></table></div>';
+                result.push(tableHtml);
+                inTable = false;
+            }
+            if(!inList){
+                inList = true;
+                listHtml = '<ul class="ul">';
+            }
+            listHtml += '<li>' + line.substring(2) + '</li>';
+            continue;
+        } else {
+            if(inList){
+                listHtml += '</ul>';
+                result.push(listHtml);
+                inList = false;
+            }
+        }
+        if(line.startsWith('|') && line.endsWith('|')){
+            if(!inTable){
+                inTable = true;
+                tableHtml = '<div class="tw2"><table>';
+                const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
+                tableHtml += '<thead><tr>' + cols.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+                if(i+1 < lines.length && lines[i+1].trim().includes('---')){
+                    i++;
+                }
+            } else {
+                const cols = line.split('|').map(c => c.trim()).filter(c => c !== '');
+                tableHtml += '<tr>' + cols.map(c => `<td>${c}</td>`).join('') + '</tr>';
+            }
+            continue;
+        } else {
+            if(inTable){
+                tableHtml += '</tbody></table></div>';
+                result.push(tableHtml);
+                inTable = false;
+            }
+        }
+        if(line === ''){
+            result.push('<br>');
+        } else if(!line.startsWith('<h') && !line.startsWith('<div') && !line.startsWith('<ul')){
+            result.push(`<p>${line}</p>`);
+        } else {
+            result.push(line);
+        }
+    }
+    if(inList){
+        listHtml += '</ul>';
+        result.push(listHtml);
+    }
+    if(inTable){
+        tableHtml += '</tbody></table></div>';
+        result.push(tableHtml);
+    }
+    return result.join('\n');
+}
+
+function saveT(id){localStorage.setItem('t52_'+id,document.getElementById(id).value);const si=document.getElementById('saved_'+id);si.classList.add('show');setTimeout(()=>si.classList.remove('show'),2000);toast('Progreso guardado','s')}
+function dlTarea(){let t='TAREA APLICADA 5.2 — SEGUPARQ S.A. (Continuación)\nUnidad 5: Análisis Económico Financiero del Proyecto\nUPSE — Ingeniería en Seguridad Industrial\n\n'+('='.repeat(60))+'\n\n';document.querySelectorAll('.task-textarea').forEach(ta=>{const ph=ta.previousElementSibling?.textContent||ta.id;t+=ph+'\n'+('-'.repeat(40))+'\n'+ta.value+'\n\n'});const b=new Blob([t],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tarea_5.2_SEGUPARQ.txt';a.click();toast('Archivo descargado','s')}
+document.querySelectorAll('.task-textarea').forEach(ta=>{const s=localStorage.getItem('t52_'+ta.id);if(s)ta.value=s;ta.addEventListener('input',()=>localStorage.setItem('t52_'+ta.id,ta.value))});
+
+/* ===== GRÁFICO COMPARACIÓN INTERACTIVO ===== */
+(function(){
+const cv=document.getElementById('compGraph'),ctx=cv.getContext('2d');
+const sCFA=document.getElementById('cCFA'),sCVA=document.getElementById('cCVA'),sCFB=document.getElementById('cCFB'),sCVB=document.getElementById('cCVB'),sPV=document.getElementById('cPV');
+const dCFA=document.getElementById('cCFAv'),dCVA=document.getElementById('cCVAv'),dCFB=document.getElementById('cCFBv'),dCVB=document.getElementById('cCVBv'),dPV=document.getElementById('cPVv');
+const info=document.getElementById('compInfo');
+let W,H,dpr;
+const PAD={l:65,r:25,t:20,b:45};
+let compMX=null,compMY=null;
+
+cv.addEventListener('mousemove',(e)=>{
+    const rect=cv.getBoundingClientRect();
+    compMX=e.clientX-rect.left;
+    compMY=e.clientY-rect.top;
+    draw();
+});
+cv.addEventListener('mouseleave',()=>{
+    compMX=null;compMY=null;
+    draw();
+});
+
+function setup(){dpr=window.devicePixelRatio||1;const r=cv.getBoundingClientRect();W=r.width;H=r.height;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+
+function draw(){
+setup();
+const CF_A=+sCFA.value,CV_A=+sCVA.value,CF_B=+sCFB.value,CV_B=+sCVB.value,PV=+sPV.value;
+dCFA.textContent='$'+CF_A.toLocaleString();dCVA.textContent='$'+CV_A;dCFB.textContent='$'+CF_B.toLocaleString();dCVB.textContent='$'+CV_B;dPV.textContent='$'+PV;
+const MC_A=PV-CV_A,MC_B=PV-CV_B;
+
+if(MC_A<=0||MC_B<=0){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle='#94a3b8';
+    ctx.font='14px Outfit';
+    ctx.textAlign='center';
+    ctx.fillText('El margen de contribución debe ser positivo en ambas opciones',W/2,H/2);
+    info.innerHTML='<span style="color:var(--dng)">MC debe ser positivo en ambas opciones</span>';
+    return;
+}
+
+const PE_A=CF_A/MC_A,PE_B=CF_B/MC_B;
+const Qind=(CV_A!==CV_B)?(CF_B-CF_A)/(CV_A-CV_B):null;
+const pw=W-PAD.l-PAD.r,ph=H-PAD.t-PAD.b;
+let Qmax=Math.max(PE_A||0,PE_B||0,Qind||0,50)*1.6;Qmax=Math.max(Qmax,100);
+let Ymax=Math.max(CF_A,CF_B,PV*Qmax)*1.1;Ymax=Math.max(Ymax,1000);
+const mx=q=>PAD.l+(q/Qmax)*pw,my=v=>PAD.t+ph-(v/Ymax)*ph;
+
+ctx.clearRect(0,0,W,H);
+
+/* Zona sombreada entre CT_A y CT_B */
+if(Qind&&Qind>0&&Qind<Qmax){
+    ctx.beginPath();ctx.moveTo(mx(0),my(CF_A));ctx.lineTo(mx(Qind),my(CF_A+CV_A*Qind));ctx.lineTo(mx(Qind),my(CF_B+CV_B*Qind));ctx.lineTo(mx(0),my(CF_B));ctx.closePath();ctx.fillStyle='rgba(56,189,248,0.06)';ctx.fill();
+    ctx.beginPath();ctx.moveTo(mx(Qind),my(CF_A+CV_A*Qind));ctx.lineTo(mx(Qmax),my(CF_A+CV_A*Qmax));ctx.lineTo(mx(Qmax),my(CF_B+CV_B*Qmax));ctx.lineTo(mx(Qind),my(CF_B+CV_B*Qind));ctx.closePath();ctx.fillStyle='rgba(245,158,11,0.06)';ctx.fill();
+}
+
+/* Gradientes estáticos bajo curvas */
+const gradIT=ctx.createLinearGradient(PAD.l,PAD.t,PAD.l,H-PAD.b);
+gradIT.addColorStop(0,'rgba(16,185,129,0.12)');
+gradIT.addColorStop(1,'rgba(16,185,129,0.0)');
+ctx.fillStyle=gradIT;
+ctx.beginPath();ctx.moveTo(mx(0),my(0));ctx.lineTo(mx(Qmax),my(PV*Qmax));ctx.lineTo(mx(Qmax),my(0));ctx.closePath();ctx.fill();
+
+const gradA=ctx.createLinearGradient(PAD.l,PAD.t,PAD.l,H-PAD.b);
+gradA.addColorStop(0,'rgba(56,189,248,0.10)');
+gradA.addColorStop(1,'rgba(56,189,248,0.0)');
+ctx.fillStyle=gradA;
+ctx.beginPath();ctx.moveTo(mx(0),my(CF_A));ctx.lineTo(mx(Qmax),my(CF_A+CV_A*Qmax));ctx.lineTo(mx(Qmax),my(0));ctx.lineTo(mx(0),my(0));ctx.closePath();ctx.fill();
+
+const gradB=ctx.createLinearGradient(PAD.l,PAD.t,PAD.l,H-PAD.b);
+gradB.addColorStop(0,'rgba(245,158,11,0.08)');
+gradB.addColorStop(1,'rgba(245,158,11,0.0)');
+ctx.fillStyle=gradB;
+ctx.beginPath();ctx.moveTo(mx(0),my(CF_B));ctx.lineTo(mx(Qmax),my(CF_B+CV_B*Qmax));ctx.lineTo(mx(Qmax),my(0));ctx.lineTo(mx(0),my(0));ctx.closePath();ctx.fill();
+
+/* Grid */
+ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+for(let i=0;i<=5;i++){const y=PAD.t+i*ph/5;ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(W-PAD.r,y);ctx.stroke();const x=PAD.l+i*pw/5;ctx.beginPath();ctx.moveTo(x,PAD.t);ctx.lineTo(x,H-PAD.b);ctx.stroke()}
+
+/* Ejes */
+ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(PAD.l,PAD.t);ctx.lineTo(PAD.l,H-PAD.b);ctx.lineTo(W-PAD.r,H-PAD.b);ctx.stroke();
+
+/* Labels ejes */
+ctx.fillStyle='rgba(255,255,255,0.35)';ctx.font='11px Outfit';ctx.textAlign='center';
+for(let i=0;i<=5;i++){ctx.fillText(Math.round(Qmax*i/5),PAD.l+i*pw/5,H-PAD.b+18)}
+ctx.textAlign='right';
+for(let i=0;i<=5;i++){const v=Ymax*(5-i)/5;ctx.fillText(v>=1000?(v/1000).toFixed(0)+'k':Math.round(v),PAD.l-8,PAD.t+i*ph/5+4)}
+ctx.textAlign='center';ctx.fillText('Cantidad (Q)',PAD.l+pw/2,H-2);ctx.save();ctx.translate(12,PAD.t+ph/2);ctx.rotate(-Math.PI/2);ctx.fillText('$',0,0);ctx.restore();
+
+/* Línea IT */
+ctx.beginPath();ctx.moveTo(mx(0),my(0));ctx.lineTo(mx(Qmax),my(PV*Qmax));ctx.strokeStyle='#10b981';ctx.lineWidth=2.2;ctx.stroke();
+/* Línea CT_A */
+ctx.beginPath();ctx.moveTo(mx(0),my(CF_A));ctx.lineTo(mx(Qmax),my(CF_A+CV_A*Qmax));ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.stroke();
+/* Línea CT_B */
+ctx.beginPath();ctx.moveTo(mx(0),my(CF_B));ctx.lineTo(mx(Qmax),my(CF_B+CV_B*Qmax));ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.stroke();
+
+/* PE_A */
+if(PE_A>0&&PE_A<Qmax){const px=mx(PE_A),py=my(PV*PE_A);ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fillStyle='#38bdf8';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#38bdf8';ctx.font='bold 10px Outfit';ctx.textAlign='left';ctx.fillText('PE_A='+Math.ceil(PE_A),px+8,py-4)}
+/* PE_B */
+if(PE_B>0&&PE_B<Qmax){const px=mx(PE_B),py=my(PV*PE_B);ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);ctx.fillStyle='#f59e0b';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#f59e0b';ctx.font='bold 10px Outfit';ctx.textAlign='left';ctx.fillText('PE_B='+Math.ceil(PE_B),px+8,py-4)}
+/* Punto indiferencia */
+if(Qind&&Qind>0&&Qind<Qmax){const px=mx(Qind),py=my(CF_A+CV_A*Qind);ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(px,PAD.t);ctx.lineTo(px,H-PAD.b);ctx.strokeStyle='rgba(220,38,38,0.5)';ctx.lineWidth=1;ctx.stroke();ctx.setLineDash([]);ctx.beginPath();ctx.arc(px,py,6,0,Math.PI*2);ctx.fillStyle='#dc2626';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();ctx.fillStyle='#dc2626';ctx.font='bold 11px Outfit';ctx.textAlign='center';ctx.fillText('Q_ind='+Math.round(Qind),px,py-12)}
+
+/* Línea de Seguimiento y Tooltip */
+if(compMX!==null&&compMX>=PAD.l&&compMX<=W-PAD.r){
+    const pct=(compMX-PAD.l)/pw;
+    let Q_curr=pct*Qmax;
+    if(Q_curr<0)Q_curr=0;if(Q_curr>Qmax)Q_curr=Qmax;
+    const CTA_curr=CF_A+CV_A*Q_curr;
+    const CTB_curr=CF_B+CV_B*Q_curr;
+
+    ctx.strokeStyle='rgba(255,255,255,0.2)';
+    ctx.lineWidth=1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();ctx.moveTo(compMX,PAD.t);ctx.lineTo(compMX,H-PAD.b);ctx.stroke();ctx.setLineDash([]);
+
+    ctx.fillStyle='#38bdf8';
+    ctx.beginPath();ctx.arc(compMX,my(CTA_curr),4.5,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();
+
+    ctx.fillStyle='#f59e0b';
+    ctx.beginPath();ctx.arc(compMX,my(CTB_curr),4.5,0,Math.PI*2);ctx.fill();
+    ctx.stroke();
+
+    const ttW=160,ttH=95;
+    let ttX=compMX+15;
+    if(ttX+ttW>W-PAD.r)ttX=compMX-ttW-15;
+    let ttY=compMY-ttH/2;
+    if(ttY<PAD.t)ttY=PAD.t;
+    if(ttY+ttH>H-PAD.b)ttY=H-PAD.b-ttH;
+
+    ctx.fillStyle='rgba(13,22,41,0.92)';
+    ctx.strokeStyle='rgba(255,255,255,0.15)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    if(ctx.roundRect)ctx.roundRect(ttX,ttY,ttW,ttH,8);else ctx.rect(ttX,ttY,ttW,ttH);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle='#f1f5f9';
+    ctx.font='bold 11px Outfit';
+    ctx.textAlign='left';
+    ctx.fillText(`Volumen: ${Math.round(Q_curr)} und`,ttX+12,ttY+20);
+
+    ctx.font='10px Source Sans 3';
+    ctx.fillStyle='#38bdf8';
+    ctx.fillText(`Costo A: $${Math.round(CTA_curr).toLocaleString()}`,ttX+12,ttY+38);
+
+    ctx.fillStyle='#f59e0b';
+    ctx.fillText(`Costo B: $${Math.round(CTB_curr).toLocaleString()}`,ttX+12,ttY+54);
+
+    const diff=CTA_curr-CTB_curr;
+    ctx.fillStyle=diff>0?'#10b981':'#ef4444';
+    ctx.font='bold 10px Outfit';
+    ctx.fillText(diff>0?`B ahorra: $${Math.round(diff).toLocaleString()}`:`A ahorra: $${Math.round(Math.abs(diff)).toLocaleString()}`,ttX+12,ttY+74);
+}
+
+/* Info */
+let txt='';
+txt='<span style="color:var(--inf)">PE_A = '+Math.ceil(PE_A)+'</span> · <span style="color:var(--wrn)">PE_B = '+Math.ceil(PE_B)+'</span>';
+if(Qind&&Qind>0&&Qind<Qmax)txt+=' · <span style="color:var(--acc)">Indiferencia = '+Math.round(Qind)+'</span> · Para Q &lt; '+Math.round(Qind)+': <strong>A mejor</strong> · Para Q &gt; '+Math.round(Qind)+': <strong>B mejor</strong>';
+else if(Qind&&Qind<=0)txt+=' · <span style="color:var(--dng)">A domina siempre (sin punto de cruce positivo)</span>';
+else if(!Qind)txt+=' · <span style="color:var(--dng)">CV idénticos: comparar directamente por CF</span>';
+info.innerHTML=txt;
+}
+
+sCFA.addEventListener('input',draw);sCVA.addEventListener('input',draw);sCFB.addEventListener('input',draw);sCVB.addEventListener('input',draw);sPV.addEventListener('input',draw);
+window.addEventListener('resize',draw);
+draw();
+})();
+
+/* ===== KATEX INICIAL ===== */
+document.addEventListener('DOMContentLoaded',()=>setTimeout(rK,200));
+</script>
+</body>
+</html>
