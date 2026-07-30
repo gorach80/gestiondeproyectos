@@ -1,0 +1,2693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Proyectos UPSE - Ingeniería Industrial (Portal de Estudio)</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- MathJax for LaTeX -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                ignoreHtmlClass: 'tex2jax_ignore',
+                processHtmlClass: 'tex2jax_process'
+            },
+            startup: {
+                pageReady: () => {
+                    console.log('MathJax inicializado.');
+                    return MathJax.startup.defaultPageReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #060813;
+            --bg-surface: rgba(13, 17, 39, 0.7);
+            --bg-card: rgba(20, 26, 56, 0.4);
+            --bg-accent: rgba(59, 130, 246, 0.15);
+            --border-glow: rgba(59, 130, 246, 0.3);
+            --border-dim: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --color-primary: #3b82f6;
+            --color-primary-glow: rgba(59, 130, 246, 0.6);
+            --color-accent: #10b981;
+            --color-accent-glow: rgba(16, 185, 129, 0.6);
+            --color-warning: #f59e0b;
+            --color-danger: #ef4444;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-display: 'Space Grotesk', sans-serif;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(29, 78, 216, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(76, 29, 149, 0.15) 0px, transparent 50%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Container */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(8, 11, 28, 0.85);
+            border-right: 1px solid var(--border-dim);
+            backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-dim);
+            text-align: center;
+        }
+
+        .sidebar-header h1 {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            padding: 20px 12px;
+            list-style: none;
+            overflow-y: auto;
+        }
+
+        .menu-item {
+            margin-bottom: 6px;
+        }
+
+        .menu-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+        }
+
+        .menu-btn i {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .menu-btn.active {
+            color: #fff;
+            background: var(--bg-accent);
+            border-color: var(--border-glow);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.15);
+        }
+
+        .menu-btn.active i {
+            color: var(--color-primary);
+            filter: drop-shadow(0 0 4px var(--color-primary-glow));
+            transform: scale(1.1);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            min-height: 100vh;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            max-width: calc(100vw - var(--sidebar-width));
+        }
+
+        header.content-header {
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-dim);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            margin-bottom: 32px;
+            transition: border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        /* Pane controls */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Grid Layouts */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        @media (max-width: 1200px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Typography & MarkDown Elements */
+        .content-body h3 {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: #fff;
+            margin-top: 24px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid var(--color-primary);
+            padding-left: 12px;
+        }
+
+        .content-body h4 {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            color: #fff;
+            margin-top: 18px;
+            margin-bottom: 10px;
+        }
+
+        .content-body p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .content-body ul, .content-body ol {
+            margin-left: 24px;
+            margin-bottom: 18px;
+            color: var(--text-secondary);
+        }
+
+        .content-body li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        /* LaTeX Container */
+        .math-block {
+            background: rgba(8, 11, 28, 0.5);
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 20px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        /* GitHub-style alerts */
+        .alert {
+            padding: 16px 20px;
+            border-left: 4px solid;
+            border-radius: 0 12px 12px 0;
+            margin: 24px 0;
+            background: rgba(255, 255, 255, 0.02);
+        }
+        .alert-info { border-left-color: var(--color-primary); background: rgba(59, 130, 246, 0.05); }
+        .alert-warning { border-left-color: var(--color-warning); background: rgba(245, 158, 11, 0.05); }
+        .alert-danger { border-left-color: var(--color-danger); background: rgba(239, 68, 68, 0.05); }
+        
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .alert-info .alert-title { color: #60a5fa; }
+        .alert-warning .alert-title { color: #fbbf24; }
+        .alert-danger .alert-title { color: #f87171; }
+
+        /* Simulator Panels */
+        .sim-panel {
+            background: rgba(8, 11, 28, 0.6);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sim-viewport {
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            aspect-ratio: 16 / 10;
+        }
+
+        .sim-viewport canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        .sim-viewport canvas:active {
+            cursor: grabbing;
+        }
+
+        .sim-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .control-label span.val {
+            color: var(--color-primary);
+            font-family: var(--font-display);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            box-shadow: 0 0 10px var(--color-primary-glow);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .sim-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-dim);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-card .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-family: var(--font-display);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .btn {
+            background: var(--color-primary);
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-success {
+            background: var(--color-accent);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-dim);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Editor Styles */
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            height: 600px;
+            margin-top: 16px;
+        }
+
+        .editor-pane, .preview-pane {
+            display: flex;
+            flex-direction: column;
+            background: rgba(8, 11, 28, 0.7);
+            border: 1px solid var(--border-dim);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .pane-header {
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid var(--border-dim);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #code-editor {
+            width: 100%;
+            flex: 1;
+            background: #03050a;
+            border: none;
+            color: #d1d5db;
+            font-family: 'Consolas', 'Fira Code', monospace;
+            font-size: 0.9rem;
+            padding: 20px;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        #html-preview {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #060813;
+        }
+
+        .editor-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Collapsible items for solved cases */
+        .accordion-item {
+            border: 1px solid var(--border-dim);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-content {
+            padding: 20px;
+            background: rgba(8, 11, 28, 0.4);
+            border-top: 1px solid var(--border-dim);
+            display: none;
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+
+        .accordion-item.active .accordion-header i {
+            transform: rotate(180deg);
+        }
+
+        .accordion-header i {
+            transition: transform 0.3s ease;
+        }
+
+        /* Select controls */
+        select.select-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(8, 11, 28, 0.8);
+            border: 1px solid var(--border-dim);
+            border-radius: 8px;
+            color: var(--text-primary);
+            outline: none;
+            font-family: var(--font-sans);
+            cursor: pointer;
+        }
+
+        select.select-input option {
+            background: var(--bg-base);
+            color: var(--text-primary);
+        }
+
+        /* Split-screen layout specific for students */
+        body.student-layout {
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        body.student-layout .main-content {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 32px;
+            overflow: hidden;
+            max-width: calc(100vw - var(--sidebar-width));
+        }
+
+        body.student-layout header.content-header {
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        body.student-layout .tab-pane {
+            flex: 1;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        body.student-layout .grid-2 {
+            display: flex;
+            height: 100%;
+            gap: 24px;
+            overflow: hidden;
+        }
+
+        body.student-layout .grid-2 > .content-body {
+            flex: 0 0 45%;
+            overflow-y: auto;
+            height: calc(100vh - 120px);
+            padding-right: 16px;
+            margin-bottom: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-dim);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(15px);
+        }
+
+        /* Custom scrollbar for student reading content card */
+        body.student-layout .grid-2 > .content-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        body.student-layout .grid-2 > .content-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 3px;
+        }
+        body.student-layout .grid-2 > .content-body::-webkit-scrollbar-thumb {
+            background: rgba(59, 130, 246, 0.3);
+            border-radius: 3px;
+        }
+        body.student-layout .grid-2 > .content-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(59, 130, 246, 0.5);
+        }
+
+        body.student-layout .grid-2 > .sim-panel {
+            flex: 1;
+            height: calc(100vh - 120px);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-dim);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        body.student-layout .sim-viewport {
+            flex: 1;
+            aspect-ratio: auto;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body class="student-layout">
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>GESTIÓN PROYECTOS</h1>
+            <p>UPSE · Ing. Industrial</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li class="menu-item">
+                <button class="menu-btn active" onclick="switchTab('plano-vectorial')">
+                    <i data-lucide="file-text"></i> Plano de Pieza 2D
+                </button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="switchTab('proceso-mecanizado-3d')">
+                    <i data-lucide="cpu"></i> Mecanizado 3D
+                </button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="switchTab('layout-planta')">
+                    <i data-lucide="layout"></i> Layout de Planta
+                </button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="switchTab('planificacion-gantt')">
+                    <i data-lucide="calendar"></i> Programación Gantt
+                </button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="switchTab('evaluacion-economica')">
+                    <i data-lucide="trending-up"></i> Evaluación Económica
+                </button>
+            </li>
+            <li class="menu-item">
+                <button class="menu-btn" onclick="switchTab('casos-practicos')">
+                    <i data-lucide="book-open"></i> Casos Prácticos
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="main-content tex2jax_process">
+        <header class="content-header">
+            <div class="header-title">
+                <h2 id="page-title">Plano Mecánico e Ingeniería 2D</h2>
+                <p id="page-subtitle">Tolerancias dimensionales, QFD e índices Cp y Cpk interactivos</p>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-muted); text-align: right;">
+                <div>UPSE Industrial · Plataforma Didáctica</div>
+                <div id="last-update">Actualizado: 2026</div>
+            </div>
+        </header>
+
+
+
+        <!-- Pestaña 2: Diseño de Producto (Planos de Piezas 2D) -->
+        <div id="plano-vectorial" class="tab-pane active">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Definición y Diseño del Producto o Servicio</h3>
+                    <p>El estudio técnico constituye la columna vertebral de la formulación de proyectos de inversión en la ingeniería industrial. Su propósito fundamental es demostrar la viabilidad operativa del proyecto, garantizando que el activo diseñado alcance una Efectividad Global del Equipo (OEE — Overall Equipment Effectiveness) del 100% mediante la eliminación sistemática de cuellos de botella y la variabilidad del proceso.</p>
+                    
+                    <p>La Definición y Diseño del Producto o Servicio representa la fase de ingeniería conceptual y de detalle donde se traducen las necesidades del mercado en especificaciones técnicas cuantificables, tolerancias geométricas y descriptores de procesos estandarizados.</p>
+                    
+                    <h4>1. Dimensionamiento Técnico y Despliegue de la Función de Calidad (QFD)</h4>
+                    <p>El diseño del producto inicia con la captura de la "Voz del Cliente" (VoC) y su traducción a "Características Críticas para la Calidad" (CTQ) mediante el Despliegue de la Función de Calidad (QFD — Quality Function Deployment), estructurado en la matriz denominada "Casa de la Calidad".</p>
+                    
+                    <div class="math-block">
+                        $$A_j = \sum_{i=1}^{n} (d_i \cdot W_{ij})$$
+                    </div>
+                    <p>Donde $d_i$ representa el vector de importancia relativa asignado por el mercado a cada requerimiento, y $W_{ij}$ la matriz de ponderación.</p>
+
+                    <h4>2. Estandarización Teórica bajo la Norma ISO 128</h4>
+                    <p>Todo producto físico debe ser parametrizado geométricamente. El dibujo técnico rige los tipos de líneas: continuas gruesas para contornos vistos, trazos para contornos ocultos, y trazo/punto para ejes de simetría, asegurando una interpretación unívoca en software CAD.</p>
+
+                    <h4>3. Concurrencia de la Ingeniería de Valor (VE)</h4>
+                    <p>La Ingeniería de Valor es un método sistemático para mejorar la "proporción de valor" de un producto o servicio, definida como la relación entre la función y el costo:</p>
+                    <div class="math-block">
+                        $$V = \frac{F}{C}$$
+                    </div>
+                </div>
+
+                <div class="sim-panel">
+                    <div class="sim-viewport" id="blueprint-viewport">
+                        <canvas id="blueprint-canvas"></canvas>
+                    </div>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Media del Proceso ($\mu$)</span>
+                                <span class="val"><span id="lbl-d-mayor">50.010</span> mm</span>
+                            </div>
+                            <input type="range" id="input-d-mayor" min="49.940" max="50.060" step="0.001" value="50.010" oninput="updateBlueprintSim()">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Desviación Estándar ($\sigma$)</span>
+                                <span class="val"><span id="lbl-sigma">0.012</span> mm</span>
+                            </div>
+                            <input type="range" id="input-sigma" min="0.005" max="0.025" step="0.001" value="0.012" oninput="updateBlueprintSim()">
+                        </div>
+
+                        <div class="control-group">
+                            <div style="font-size:0.8rem; color:var(--text-secondary); line-height:1.4;">
+                                <strong>Límites del Diseño:</strong> USL = 50.05 mm | LSL = 49.95 mm<br>
+                                Ajuste del Torno CNC: Use la compensación en X en el panel inferior para centrar la media ($\mu = 50.00\text{ mm}$).
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <div class="label">Capacidad Cp</div>
+                            <div class="value" id="val-cp">1.39</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Capacidad Cpk</div>
+                            <div class="value" id="val-cpk" style="color:var(--color-warning);">1.11</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Defectos PPM</div>
+                            <div class="value" id="val-ppm" style="color:var(--color-danger);">424 PPM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 3: Proceso de Manufactura (Simulación 3D Torno CNC) -->
+        <div id="proceso-mecanizado-3d" class="tab-pane">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Proceso de Manufactura y Parámetros CNC</h3>
+                    <p>Para corregir el descentrado detectado e incrementar el $C_{pk}$ hacia el objetivo de diseño mitigando la deflexión de la herramienta, se simulan los parámetros de corte óptimos calculados bajo rigor metalúrgico.</p>
+                    
+                    <p>La velocidad de rotación del husillo ($n$) para una velocidad de corte de $v_c = 300\text{ m/min}$ en un diámetro de $D_0 = 50\text{ mm}$ es:</p>
+                    
+                    <div class="math-block">
+                        $$n = \frac{v_c \cdot 1000}{\pi \cdot D_0} = \frac{300 \cdot 1000}{\pi \cdot 50} \approx 1909.86\text{ RPM}$$
+                    </div>
+
+                    <p>Variables operacionales seleccionadas:</p>
+                    <ul>
+                        <li>Avance por revolución ($f_n$): $0.15\text{ mm/rev}$</li>
+                        <li>Profundidad de corte radial ($a_p$): $0.50\text{ mm}$</li>
+                    </ul>
+
+                    <div class="alert alert-danger">
+                        <div class="alert-title"><i data-lucide="shield-alert" style="width:16px;height:16px;margin-right:8px;"></i>Advertencia de Seguridad</div>
+                        Asegure el anclaje rígido de la pieza en el plato de garras y verifique el estado de desgaste de la plaquita de metal duro antes de iniciar el ciclo de mecanizado para evitar proyecciones de viruta o fallas catastróficas del inserto.
+                    </div>
+                </div>
+
+                <div class="sim-panel">
+                    <div class="sim-viewport" id="viewport-3d">
+                        <canvas id="canvas-3d"></canvas>
+                        <div style="position: absolute; top: 12px; left: 12px; font-size: 0.75rem; color: rgba(255,255,255,0.4); pointer-events: none;">
+                            <i data-lucide="rotate-3d" style="width:12px;height:12px;vertical-align:middle;margin-right:4px;"></i> Arrastre el mouse para rotar cámara
+                        </div>
+                    </div>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Velocidad de Corte ($v_c$)</span>
+                                <span class="val"><span id="lbl-vc">300</span> m/min</span>
+                            </div>
+                            <input type="range" id="input-vc" min="150" max="350" value="300" oninput="updateMachining3D()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Avance por rev ($f_n$)</span>
+                                <span class="val"><span id="lbl-feed">0.15</span> mm/rev</span>
+                            </div>
+                            <input type="range" id="input-feed" min="0.05" max="0.30" step="0.01" value="0.15" oninput="updateMachining3D()">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Profundidad de Corte ($a_p$)</span>
+                                <span class="val"><span id="lbl-depth">0.5</span> mm</span>
+                            </div>
+                            <input type="range" id="input-depth" min="0.2" max="2.0" step="0.1" value="0.5" oninput="updateMachining3D()">
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;">
+                        <button class="btn btn-secondary" onclick="resetWorkpiece3D()">Resetear Pieza</button>
+                        <button class="btn" style="flex:1;" id="btn-start-machining" onclick="toggleMachining3D()">Iniciar Mecanizado</button>
+                    </div>
+
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <div class="label">Velocidad del Husillo</div>
+                            <div class="value" id="val-spindle-rpm">1910 RPM</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Remoción MRR</div>
+                            <div class="value" id="val-mrr">22.5 cm³/min</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Potencia Corte ($P_c$)</div>
+                            <div class="value" id="val-power" style="color:var(--color-accent);">0.8 kW</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 4: Distribución de Planta (Layout Industrial) -->
+        <div id="layout-planta" class="tab-pane">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Distribución de Planta y OEE del 100%</h3>
+                    <p>La distribución de planta (Layout) busca organizar físicamente las estaciones de trabajo, bandas transportadoras y almacenes de forma tal que se minimicen los tiempos muertos y cuellos de botella.</p>
+                    
+                    <p>El balanceo de línea consiste en asignar tareas elementales a estaciones de trabajo consecutivas con el fin de equilibrar sus cargas de trabajo. El parámetro fundamental es el <strong>Tiempo de Ciclo</strong> de la línea ($T_c$):</p>
+                    <div class="math-block">
+                        $$T_c = \frac{Tiempo\ productivo\ diario}{Demanda\ diaria\ de\ unidades}$$
+                    </div>
+
+                    <p>La eficiencia global de la línea ($E$) se define como la proporción del tiempo de trabajo acumulado frente al tiempo total disponible en las $K$ estaciones asignadas:</p>
+                    <div class="math-block">
+                        $$E = \frac{\sum_{i=1}^{n} t_i}{K \cdot T_c} \times 100\%$$
+                    </div>
+                </div>
+
+                <div class="sim-panel">
+                    <div class="sim-viewport" id="plant-viewport">
+                        <canvas id="plant-canvas"></canvas>
+                    </div>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Tasa de Servicio Estación 1 (Mecanizado)</span>
+                                <span class="val"><span id="lbl-srv-1">10</span> seg/pieza</span>
+                            </div>
+                            <input type="range" id="input-srv-1" min="4" max="20" value="10" oninput="updatePlantLayoutSim()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Tasa de Servicio Estación 2 (Ensamblaje)</span>
+                                <span class="val"><span id="lbl-srv-2">8</span> seg/pieza</span>
+                            </div>
+                            <input type="range" id="input-srv-2" min="4" max="20" value="8" oninput="updatePlantLayoutSim()">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Tasa de Servicio Estación 3 (Calidad)</span>
+                                <span class="val"><span id="lbl-srv-3">12</span> seg/pieza</span>
+                            </div>
+                            <input type="range" id="input-srv-3" min="4" max="20" value="12" oninput="updatePlantLayoutSim()">
+                        </div>
+                    </div>
+
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <div class="label">Estación Crítica</div>
+                            <div class="value" id="val-critical-station" style="color:var(--color-danger);">Calidad</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Productividad real</div>
+                            <div class="value" id="val-plant-output">300 pzs/hr</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Eficiencia de Balance</div>
+                            <div class="value" id="val-balance-eff">83.3%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 5: Planificación de Proyectos (Gantt & CPM) -->
+        <div id="planificacion-gantt" class="tab-pane">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Gestión Temporal de Proyectos con CPM y Gantt</h3>
+                    <p>La implantación de una nueva línea de producción requiere planificar múltiples tareas con dependencias lógicas complejas. El <strong>Método de la Ruta Crítica (CPM)</strong> calcula la duración mínima del proyecto e identifica las actividades que no admiten demoras sin retrasar el fin del proyecto.</p>
+
+                    <p>Para cada actividad se calculan cuatro fechas:</p>
+                    <ul>
+                        <li><strong>ES (Early Start):</strong> Fecha de inicio más temprana posible.</li>
+                        <li><strong>EF (Early Finish):</strong> Fecha de término más temprana possible: $EF = ES + Duraci\acute{o}n$.</li>
+                        <li><strong>LS (Late Start) / LF (Late Finish):</strong> Fechas más tardías calculadas mediante el paso atrás.</li>
+                    </ul>
+
+                    <div class="math-block">
+                        $$Holgura\ Total\ (H) = LF - EF = LS - ES$$
+                    </div>
+                    <p>Las actividades con <strong>$H = 0$</strong> constituyen la <strong>Ruta Crítica</strong>. Modificar su duración impactará directamente en la fecha final de entrega.</p>
+                </div>
+
+                <div class="sim-panel">
+                    <div class="sim-viewport" id="gantt-viewport">
+                        <canvas id="gantt-canvas"></canvas>
+                    </div>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Duración Actividad A (Diseño de Ejes)</span>
+                                <span class="val"><span id="lbl-dur-a">4</span> días</span>
+                            </div>
+                            <input type="range" id="input-dur-a" min="2" max="10" value="4" oninput="updateGanttSim()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Duración Actividad B (Maquinado de Ejes)</span>
+                                <span class="val"><span id="lbl-dur-b">5</span> días</span>
+                            </div>
+                            <input type="range" id="input-dur-b" min="2" max="10" value="5" oninput="updateGanttSim()">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Duración Actividad C (Instalación Layout)</span>
+                                <span class="val"><span id="lbl-dur-c">6</span> días</span>
+                            </div>
+                            <input type="range" id="input-dur-c" min="2" max="12" value="6" oninput="updateGanttSim()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Duración Actividad D (Calidad y Puesta en Marcha)</span>
+                                <span class="val"><span id="lbl-dur-d">4</span> días</span>
+                            </div>
+                            <input type="range" id="input-dur-d" min="2" max="8" value="4" oninput="updateGanttSim()">
+                        </div>
+                    </div>
+
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <div class="label">Duración Total Proyecto</div>
+                            <div class="value" id="val-gantt-total">14 días</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Ruta Crítica</div>
+                            <div class="value" id="val-gantt-path" style="color:var(--color-danger);">A &rarr; C &rarr; D</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Ingenieros Requeridos Máx</div>
+                            <div class="value" id="val-gantt-resources">6 Ing.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 6: Evaluación Económica de Proyectos -->
+        <div id="evaluacion-economica" class="tab-pane">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Análisis de Inversión y Flujo de Caja</h3>
+                    <p>Todo proyecto de ingeniería industrial debe evaluarse financieramente para medir la rentabilidad de los fondos invertidos en la compra del torno CNC y las adecuaciones del layout. Se utilizan los siguientes criterios económicos:</p>
+                    
+                    <h4>A. Valor Actual Neto (VAN)</h4>
+                    <p>Descuenta los flujos netos de caja futuros ($F_t$) generados por la venta del eje mecánico mecanizado al valor actual de la moneda, restándole la inversión inicial ($I_0$) a una tasa de costo de oportunidad ($k$):</p>
+                    <div class="math-block">
+                        $$VAN = -I_0 + \sum_{t=1}^{n} \frac{F_t}{(1 + k)^t}$$
+                    </div>
+
+                    <h4>B. Tasa Interna de Retorno (TIR)</h4>
+                    <p>Es la tasa de interés o rentabilidad de la inversión que iguala el VAN a cero. Se calcula mediante métodos numéricos resolviendo:</p>
+                    <div class="math-block">
+                        $$-I_0 + \sum_{t=1}^{n} \frac{F_t}{(1 + TIR)^t} = 0$$
+                    </div>
+
+                    <div class="alert alert-info" style="margin-top:20px;">
+                        <div class="alert-title"><i data-lucide="dollar-sign" style="width:16px;height:16px;margin-right:8px;"></i>Período de Recuperación de Capital (Payback Period)</div>
+                        Es el tiempo requerido ($t_{payback}$) para que la suma acumulada de los flujos netos de caja iguale al desembolso de la inversión inicial. 
+                        $$t_{payback} = \frac{Inversi\acute{o}n\ Inicial}{Flujo\ Promedio\ Anual}$$
+                    </div>
+                </div>
+
+                <div class="sim-panel">
+                    <div class="sim-viewport" id="econ-viewport">
+                        <canvas id="econ-canvas"></canvas>
+                    </div>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Inversión Inicial ($I_0$)</span>
+                                <span class="val">$<span id="lbl-inv-0">80,000</span> USD</span>
+                            </div>
+                            <input type="range" id="input-inv-0" min="50000" max="150000" step="5000" value="80000" oninput="updateEconSim()">
+                        </div>
+                        
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Flujo Anual Neto ($F_t$)</span>
+                                <span class="val">$<span id="lbl-flujo-anual">25,000</span> USD/año</span>
+                            </div>
+                            <input type="range" id="input-flujo-anual" min="10000" max="50000" step="1000" value="25000" oninput="updateEconSim()">
+                        </div>
+
+                        <div class="control-group">
+                            <div class="control-label">
+                                <span>Tasa de Costo de Oportunidad ($k$)</span>
+                                <span class="val"><span id="lbl-tasa-k">10.0</span>%</span>
+                            </div>
+                            <input type="range" id="input-tasa-k" min="5.0" max="20.0" step="0.5" value="10.0" oninput="updateEconSim()">
+                        </div>
+                    </div>
+
+                    <div class="sim-stats">
+                        <div class="stat-card">
+                            <div class="label">Valor Actual Neto</div>
+                            <div class="value" id="val-econ-van">$14,771</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Rentabilidad TIR</div>
+                            <div class="value" id="val-econ-tir" style="color:var(--color-accent);">16.7%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="label">Retorno Payback</div>
+                            <div class="value" id="val-econ-payback">3.2 años</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestaña 7: Casos Prácticos y Autoevaluación -->
+        <div id="casos-practicos" class="tab-pane">
+            <div class="grid-2">
+                <div class="glass-card content-body">
+                    <h3>Ejercicios Resueltos e Interactivos</h3>
+                    <p>Examine detenidamente las soluciones completas paso a paso para afianzar los conceptos estudiados.</p>
+                    
+                    <!-- Caso 1 -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <span>Caso 1: Deducción de Capacidad de Proceso ($C_p, C_{pk}$)</span>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="accordion-content content-body">
+                            <h4>Actividad Práctica: Caso de Aplicación Numérica y Deducción Matemática</h4>
+                            <h5>Contexto del Ejercicio</h5>
+                            <p>Una planta metalmecánica proyecta fabricar un nuevo componente cilíndrico de aleación de aluminio para el sector automotriz. El diseño conceptual establece que el diámetro exterior nominal crítico del producto debe ser de $D_0 = 50.00\text{ mm}$ con una tolerancia dimensional de $\pm 0.05\text{ mm}$ ($LSL = 49.95\text{ mm}$ y $USL = 50.05\text{ mm}$).</p>
+                            <p>Para asegurar un OEE del 100% en la dimensión de calidad, la ingeniería del proyecto exige que el proceso de torneado CNC (Control Numérico Computarizado) opere con un índice de capacidad de proceso $C_p \ge 1.33$. Se evalúa una máquina herramienta piloto cuyo comportamiento histórico de la variable sigue una distribución normal con media del proceso $\mu = 50.01\text{ mm}$ y una desviación estándar muestral $\sigma = 0.012\text{ mm}$.</p>
+                            
+                            <h5>Deducción Matemática de la Capacidad del Proceso</h5>
+                            <p>Ecuación de Capacidad Potencial ($C_p$):</p>
+                            <div class="math-block">
+                                $$C_p = \frac{USL - LSL}{6\sigma}$$
+                            </div>
+                            
+                            <p>Ecuación de Capacidad Real ($C_{pk}$):</p>
+                            <div class="math-block">
+                                $$C_{pk} = \min \left( \frac{USL - \mu}{3\sigma}, \frac{\mu - LSL}{3\sigma} \right)$$
+                            </div>
+                            
+                            <p>Ecuación del Factor de Descentrado ($k$):</p>
+                            <div class="math-block">
+                                $$NT = \frac{USL + LSL}{2}$$
+                                $$k = \frac{|\mu - NT|}{(USL - LSL)/2}$$
+                                $$C_{pk} = C_p (1 - k)$$
+                            </div>
+                            
+                            <h5>Desarrollo Numérico Paso a Paso</h5>
+                            <ol>
+                                <li>Calcular el límite central nominal y factor de descentrado:
+                                    $$NT = \frac{50.05 + 49.95}{2} = 50.00\text{ mm}$$
+                                    $$k = \frac{|50.01 - 50.00|}{(50.05 - 49.95)/2} = \frac{0.01}{0.05} = 0.20\ (20\%)$$
+                                </li>
+                                <li>Calcular la Capacidad Potencial ($C_p$):
+                                    $$C_p = \frac{50.05 - 49.95}{6 \cdot 0.012} = \frac{0.10}{0.072} \approx 1.3889$$
+                                </li>
+                                <li>Calcular la Capacidad Real ($C_{pk}$):
+                                    $$C_{pku} = \frac{50.05 - 50.01}{3 \cdot 0.012} = 1.1111$$
+                                    $$C_{pkl} = \frac{50.01 - 49.95}{3 \cdot 0.012} = 1.6667$$
+                                    $$C_{pk} = \min(1.1111, 1.6667) = 1.1111$$
+                                </li>
+                                <li>Validación de la relación:
+                                    $$C_{pk} = C_p (1 - k) = 1.3889 \cdot (1 - 0.20) = 1.1111$$
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Caso 2: Ejercicios Propuestos -->
+                    <div class="accordion-item" style="border-color: rgba(16, 185, 129, 0.4);">
+                        <div class="accordion-header" onclick="toggleAccordion(this)" style="background: rgba(16, 185, 129, 0.05);">
+                            <span style="color:var(--color-accent);">Ejercicios Propuestos (Autoevaluación)</span>
+                            <i data-lucide="chevron-down" style="color:var(--color-accent);"></i>
+                        </div>
+                        <div class="accordion-content content-body">
+                            <p><strong>Problema 1:</strong> Si la ingeniería del proyecto compensa el desgaste del inserto desplazando el eje X del torno CNC en $-0.01\text{ mm}$, centrando la media del proceso a $\mu = 50.00\text{ mm}$ (lo que hace $k = 0$). Calcule el nuevo valor del índice $C_{pk}$ y explique el impacto en la tasa de defectos en PPM.</p>
+                            
+                            <p><strong>Problema 2:</strong> Para un proyecto cuya ruta crítica pasa por las actividades A, C, y D con duraciones nominales de 4, 6 y 4 días respectivamente. ¿Qué ocurre con la duración total si la actividad B (fuera de la ruta crítica con holgura de 3 días) se retrasa 4 días debido a fallos en las pruebas del torno CNC?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sim-panel">
+                    <h3 style="border-left:4px solid var(--color-accent); padding-left:12px; margin-bottom:12px; font-family:var(--font-display);">Asistente de Autoevaluación</h3>
+                    <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">Seleccione un ejercicio de autoevaluación e ingrese su resultado numérico para validar sus respuestas.</p>
+                    
+                    <div class="sim-controls">
+                        <div class="control-group">
+                            <label class="control-label" for="select-ejercicio">Seleccionar Ejercicio</label>
+                            <select id="select-ejercicio" class="select-input" onchange="changeQuizProblem()">
+                                <option value="p1">Problema 1: Centrado de Proceso (Cpk)</option>
+                                <option value="p2">Problema 2: Retraso en Actividad B (Días)</option>
+                            </select>
+                        </div>
+
+                        <div class="control-group" style="margin-top:12px;">
+                            <div class="control-label">
+                                <span id="lbl-quiz-prompt">Ingrese el nuevo valor del índice Cpk (Ej: 1.39):</span>
+                            </div>
+                            <input type="text" id="input-quiz-answer" style="width:100%; padding:10px 14px; background:rgba(8,11,28,0.8); border:1px solid var(--border-dim); border-radius:8px; color:#fff; outline:none; font-family:var(--font-sans);" placeholder="Respuesta numérica...">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-success" style="margin-top:12px;" onclick="verifyQuizAnswer()">
+                        <i data-lucide="check-circle"></i> Verificar Respuesta
+                    </button>
+
+                    <div id="quiz-feedback" class="alert alert-info" style="margin-top:20px; display:none;">
+                        <div class="alert-title" id="quiz-feedback-title">Resultado</div>
+                        <span id="quiz-feedback-text">Pista...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Code Blocks (Autocontenido) -->
+    <script>
+        // Global variables for tab control & simulations
+        let currentTabId = 'plano-vectorial';
+        
+        // Default text for study guide (exactly matching the user's pasted study content)
+        const defaultEditorText = `--- Pestaña: Introducción ---
+# Estudio Técnico del Proyecto — Definición y Diseño del Producto o Servicio
+El estudio técnico constituye la columna vertebral de la formulación de proyectos de inversión en la ingeniería industrial. Su propósito fundamental es demostrar la viabilidad operativa del proyecto, garantizando que el activo diseñado alcance una Efectividad Global del Equipo (OEE — Overall Equipment Effectiveness) del 100% mediante la eliminación sistemática de cuellos de botella y la variabilidad del proceso.
+
+Dentro de este bloque, la Definición y Diseño del Producto o Servicio representa la fase de ingeniería conceptual y de detalle donde se traducen las necesidades del mercado en especificaciones técnicas cuantificables, tolerancias geométricas y descriptores de procesos estandarizados.
+
+### Introducción Motivadora
+En el entorno competitivo actual, un diseño deficiente del producto es el primer cuello de botella que condena al fracaso la productividad de una planta. Si las especificaciones de diseño no están alineadas con las capacidades del proceso (process capability), la línea de producción experimentará paradas no programadas, mermas por retrabajo y una caída drástica en el OEE. 
+
+Para un ingeniero industrial, diseñar un producto no es simplemente definir su estética o su función básica; es modelar la función de transferencia matemática que transforma materias primas y variables de control en un output óptimo y reproducible bajo estándares normativos estrictos (como la norma ISO 128 para dibujo técnico). El diseño de vanguardia integra la Ingeniería de Valor (VE — Value Engineering) desde el primer bosquejo, garantizando la máxima utilidad al menor costo de manufactura posible.
+
+--- Pestaña: Marco Teórico ---
+# iDevice de Lectura: Marco Teórico y Conceptual
+
+### 1. Dimensionamiento Técnico y Despliegue de la Función de Calidad (QFD)
+El diseño del producto inicia con la captura de la "Voz del Cliente" (VoC) y su traducción a "Características Críticas para la Calidad" (CTQ) mediante el Despliegue de la Función de Calidad (QFD — Quality Function Deployment), estructurado en la matriz denominada "Casa de la Calidad".
+
+Matemáticamente, la relación entre los requerimientos del cliente ($CR_i$) y las características de ingeniería ($EC_j$) se modela mediante una matriz de ponderación $W_{ij}$, donde se asignan valores numéricos discretos según el grado de correlación (9 para fuerte, 3 para media, 1 para débil, y 0 para nula). El peso absoluto de cada característica técnica ($A_j$) se deduce como:
+$$A_j = \\sum_{i=1}^{n} (d_i \\cdot W_{ij})$$
+Donde $d_i$ representa el vector de importancia relativa asignado por el mercado a cada requerimiento.
+
+### 2. Estandarización Teórica bajo la Norma ISO 128
+Todo producto físico debe ser parametrizado geométricamente. El dibujo técnico rige los tipos de líneas: continuas gruesas para contornos vistos, trazos para contornos ocultos, y trazo/punto para ejes de simetría, asegurando una interpretación unívoca en software CAD.
+
+### 3. Concurrencia de la Ingeniería de Valor (VE)
+La Ingeniería de Valor es un método sistemático para mejorar la "proporción de valor" de un producto o servicio, definida como la relación entre la función y el costo:
+$$V = \\frac{F}{C}$$
+Donde:
+- $V$: Valor del componente o sistema.
+- $F$: Función (cumplimiento de requisitos).
+- $C$: Costo del ciclo de vida.
+
+--- Pestaña: Caso Práctico ---
+# Actividad Práctica: Caso de Aplicación Numérica y Deducción Matemática
+
+### Contexto del Ejercicio
+Una planta metalmecánica proyecta fabricar un nuevo componente cilíndrico de aleación de aluminio para el sector automotriz. El diseño conceptual establece que el diámetro exterior nominal crítico del producto debe ser de $D_0 = 50.00\\text{ mm}$ con una tolerancia dimensional de $\\pm 0.05\\text{ mm}$ ($LSL = 49.95\\text{ mm}$ y $USL = 50.05\\text{ mm}$).
+
+Para asegurar un OEE del 100% en la dimensión de calidad, la ingeniería del proyecto exige que el proceso de torneado CNC (Control Numérico Computarizado) opere con un índice de capacidad de proceso $C_p \\ge 1.33$. Se evalúa una máquina herramienta piloto cuyo comportamiento histórico de la variable sigue una distribución normal con media del proceso $\\mu = 50.01\\text{ mm}$ y una desviación estándar muestral $\\sigma = 0.012\\text{ mm}$.
+
+### Deducción Matemática de la Capacidad del Proceso
+Ecuación de Capacidad Potencial ($C_p$):
+$$C_p = \\frac{USL - LSL}{6\\sigma}$$
+
+Ecuación de Capacidad Real ($C_{pk}$):
+$$C_{pk} = \\min \\left( \\frac{USL - \\mu}{3\\sigma}, \\frac{\\mu - LSL}{3\\sigma} \\right)$$
+
+Ecuación del Factor de Descentrado ($k$):
+$$NT = \\frac{USL + LSL}{2}$$
+$$k = \\frac{|\\mu - NT|}{(USL - LSL)/2}$$
+$$C_{pk} = C_p (1 - k)$$
+
+### Desarrollo Numérico Paso a Paso
+1. **Cálculo del límite central nominal y descentrado:**
+   $$NT = \\frac{50.05 + 49.95}{2} = 50.00\\text{ mm}$$
+   $$k = \\frac{|50.01 - 50.00|}{(50.05 - 49.95)/2} = \\frac{0.01}{0.05} = 0.20\\ (20\\%)$$
+2. **Cálculo de la Capacidad Potencial ($C_p$):**
+   $$C_p = \\frac{50.05 - 49.95}{6 \\cdot 0.012} = \\frac{0.10}{0.072} \\approx 1.3889$$ (Apto)
+3. **Cálculo de la Capacidad Real ($C_{pk}$):**
+   $$C_{pku} = \\frac{50.05 - 50.01}{3 \\cdot 0.012} = 1.1111$$
+   $$C_{pkl} = \\frac{50.01 - 49.95}{3 \\cdot 0.012} = 1.6667$$
+   $$C_{pk} = \\min(1.1111, 1.6667) = 1.1111$$
+
+--- Pestaña: Parámetros CNC ---
+# Parámetros de Corte Recomendados para la Programación CNC
+Para corregir el descentrado detectado e incrementar el $C_{pk}$ hacia el objetivo de diseño mitigando la deflexión de la herramienta, se simulan los parámetros de corte óptimos:
+
+- Velocidad de corte ($v_c$): $300\\text{ m/min}$
+- Velocidad de rotación del husillo ($n$):
+  $$n = \\frac{v_c \\cdot 1000}{\\pi \\cdot D_0} = \\frac{300 \\cdot 1000}{\\pi \\cdot 50} \\approx 1909.86\\text{ RPM}$$
+- Avance por revolución ($f_n$): $0.15\\text{ mm/rev}$
+- Profundidad de corte radial ($a_p$): $0.50\\text{ mm}$
+
+**Advertencia de Seguridad:** Asegure el anclaje rígido de la pieza en el plato de garras y verifique el desgaste del inserto para evitar fallas catastróficas.
+
+--- Pestaña: Validación OEE ---
+# Retroalimentación y Validación de Integridad (Enfoque OEE Industrial)
+Para garantizar la consistencia en una arquitectura de manufactura limpia, analizamos las tasas de defectos. Un valor de $C_{pk} = 1.11$ equivale a una tasa teórica de partes por millón defectuosas (PPM) de aproximadamente $424\\text{ PPM}$ en el límite superior, lo cual representa un riesgo de pérdidas por calidad que penaliza el OEE de la planta.
+
+La ingeniería del proyecto determina implementar una compensación de desgaste en el sistema de control numérico (desplazando la corrección dimensional en el eje X en $-0.01\\text{ mm}$) para centrar la media del proceso a $\\mu = 50.00\\text{ mm}$. Al hacer $k = 0$, se logra que $C_{pk} = C_p = 1.3889$, reduciendo la probabilidad de defectos a menos de $30\\text{ PPM}$, optimizando de esta manera el indicador de calidad del activo industrial al 100%.`;
+
+        // Load content on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            const editorObj = document.getElementById('code-editor');
+            if (editorObj) {
+                editorObj.value = defaultEditorText;
+                livePreview();
+            }
+            
+            // Initialize Canvas Simulators
+            initBlueprintSim();
+            initMachining3D();
+            initPlantLayoutSim();
+            initGanttSim();
+            initEconSim();
+        });
+
+        // Safe MathJax typesetting wrapper
+        window.safeTypeset = function(element) {
+            if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+                window.MathJax.typesetPromise([element]).catch(err => {
+                    console.error('MathJax typeset error:', err);
+                });
+            }
+        };
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(el => el.classList.remove('active'));
+            
+            const pane = document.getElementById(tabId);
+            if (pane) pane.classList.add('active');
+            
+            const btn = Array.from(document.querySelectorAll('.menu-btn')).find(b => b.getAttribute('onclick').includes(tabId));
+            if (btn) btn.classList.add('active');
+            
+            currentTabId = tabId;
+            
+            const titles = {
+                'creador-docente': ['Creador de Material de Estudio', 'Editor interactivo y compilador para docentes de Ingeniería Industrial'],
+                'plano-vectorial': ['Plano Mecánico e Ingeniería 2D', 'Tolerancias dimensionales, QFD e índices Cp y Cpk interactivos'],
+                'proceso-mecanizado-3d': ['Simulador de Manufactura 3D', 'Cálculos de velocidad de husillo, potencia de corte y modelo CNC 3D'],
+                'layout-planta': ['Layout y Distribución de Planta', 'Línea de producción automatizada y detección analítica de cuellos de botella'],
+                'planificacion-gantt': ['Programación de Proyectos (Gantt & CPM)', 'Cálculo interactivo de ruta crítica e histograma de distribución de ingenieros'],
+                'evaluacion-economica': ['Evaluación Económica de Proyectos', 'Fórmulas y criterios VAN, TIR y Payback para proyectos de inversión industrial'],
+                'casos-practicos': ['Casos Prácticos de Estudio', 'Problemas completos resueltos de capacidad Cp/Cpk y cronoanálisis']
+            };
+            
+            if (titles[tabId]) {
+                document.getElementById('page-title').textContent = titles[tabId][0];
+                document.getElementById('page-subtitle').textContent = titles[tabId][1];
+            }
+            
+            setTimeout(() => {
+                if (tabId === 'plano-vectorial') redrawBlueprint();
+                else if (tabId === 'proceso-mecanizado-3d') redraw3D();
+                else if (tabId === 'layout-planta') resizePlantCanvas();
+                else if (tabId === 'planificacion-gantt') resizeGanttCanvas();
+                else if (tabId === 'evaluacion-economica') resizeEconCanvas();
+                
+                // Force MathJax to re-render formulas in the newly shown pane
+                const pane = document.getElementById(tabId);
+                if (pane) window.safeTypeset(pane);
+            }, 50);
+        }
+
+        // Accordion for Solved Cases
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        // Reset Editor Content
+        function resetEditorContent() {
+            if (confirm('¿Está seguro de querer restaurar el contenido predeterminado? Se perderán sus cambios actuales.')) {
+                document.getElementById('code-editor').value = defaultEditorText;
+                livePreview();
+            }
+        }
+
+        // Simple Markdown parser
+        function parseMarkdown(text) {
+            let html = text;
+            html = html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            
+            html = html.replace(/^### (.*$)/gim, '<h4>$1</h4>');
+            html = html.replace(/^## (.*$)/gim, '<h3>$1</h3>');
+            html = html.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+            
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            html = html.replace(/^\s*-\s+(.*$)/gim, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/gim, '<ul>$1</ul>');
+            html = html.replace(/<\/ul>\s*<ul>/g, ''); // merge lists
+            
+            const blocks = html.split(/\n\n+/);
+            const parsedBlocks = blocks.map(block => {
+                if (block.trim().startsWith('<h') || block.trim().startsWith('<ul') || block.trim().startsWith('<ol') || block.trim().startsWith('<div')) {
+                    return block;
+                }
+                return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+            });
+            
+            return parsedBlocks.join('\n');
+        }
+
+        // Live Preview Compiler
+        function livePreview() {
+            const code = document.getElementById('code-editor').value;
+            const preview = document.getElementById('html-preview');
+            
+            const sections = code.split(/--- Pestaña:\s*(.*?)\s*---/);
+            let combinedHTML = "";
+            
+            if (sections.length <= 1) {
+                combinedHTML = parseMarkdown(code);
+            } else {
+                for (let i = 1; i < sections.length; i += 2) {
+                    const tabName = sections[i];
+                    const tabContent = sections[i+1] || "";
+                    combinedHTML += `<div style="border:1px solid var(--border-dim); border-radius:12px; padding:20px; margin-bottom:20px; background:rgba(255,255,255,0.01);">
+                        <h4 style="color:var(--color-primary); margin-bottom:12px; font-family:var(--font-display); border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:6px;">Sección: ${tabName}</h4>
+                        ${parseMarkdown(tabContent)}
+                    </div>`;
+                }
+            }
+            
+            preview.innerHTML = combinedHTML;
+            window.safeTypeset(preview);
+        }
+
+        function triggerCompilation() {
+            livePreview();
+            alert('¡Compilación completada con éxito! Revise la pestaña de Vista Previa.');
+        }
+
+        // Export Standalone HTML Compiler
+        function exportStandaloneHTML() {
+            const editorText = document.getElementById('code-editor').value;
+            let originalSource = document.documentElement.outerHTML;
+            const searchPattern = /const defaultEditorText = `([\s\S]*?)`;/;
+            
+            const escapedText = editorText.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+            const replacement = `const defaultEditorText = \`${escapedText}\`;`;
+            
+            originalSource = originalSource.replace(searchPattern, replacement);
+            
+            const blob = new Blob(["<!DOCTYPE html>\n" + originalSource], {type: "text/html;charset=utf-8"});
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "gestion_proyectos_upse_compilado.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        // ==========================================
+        // 5. EVALUACIÓN ECONÓMICA (NPV / IRR / Payback)
+        // ==========================================
+        let econCtx, econCanvas;
+        
+        function initEconSim() {
+            econCanvas = document.getElementById('econ-canvas');
+            econCtx = econCanvas.getContext('2d');
+            resizeEconCanvas();
+            window.addEventListener('resize', resizeEconCanvas);
+            updateEconSim();
+        }
+
+        function resizeEconCanvas() {
+            if (!econCanvas) return;
+            econCanvas.width = econCanvas.parentElement.clientWidth;
+            econCanvas.height = econCanvas.parentElement.clientHeight;
+            updateEconSim();
+        }
+
+        function updateEconSim() {
+            const I0 = parseFloat(document.getElementById('input-inv-0').value);
+            const Ft = parseFloat(document.getElementById('input-flujo-anual').value);
+            const k = parseFloat(document.getElementById('input-tasa-k').value) / 100;
+            const N = 5;
+            
+            document.getElementById('lbl-inv-0').textContent = I0.toLocaleString('en-US');
+            document.getElementById('lbl-flujo-anual').textContent = Ft.toLocaleString('en-US');
+            document.getElementById('lbl-tasa-k').textContent = (k * 100).toFixed(1);
+            
+            // Calculate VAN
+            let van = -I0;
+            for (let t = 1; t <= N; t++) {
+                van += Ft / Math.pow(1 + k, t);
+            }
+            
+            // Calculate TIR
+            let tir = 0.1;
+            for (let iter = 0; iter < 100; iter++) {
+                let f = -I0;
+                let df = 0;
+                for (let t = 1; t <= N; t++) {
+                    f += Ft / Math.pow(1 + tir, t);
+                    df -= t * Ft / Math.pow(1 + tir, t + 1);
+                }
+                let nextTir = tir - f / df;
+                if (Math.abs(nextTir - tir) < 0.0001) {
+                    tir = nextTir;
+                    break;
+                }
+                tir = nextTir;
+            }
+            
+            // Calculate Payback Period
+            let payback = I0 / Ft;
+            
+            // Update labels
+            const vanEl = document.getElementById('val-econ-van');
+            vanEl.textContent = (van >= 0 ? "$" : "-$") + Math.abs(Math.round(van)).toLocaleString('en-US');
+            if (van >= 0) {
+                vanEl.style.color = 'var(--color-accent)';
+            } else {
+                vanEl.style.color = 'var(--color-danger)';
+            }
+            
+            const tirEl = document.getElementById('val-econ-tir');
+            if (tir > 0 && tir < 2) {
+                tirEl.textContent = (tir * 100).toFixed(1) + "%";
+                if (tir >= k) {
+                    tirEl.style.color = 'var(--color-accent)';
+                } else {
+                    tirEl.style.color = 'var(--color-danger)';
+                }
+            } else {
+                tirEl.textContent = "N/A";
+                tirEl.style.color = 'var(--color-warning)';
+            }
+            
+            document.getElementById('val-econ-payback').textContent = payback.toFixed(1) + " años";
+            
+            drawEconChart(I0, Ft, k, N, van);
+        }
+
+        function drawEconChart(I0, Ft, k, N, van) {
+            if (!econCtx || !econCanvas) return;
+            const ctx = econCtx;
+            const w = econCanvas.width;
+            const h = econCanvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(10, 10, w - 20, h - 20);
+            
+            const zeroY = h * 0.5;
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.moveTo(30, zeroY);
+            ctx.lineTo(w - 30, zeroY);
+            ctx.stroke();
+            
+            const spacing = (w - 80) / N;
+            const maxVal = Math.max(I0, Ft * 5);
+            const scaleY = (h * 0.3) / maxVal;
+            
+            ctx.font = "9px 'Space Grotesk'";
+            ctx.textAlign = 'center';
+            
+            let cumulative = -I0;
+            let cumPoints = [{x: 45, y: zeroY - cumulative * scaleY}];
+            
+            for (let t = 0; t <= N; t++) {
+                const x = 45 + t * spacing;
+                let val = (t === 0) ? -I0 : Ft;
+                let barH = val * scaleY;
+                
+                if (t === 0) {
+                    ctx.fillStyle = 'rgba(239, 68, 68, 0.4)';
+                    ctx.strokeStyle = '#ef4444';
+                } else {
+                    ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+                    ctx.strokeStyle = '#3b82f6';
+                }
+                ctx.lineWidth = 1;
+                ctx.fillRect(x - 12, zeroY, 24, -barH);
+                ctx.strokeRect(x - 12, zeroY, 24, -barH);
+                
+                ctx.fillStyle = '#fff';
+                ctx.fillText((t === 0 ? "-" : "+") + Math.round(Math.abs(val)/1000) + "k", x, zeroY - barH + (barH >= 0 ? -6 : 12));
+                
+                ctx.fillStyle = '#9ca3af';
+                ctx.fillText("Año " + t, x, zeroY + 18);
+                
+                if (t > 0) {
+                    cumulative += Ft;
+                    cumPoints.push({x: x, y: zeroY - cumulative * scaleY});
+                }
+            }
+            
+            ctx.strokeStyle = 'rgba(16, 185, 129, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(cumPoints[0].x, cumPoints[0].y);
+            for (let i = 1; i < cumPoints.length; i++) {
+                ctx.lineTo(cumPoints[i].x, cumPoints[i].y);
+            }
+            ctx.stroke();
+            
+            ctx.fillStyle = '#10b981';
+            cumPoints.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+            });
+        }
+
+        // ==========================================
+        // 6. ASISTENTE DE AUTOEVALUACIÓN (QUIZ)
+        // ==========================================
+        const quizData = {
+            p1: {
+                prompt: "Ingrese el nuevo valor del índice Cpk (Ej: 1.39):",
+                correct: "1.39",
+                tolerance: 0.02,
+                help: "Pista: Cuando el proceso se centra, k = 0, y Cpk = Cp. Calcula Cp = (USL - LSL) / (6 * σ) = (50.05 - 49.95) / (6 * 0.012).",
+                success: "¡Excelente! Respuesta correcta. Cpk = Cp = 1.39 al centrarse."
+            },
+            p2: {
+                prompt: "Ingrese la nueva duración del proyecto en días (Ej: 15):",
+                correct: "15",
+                tolerance: 0.1,
+                help: "Pista: La actividad B tiene 1 día de holgura. Si B se retrasa 4 días, el proyecto se retrasará 3 días más allá del día 11, lo que incrementa la duración total a 15 días.",
+                success: "¡Excelente! Respuesta correcta. El proyecto dura ahora 15 días."
+            }
+        };
+
+        function changeQuizProblem() {
+            const probId = document.getElementById('select-ejercicio').value;
+            const prob = quizData[probId];
+            document.getElementById('lbl-quiz-prompt').textContent = prob.prompt;
+            document.getElementById('input-quiz-answer').value = "";
+            document.getElementById('quiz-feedback').style.display = "none";
+        }
+
+        function verifyQuizAnswer() {
+            const probId = document.getElementById('select-ejercicio').value;
+            const prob = quizData[probId];
+            const studentAnsText = document.getElementById('input-quiz-answer').value.trim();
+            const fb = document.getElementById('quiz-feedback');
+            const fbTitle = document.getElementById('quiz-feedback-title');
+            const fbText = document.getElementById('quiz-feedback-text');
+            
+            fb.style.display = "block";
+            
+            const val = parseFloat(studentAnsText.replace(',', '.'));
+            const expected = parseFloat(prob.correct);
+            
+            if (isNaN(val)) {
+                fb.className = "alert alert-warning";
+                fbTitle.textContent = "Formato Incorrecto";
+                fbText.textContent = "Por favor ingrese un número válido.";
+                return;
+            }
+            
+            if (Math.abs(val - expected) <= prob.tolerance) {
+                fb.className = "alert alert-info";
+                fb.style.borderLeftColor = "var(--color-accent)";
+                fb.style.background = "rgba(16, 185, 129, 0.05)";
+                fbTitle.style.color = "var(--color-accent)";
+                fbTitle.textContent = "¡CORRECTO!";
+                fbText.textContent = prob.success;
+            } else {
+                fb.className = "alert alert-danger";
+                fb.style.borderLeftColor = "var(--color-danger)";
+                fb.style.background = "rgba(239, 68, 68, 0.05)";
+                fbTitle.style.color = "var(--color-danger)";
+                fbTitle.textContent = "INCORRECTO";
+                fbText.textContent = prob.help;
+            }
+        }
+
+        // ==========================================
+        // 1. VISOR DE PLANOS DE INGENIERÍA 2D CON CP/CPK
+        // ==========================================
+        let bpCtx, bpCanvas;
+
+        function initBlueprintSim() {
+            bpCanvas = document.getElementById('blueprint-canvas');
+            bpCtx = bpCanvas.getContext('2d');
+            resizeBlueprintCanvas();
+            window.addEventListener('resize', resizeBlueprintCanvas);
+            updateBlueprintSim();
+        }
+
+        function resizeBlueprintCanvas() {
+            if (!bpCanvas) return;
+            const container = bpCanvas.parentElement;
+            bpCanvas.width = container.clientWidth;
+            bpCanvas.height = container.clientHeight;
+            redrawBlueprint();
+        }
+
+        function updateBlueprintSim() {
+            const mu = parseFloat(document.getElementById('input-d-mayor').value);
+            const sigma = parseFloat(document.getElementById('input-sigma').value);
+            
+            document.getElementById('lbl-d-mayor').textContent = mu.toFixed(3);
+            document.getElementById('lbl-sigma').textContent = sigma.toFixed(3);
+            
+            // Spec Limits
+            const USL = 50.05;
+            const LSL = 49.95;
+            const NT = 50.00;
+            
+            // Calculate Cp
+            const cp = (USL - LSL) / (6 * sigma);
+            
+            // Calculate Cpk
+            const cpku = (USL - mu) / (3 * sigma);
+            const cpkl = (mu - LSL) / (3 * sigma);
+            const cpk = Math.min(cpku, cpkl);
+            
+            // Calculate PPM (approximate normal tail area)
+            const zU = (USL - mu) / sigma;
+            const zL = (mu - LSL) / sigma;
+            
+            function normCDF(z) {
+                const t = 1 / (1 + 0.2316419 * Math.abs(z));
+                const d = 0.39894228 * Math.exp(-z * z / 2);
+                let p = d * t * (0.31938153 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+                if (z > 0) p = 1 - p;
+                return p;
+            }
+            
+            const defFraction = (1 - normCDF(zU)) + (1 - normCDF(zL));
+            let ppm = Math.round(defFraction * 1000000);
+            if (ppm < 1) ppm = 0;
+            
+            document.getElementById('val-cp').textContent = cp.toFixed(2);
+            
+            const cpkEl = document.getElementById('val-cpk');
+            cpkEl.textContent = cpk.toFixed(2);
+            if (cpk < 1.33) {
+                cpkEl.style.color = 'var(--color-warning)';
+            } else {
+                cpkEl.style.color = 'var(--color-accent)';
+            }
+            
+            const ppmEl = document.getElementById('val-ppm');
+            ppmEl.textContent = ppm + " PPM";
+            if (ppm > 100) {
+                ppmEl.style.color = 'var(--color-danger)';
+            } else {
+                ppmEl.style.color = 'var(--color-accent)';
+            }
+            
+            redrawBlueprint();
+        }
+
+        function redrawBlueprint() {
+            if (!bpCtx || !bpCanvas) return;
+            const ctx = bpCtx;
+            const w = bpCanvas.width;
+            const h = bpCanvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            const mu = parseFloat(document.getElementById('input-d-mayor').value);
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(10, 10, w - 20, h - 20);
+            
+            const startX = w * 0.15;
+            const centerY = h * 0.45;
+            const lenVal = 320;
+            const scaleX = (w * 0.7) / 400;
+            const scaleY = (h * 0.5) / 70;
+            
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([15, 5, 2, 5]);
+            ctx.beginPath();
+            ctx.moveTo(startX - 20, centerY);
+            ctx.lineTo(startX + lenVal * scaleX + 20, centerY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            const sec1_w = (lenVal * 0.25) * scaleX;
+            const sec2_w = (lenVal * 0.5) * scaleX;
+            const sec3_w = (lenVal * 0.25) * scaleX;
+            
+            const sec1_h = (35) * scaleY;
+            const sec2_h = (mu) * scaleY;
+            const sec3_h = (35) * scaleY;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            
+            ctx.beginPath();
+            ctx.rect(startX, centerY - sec1_h/2, sec1_w, sec1_h);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.rect(startX + sec1_w, centerY - sec2_h/2, sec2_w, sec2_h);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.rect(startX + sec1_w + sec2_w, centerY - sec3_h/2, sec3_w, sec3_h);
+            ctx.fill();
+            ctx.stroke();
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+            ctx.lineWidth = 1;
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(startX + sec1_w, centerY - sec2_h/2, sec2_w, sec2_h);
+            ctx.clip();
+            for (let i = -100; i < w; i += 12) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i + h, h);
+                ctx.stroke();
+            }
+            ctx.restore();
+            ctx.strokeStyle = '#fff';
+            
+            ctx.strokeStyle = '#9ca3af';
+            ctx.fillStyle = '#9ca3af';
+            ctx.lineWidth = 1;
+            
+            const cotaY = centerY + (50 * scaleY)/2 + 30;
+            ctx.beginPath();
+            ctx.moveTo(startX, centerY + sec1_h/2 + 5);
+            ctx.lineTo(startX, cotaY + 5);
+            ctx.moveTo(startX + lenVal * scaleX, centerY + sec3_h/2 + 5);
+            ctx.lineTo(startX + lenVal * scaleX, cotaY + 5);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(startX, cotaY);
+            ctx.lineTo(startX + lenVal * scaleX, cotaY);
+            ctx.stroke();
+            
+            drawArrow(ctx, startX, cotaY, 0);
+            drawArrow(ctx, startX + lenVal * scaleX, cotaY, Math.PI);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = "11px 'Space Grotesk'";
+            ctx.textAlign = 'center';
+            ctx.fillText("320.00 mm", startX + (lenVal * scaleX)/2, cotaY - 5);
+            
+            const cotaX = startX + sec1_w + sec2_w/2;
+            ctx.strokeStyle = '#a78bfa';
+            ctx.fillStyle = '#a78bfa';
+            
+            ctx.beginPath();
+            ctx.moveTo(startX + sec1_w, centerY - sec2_h/2);
+            ctx.lineTo(cotaX - 25, centerY - sec2_h/2);
+            ctx.moveTo(startX + sec1_w, centerY + sec2_h/2);
+            ctx.lineTo(cotaX - 25, centerY + sec2_h/2);
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(cotaX - 20, centerY - sec2_h/2);
+            ctx.lineTo(cotaX - 20, centerY + sec2_h/2);
+            ctx.stroke();
+            
+            drawArrow(ctx, cotaX - 20, centerY - sec2_h/2, Math.PI/2);
+            drawArrow(ctx, cotaX - 20, centerY + sec2_h/2, -Math.PI/2);
+            
+            ctx.fillStyle = '#fff';
+            ctx.textAlign = 'right';
+            ctx.fillText("Ø50.00 ±0.05 mm", cotaX - 28, centerY - 6);
+            ctx.fillStyle = '#a78bfa';
+            ctx.fillText("μ_real = " + mu.toFixed(3), cotaX - 28, centerY + 8);
+            
+            const boxW = 180;
+            const boxH = 45;
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.strokeRect(w - 10 - boxW, h - 10 - boxH, boxW, boxH);
+            ctx.fillStyle = 'rgba(8,11,28,0.8)';
+            ctx.fillRect(w - 10 - boxW, h - 10 - boxH, boxW, boxH);
+            
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = "8px 'Plus Jakarta Sans'";
+            ctx.textAlign = 'left';
+            ctx.fillText("FACULTAD INGENIERÍA INDUSTRIAL - UPSE", w - 8 - boxW, h - 38);
+            ctx.fillText("PIEZA: EJE CILÍNDRICO AUTOMOTRIZ", w - 8 - boxW, h - 28);
+            ctx.fillText("NORMA: ISO 128 | ACOTO: mm", w - 8 - boxW, h - 18);
+        }
+
+        function drawArrow(ctx, x, y, angle) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate(angle);
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(8, -3);
+            ctx.lineTo(8, 3);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // ==========================================
+        // 2. SIMULADOR DE MECANIZADO EN 3D
+        // ==========================================
+        let t3dCtx, t3dCanvas;
+        let rotationAngle = 0;
+        let toolX = 50;
+        let isMachining = false;
+        let animFrame3D;
+        
+        let camYaw = -0.6;
+        let camPitch = 0.4;
+        let camZoom = 1.0;
+        
+        let workpieceLength = 160;
+        let slicesCount = 80;
+        let workpieceRadii = new Array(slicesCount).fill(25);
+        let sparksList = [];
+
+        function initMachining3D() {
+            t3dCanvas = document.getElementById('canvas-3d');
+            t3dCtx = t3dCanvas.getContext('2d');
+            resetWorkpiece3D();
+            
+            let isDragging = false;
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+            
+            t3dCanvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            });
+            
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            t3dCanvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - lastMouseX;
+                const deltaY = e.clientY - lastMouseY;
+                
+                camYaw += deltaX * 0.01;
+                camPitch += deltaY * 0.01;
+                camPitch = Math.max(-Math.PI/2.1, Math.min(Math.PI/2.1, camPitch));
+                
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+                if (!isMachining) redraw3D();
+            });
+            
+            t3dCanvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                camZoom += e.deltaY * -0.001;
+                camZoom = Math.max(0.4, Math.min(2.0, camZoom));
+                if (!isMachining) redraw3D();
+            });
+            
+            redraw3D();
+            updateMachining3D();
+        }
+
+        function resetWorkpiece3D() {
+            workpieceRadii = new Array(slicesCount).fill(25);
+            toolX = -40;
+            sparksList = [];
+            document.getElementById('btn-start-machining').textContent = "Iniciar Mecanizado";
+            isMachining = false;
+            redraw3D();
+        }
+
+        function updateMachining3D() {
+            const vc = parseFloat(document.getElementById('input-vc').value);
+            const feed = parseFloat(document.getElementById('input-feed').value);
+            const depth = parseFloat(document.getElementById('input-depth').value);
+            
+            document.getElementById('lbl-vc').textContent = vc;
+            document.getElementById('lbl-feed').textContent = feed;
+            document.getElementById('lbl-depth').textContent = depth.toFixed(1);
+            
+            const rpm = Math.round((1000 * vc) / (Math.PI * 50));
+            document.getElementById('val-spindle-rpm').textContent = rpm + " RPM";
+            
+            const mrr = (vc * feed * depth).toFixed(1);
+            document.getElementById('val-mrr').textContent = mrr + " cm³/min";
+            
+            const power = ((vc * feed * depth * 1800) / (60 * 1000 * 0.85)).toFixed(2);
+            const powerEl = document.getElementById('val-power');
+            powerEl.textContent = power + " kW";
+            
+            if (power > 5.5) {
+                powerEl.style.color = 'var(--color-danger)';
+            } else {
+                powerEl.style.color = 'var(--color-accent)';
+            }
+        }
+
+        function project3D(x, y, z, width, height) {
+            let x1 = x * Math.cos(camYaw) - z * Math.sin(camYaw);
+            let z1 = x * Math.sin(camYaw) + z * Math.cos(camYaw);
+            let y1 = y;
+            
+            let x2 = x1;
+            let y2 = y1 * Math.cos(camPitch) - z1 * Math.sin(camPitch);
+            let z2 = y1 * Math.sin(camPitch) + z1 * Math.cos(camPitch);
+            
+            const dCam = 260 / camZoom;
+            const zProj = dCam - z2;
+            const focal = 300;
+            const factor = focal / (zProj <= 5 ? 5 : zProj);
+            
+            return {
+                x: x2 * factor + width/2,
+                y: y2 * factor + height/2,
+                depth: z2
+            };
+        }
+
+        function redraw3D() {
+            if (!t3dCtx || !t3dCanvas) return;
+            const ctx = t3dCtx;
+            const w = t3dCanvas.width = t3dCanvas.parentElement.clientWidth;
+            const h = t3dCanvas.height = t3dCanvas.parentElement.clientHeight;
+            
+            ctx.fillStyle = '#020306';
+            ctx.fillRect(0, 0, w, h);
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < w; i += 40) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, h); ctx.stroke();
+            }
+            
+            const light = {x: 1, y: -1, z: 1};
+            const lenLight = Math.sqrt(light.x**2 + light.y**2 + light.z**2);
+            light.x /= lenLight; light.y /= lenLight; light.z /= lenLight;
+            
+            drawChuck3D(ctx, w, h);
+            drawWorkpiece3D(ctx, w, h, light);
+            drawCuttingTool3D(ctx, w, h, light);
+            drawSparks3D(ctx, w, h);
+        }
+
+        function drawChuck3D(ctx, w, h) {
+            const cLen = 40;
+            const cRadius = 40;
+            const steps = 30;
+            
+            ctx.fillStyle = 'rgba(40,40,60,0.8)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            
+            for (let i = 0; i < steps; i++) {
+                const angle1 = (i / steps) * Math.PI * 2;
+                const angle2 = ((i + 1) / steps) * Math.PI * 2;
+                
+                const p1 = project3D(-90, cRadius * Math.cos(angle1), cRadius * Math.sin(angle1), w, h);
+                const p2 = project3D(-90, cRadius * Math.cos(angle2), cRadius * Math.sin(angle2), w, h);
+                const p3 = project3D(-50, cRadius * Math.cos(angle2), cRadius * Math.sin(angle2), w, h);
+                const p4 = project3D(-50, cRadius * Math.cos(angle1), cRadius * Math.sin(angle1), w, h);
+                
+                const normalY = Math.cos((angle1 + angle2)/2);
+                const shade = Math.floor(60 + 50 * normalY);
+                
+                ctx.fillStyle = `rgb(${shade}, ${shade}, ${shade + 10})`;
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.lineTo(p3.x, p3.y);
+                ctx.lineTo(p4.x, p4.y);
+                ctx.closePath();
+                ctx.fill();
+            }
+        }
+
+        function drawWorkpiece3D(ctx, w, h, light) {
+            const steps = 24;
+            const sliceWidth = workpieceLength / slicesCount;
+            
+            for (let s = 0; s < slicesCount - 1; s++) {
+                const x1 = -50 + s * sliceWidth;
+                const x2 = x1 + sliceWidth;
+                
+                const r1 = workpieceRadii[s];
+                const r2 = workpieceRadii[s+1];
+                
+                for (let i = 0; i < steps; i++) {
+                    const angle1 = (i / steps) * Math.PI * 2 + rotationAngle;
+                    const angle2 = ((i + 1) / steps) * Math.PI * 2 + rotationAngle;
+                    
+                    const cos1 = Math.cos(angle1);
+                    const sin1 = Math.sin(angle1);
+                    const cos2 = Math.cos(angle2);
+                    const sin2 = Math.sin(angle2);
+                    
+                    const p1 = project3D(x1, r1 * cos1, r1 * sin1, w, h);
+                    const p2 = project3D(x1, r1 * cos2, r1 * sin2, w, h);
+                    const p3 = project3D(x2, r2 * cos2, r2 * sin2, w, h);
+                    const p4 = project3D(x2, r2 * cos1, r2 * sin1, w, h);
+                    
+                    const avgCos = Math.cos((angle1 + angle2)/2);
+                    const avgSin = Math.sin((angle1 + angle2)/2);
+                    
+                    const dot = avgCos * light.y + avgSin * light.z;
+                    const brightness = Math.max(0, dot);
+                    
+                    const rColor = Math.floor(100 + 120 * brightness);
+                    const gColor = Math.floor(105 + 120 * brightness);
+                    const bColor = Math.floor(125 + 130 * brightness);
+                    
+                    ctx.fillStyle = `rgb(${rColor}, ${gColor}, ${bColor})`;
+                    ctx.beginPath();
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.lineTo(p3.x, p3.y);
+                    ctx.lineTo(p4.x, p4.y);
+                    ctx.closePath();
+                    ctx.fill();
+                }
+            }
+        }
+
+        function drawCuttingTool3D(ctx, w, h, light) {
+            const depthVal = parseFloat(document.getElementById('input-depth').value);
+            const yTip = 25 - depthVal * 1.5;
+            const toolScaleX = toolX;
+            
+            const tWidth = 12;
+            const tHeight = 12;
+            const tLength = 30;
+            
+            const vertices = [
+                {x: toolScaleX - tWidth/2, y: yTip, z: -tLength},
+                {x: toolScaleX + tWidth/2, y: yTip, z: -tLength},
+                {x: toolScaleX + tWidth/2, y: yTip + tHeight, z: -tLength},
+                {x: toolScaleX - tWidth/2, y: yTip + tHeight, z: -tLength},
+                {x: toolScaleX - tWidth/2, y: yTip, z: 0},
+                {x: toolScaleX + tWidth/2, y: yTip, z: 0},
+                {x: toolScaleX + tWidth/2, y: yTip + tHeight, z: 0},
+                {x: toolScaleX - tWidth/2, y: yTip + tHeight, z: 0}
+            ];
+            
+            const p = vertices.map(v => project3D(v.x, v.y, v.z, w, h));
+            
+            const faces = [
+                {indices: [4, 5, 6, 7], color: 'rgb(180, 50, 50)'},
+                {indices: [0, 1, 5, 4], color: 'rgb(80, 80, 80)'},
+                {indices: [1, 2, 6, 5], color: 'rgb(60, 60, 60)'},
+                {indices: [0, 4, 7, 3], color: 'rgb(50, 50, 50)'},
+                {indices: [2, 3, 7, 6], color: 'rgb(30, 30, 30)'}
+            ];
+            
+            faces.forEach(f => {
+                ctx.fillStyle = f.color;
+                ctx.beginPath();
+                ctx.moveTo(p[f.indices[0]].x, p[f.indices[0]].y);
+                for (let i = 1; i < f.indices.length; i++) {
+                    ctx.lineTo(p[f.indices[i]].x, p[f.indices[i]].y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                ctx.stroke();
+            });
+        }
+
+        function drawSparks3D(ctx, w, h) {
+            sparksList.forEach(sp => {
+                const p = project3D(sp.x, sp.y, sp.z, w, h);
+                ctx.fillStyle = `rgba(${sp.r}, ${sp.g}, 0, ${sp.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, sp.size * camZoom, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function toggleMachining3D() {
+            if (isMachining) {
+                isMachining = false;
+                document.getElementById('btn-start-machining').textContent = "Iniciar Mecanizado";
+                cancelAnimationFrame(animFrame3D);
+            } else {
+                isMachining = true;
+                document.getElementById('btn-start-machining').textContent = "Pausar Mecanizado";
+                toolX = -45;
+                runMachiningLoop();
+            }
+        }
+
+        function runMachiningLoop() {
+            if (!isMachining) return;
+            
+            const rpm = parseInt(document.getElementById('val-spindle-rpm').textContent);
+            rotationAngle += (rpm * Math.PI * 2) / (60 * 60);
+            
+            const feed = parseFloat(document.getElementById('input-feed').value);
+            const depth = parseFloat(document.getElementById('input-depth').value);
+            
+            toolX += feed * 1.5;
+            
+            if (toolX >= -50 && toolX <= workpieceLength - 50) {
+                const sliceIdx = Math.floor((toolX + 50) / (workpieceLength / slicesCount));
+                if (sliceIdx >= 0 && sliceIdx < slicesCount) {
+                    const targetR = 25 - depth * 1.5;
+                    if (workpieceRadii[sliceIdx] > targetR) {
+                        workpieceRadii[sliceIdx] = targetR;
+                        
+                        for (let k = 0; k < 5; k++) {
+                            sparksList.push({
+                                x: toolX,
+                                y: 25 - depth * 1.5 + (Math.random() - 0.5) * 4,
+                                z: (Math.random() - 0.5) * 4,
+                                vx: (Math.random() - 0.2) * 2,
+                                vy: -Math.random() * 3 - 1,
+                                vz: (Math.random() - 0.5) * 4,
+                                alpha: 1.0,
+                                r: Math.floor(200 + Math.random() * 55),
+                                g: Math.floor(100 + Math.random() * 100),
+                                size: 1 + Math.random() * 2
+                            });
+                        }
+                    }
+                }
+            }
+            
+            sparksList.forEach((sp, idx) => {
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.z += sp.vz;
+                sp.alpha -= 0.04;
+                if (sp.alpha <= 0) {
+                    sparksList.splice(idx, 1);
+                }
+            });
+            
+            if (toolX > workpieceLength - 30) {
+                isMachining = false;
+                document.getElementById('btn-start-machining').textContent = "Mecanizado Terminado";
+                alert("Mecanizado completo. Diámetro nominal del eje centrado.");
+            }
+            
+            redraw3D();
+            animFrame3D = requestAnimationFrame(runMachiningLoop);
+        }
+
+        // ==========================================
+        // 3. SIMULADOR DE DISTRIBUCIÓN DE PLANTA
+        // ==========================================
+        let plantCtx, plantCanvas;
+        let plantParts = [];
+        let plantAGV = { x: 50, y: 150, state: 'idle', targetX: 50, cargo: false };
+        let plantAnimFrame;
+        
+        function initPlantLayoutSim() {
+            plantCanvas = document.getElementById('plant-canvas');
+            plantCtx = plantCanvas.getContext('2d');
+            resizePlantCanvas();
+            window.addEventListener('resize', resizePlantCanvas);
+            
+            setInterval(() => {
+                if (document.getElementById('layout-planta').classList.contains('active')) {
+                    if (plantParts.length < 12) {
+                        plantParts.push({
+                            id: Date.now(),
+                            x: 40,
+                            y: 80,
+                            state: 'queue1',
+                            station1_time: 0,
+                            station2_time: 0,
+                            station3_time: 0,
+                            color: 'var(--color-primary)'
+                        });
+                    }
+                }
+            }, 3000);
+            
+            animatePlant();
+            updatePlantLayoutSim();
+        }
+
+        function resizePlantCanvas() {
+            if (!plantCanvas) return;
+            plantCanvas.width = plantCanvas.parentElement.clientWidth;
+            plantCanvas.height = plantCanvas.parentElement.clientHeight;
+        }
+
+        function updatePlantLayoutSim() {
+            const s1 = parseFloat(document.getElementById('input-srv-1').value);
+            const s2 = parseFloat(document.getElementById('input-srv-2').value);
+            const s3 = parseFloat(document.getElementById('input-srv-3').value);
+            
+            document.getElementById('lbl-srv-1').textContent = s1;
+            document.getElementById('lbl-srv-2').textContent = s2;
+            document.getElementById('lbl-srv-3').textContent = s3;
+            
+            const maxVal = Math.max(s1, s2, s3);
+            let bottleneck = "Mecanizado";
+            if (maxVal === s2) bottleneck = "Ensamblaje";
+            if (maxVal === s3) bottleneck = "Calidad";
+            
+            const btnEl = document.getElementById('val-critical-station');
+            btnEl.textContent = bottleneck;
+            
+            const hrProduction = Math.round(3600 / maxVal);
+            document.getElementById('val-plant-output').textContent = hrProduction + " pzs/hr";
+            
+            const totalWork = s1 + s2 + s3;
+            const balanceEff = ((totalWork / (3 * maxVal)) * 100).toFixed(1);
+            document.getElementById('val-balance-eff').textContent = balanceEff + "%";
+        }
+
+        function animatePlant() {
+            if (!plantCtx || !plantCanvas) return;
+            const ctx = plantCtx;
+            const w = plantCanvas.width;
+            const h = plantCanvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            const s1 = parseFloat(document.getElementById('input-srv-1').value);
+            const s2 = parseFloat(document.getElementById('input-srv-2').value);
+            const s3 = parseFloat(document.getElementById('input-srv-3').value);
+            
+            const st1_x = w * 0.25;
+            const st2_x = w * 0.50;
+            const st3_x = w * 0.75;
+            const lineY = h * 0.45;
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 12;
+            ctx.beginPath();
+            ctx.moveTo(30, lineY);
+            ctx.lineTo(w - 30, lineY);
+            ctx.stroke();
+            
+            drawWorkstationNode(ctx, "Mecanizado (St1)", st1_x, lineY, s1);
+            drawWorkstationNode(ctx, "Ensamblaje (St2)", st2_x, lineY, s2);
+            drawWorkstationNode(ctx, "Calidad (St3)", st3_x, lineY, s3);
+            
+            drawWarehouseNode(ctx, "Materia Prima", 50, lineY, true);
+            drawWarehouseNode(ctx, "Pto. Terminado", w - 55, lineY, false);
+            
+            ctx.strokeStyle = 'rgba(59,130,246,0.1)';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeRect(st3_x - 30, lineY + 40, w - st3_x - 10, h * 0.3);
+            ctx.setLineDash([]);
+            
+            plantParts.forEach((p, idx) => {
+                if (p.state === 'queue1') {
+                    p.x += (st1_x - 30 - p.x) * 0.1;
+                    const activeSt1 = plantParts.some(x => x.state === 'st1');
+                    if (Math.abs(p.x - (st1_x - 30)) < 1 && !activeSt1) {
+                        p.state = 'st1';
+                        p.station1_time = 0;
+                    }
+                } else if (p.state === 'st1') {
+                    p.x = st1_x;
+                    p.station1_time += 1/60;
+                    p.color = 'var(--color-warning)';
+                    if (p.station1_time >= s1 * 0.2) {
+                        p.state = 'queue2';
+                    }
+                } else if (p.state === 'queue2') {
+                    p.x += (st2_x - 30 - p.x) * 0.1;
+                    const activeSt2 = plantParts.some(x => x.state === 'st2');
+                    if (Math.abs(p.x - (st2_x - 30)) < 1 && !activeSt2) {
+                        p.state = 'st2';
+                        p.station2_time = 0;
+                    }
+                } else if (p.state === 'st2') {
+                    p.x = st2_x;
+                    p.station2_time += 1/60;
+                    p.color = '#a78bfa';
+                    if (p.station2_time >= s2 * 0.2) {
+                        p.state = 'queue3';
+                    }
+                } else if (p.state === 'queue3') {
+                    p.x += (st3_x - 30 - p.x) * 0.1;
+                    const activeSt3 = plantParts.some(x => x.state === 'st3');
+                    if (Math.abs(p.x - (st3_x - 30)) < 1 && !activeSt3) {
+                        p.state = 'st3';
+                        p.station3_time = 0;
+                    }
+                } else if (p.state === 'st3') {
+                    p.x = st3_x;
+                    p.station3_time += 1/60;
+                    p.color = 'var(--color-accent)';
+                    if (p.station3_time >= s3 * 0.2) {
+                        p.state = 'awaiting_agv';
+                    }
+                } else if (p.state === 'awaiting_agv') {
+                    p.x = st3_x + 30;
+                    if (plantAGV.state === 'idle' && !plantAGV.cargo) {
+                        plantAGV.state = 'goto_st3';
+                        plantAGV.targetX = st3_x + 30;
+                    }
+                }
+                
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, lineY, 8, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            });
+            
+            updateAGVLogic(w, h, st3_x, lineY);
+            
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(plantAGV.x - 12, plantAGV.y - 12, 24, 18);
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(plantAGV.x - 12, plantAGV.y - 12, 24, 18);
+            
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(plantAGV.x - 8, plantAGV.y + 8, 3, 0, Math.PI*2);
+            ctx.arc(plantAGV.x + 8, plantAGV.y + 8, 3, 0, Math.PI*2);
+            ctx.fill();
+            
+            if (plantAGV.cargo) {
+                ctx.fillStyle = 'var(--color-accent)';
+                ctx.fillRect(plantAGV.x - 6, plantAGV.y - 18, 12, 8);
+                ctx.strokeRect(plantAGV.x - 6, plantAGV.y - 18, 12, 8);
+            }
+            
+            plantAnimFrame = requestAnimationFrame(animatePlant);
+        }
+
+        function drawWorkstationNode(ctx, name, x, y, rate) {
+            ctx.fillStyle = 'rgba(20, 26, 56, 0.8)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+            ctx.lineWidth = 1;
+            ctx.fillRect(x - 35, y - 40, 70, 20);
+            ctx.strokeRect(x - 35, y - 40, 70, 20);
+            
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = "8px 'Plus Jakarta Sans'";
+            ctx.textAlign = 'center';
+            ctx.fillText(name, x, y - 28);
+            ctx.fillText(rate + "s / pz", x, y - 18);
+        }
+
+        function drawWarehouseNode(ctx, name, x, y, isIn) {
+            ctx.fillStyle = isIn ? 'rgba(59,130,246,0.2)' : 'rgba(16,185,129,0.2)';
+            ctx.strokeStyle = isIn ? '#3b82f6' : '#10b981';
+            ctx.lineWidth = 1.5;
+            ctx.fillRect(x - 30, y - 25, 60, 50);
+            ctx.strokeRect(x - 30, y - 25, 60, 50);
+            
+            ctx.fillStyle = '#fff';
+            ctx.font = "8px 'Plus Jakarta Sans'";
+            ctx.textAlign = 'center';
+            ctx.fillText(name, x, y + 5);
+        }
+
+        function updateAGVLogic(w, h, st3_x, lineY) {
+            const speed = 2.5;
+            const trackY = lineY + 60;
+            
+            if (plantAGV.state === 'idle') {
+                plantAGV.y = trackY;
+            } else if (plantAGV.state === 'goto_st3') {
+                plantAGV.y = trackY;
+                if (plantAGV.x < st3_x + 30) {
+                    plantAGV.x += speed;
+                } else {
+                    plantAGV.x = st3_x + 30;
+                    const pIdx = plantParts.findIndex(x => x.state === 'awaiting_agv');
+                    if (pIdx !== -1) {
+                        plantParts.splice(pIdx, 1);
+                        plantAGV.cargo = true;
+                        plantAGV.state = 'goto_warehouse';
+                        plantAGV.targetX = w - 55;
+                    } else {
+                        plantAGV.state = 'idle';
+                    }
+                }
+            } else if (plantAGV.state === 'goto_warehouse') {
+                if (plantAGV.x < w - 55) {
+                    plantAGV.x += speed;
+                } else {
+                    plantAGV.x = w - 55;
+                    plantAGV.cargo = false;
+                    plantAGV.state = 'return_st3';
+                    plantAGV.targetX = st3_x + 30;
+                }
+            } else if (plantAGV.state === 'return_st3') {
+                if (plantAGV.x > st3_x + 30) {
+                    plantAGV.x -= speed;
+                } else {
+                    plantAGV.x = st3_x + 30;
+                    plantAGV.state = 'idle';
+                }
+            }
+        }
+
+        // ==========================================
+        // 4. PLANIFICADOR DE PROYECTOS GANTT & CPM
+        // ==========================================
+        let gtCtx, gtCanvas;
+        
+        function initGanttSim() {
+            gtCanvas = document.getElementById('gantt-canvas');
+            gtCtx = gtCanvas.getContext('2d');
+            resizeGanttCanvas();
+            window.addEventListener('resize', resizeGanttCanvas);
+            updateGanttSim();
+        }
+
+        function resizeGanttCanvas() {
+            if (!gtCanvas) return;
+            gtCanvas.width = gtCanvas.parentElement.clientWidth;
+            gtCanvas.height = gtCanvas.parentElement.clientHeight;
+            redrawGantt();
+        }
+
+        function updateGanttSim() {
+            const durA = parseInt(document.getElementById('input-dur-a').value);
+            const durB = parseInt(document.getElementById('input-dur-b').value);
+            const durC = parseInt(document.getElementById('input-dur-c').value);
+            const durD = parseInt(document.getElementById('input-dur-d').value);
+            
+            document.getElementById('lbl-dur-a').textContent = durA;
+            document.getElementById('lbl-dur-b').textContent = durB;
+            document.getElementById('lbl-dur-c').textContent = durC;
+            document.getElementById('lbl-dur-d').textContent = durD;
+            
+            const esA = 0;
+            const efA = esA + durA;
+            const esB = efA;
+            const efB = esB + durB;
+            const esC = efA;
+            const efC = esC + durC;
+            const esD = Math.max(efB, efC);
+            const efD = esD + durD;
+            
+            const totalProject = efD;
+            document.getElementById('val-gantt-total').textContent = totalProject + " días";
+            
+            const lfD = totalProject;
+            const lsD = lfD - durD;
+            const lfB = lsD;
+            const lsB = lfB - durB;
+            const lfC = lsD;
+            const lsC = lfC - durC;
+            const lfA = Math.min(lsB, lsC);
+            const lsA = lfA - durA;
+            
+            const floatA = lsA - esA;
+            const floatB = lsB - esB;
+            const floatC = lsC - esC;
+            const floatD = lsD - esD;
+            
+            let path = ["A"];
+            if (floatC === 0) path.push("C");
+            if (floatB === 0) path.push("B");
+            path.push("D");
+            
+            document.getElementById('val-gantt-path').textContent = path.join(" → ");
+            
+            let dailyLoad = new Array(totalProject).fill(0);
+            for (let t = 0; t < totalProject; t++) {
+                if (t >= esA && t < efA) dailyLoad[t] += 2;
+                if (t >= esB && t < efB) dailyLoad[t] += 4;
+                if (t >= esC && t < efC) dailyLoad[t] += 3;
+                if (t >= esD && t < efD) dailyLoad[t] += 5;
+            }
+            
+            const maxResources = Math.max(...dailyLoad);
+            document.getElementById('val-gantt-resources').textContent = maxResources + " Ing.";
+            
+            redrawGantt(esA, efA, floatA, esB, efB, floatB, esC, efC, floatC, esD, efD, floatD, totalProject, dailyLoad);
+        }
+
+        function redrawGantt(esA, efA, hA, esB, efB, hB, esC, efC, hC, esD, efD, hD, totalDuration, dailyLoad) {
+            if (!gtCtx || !gtCanvas) return;
+            const ctx = gtCtx;
+            const w = gtCanvas.width;
+            const h = gtCanvas.height;
+            
+            ctx.clearRect(0, 0, w, h);
+            
+            const startX = w * 0.22;
+            const barW = w * 0.72;
+            const numDays = Math.max(16, totalDuration + 2);
+            const dayWidth = barW / numDays;
+            
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 1;
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.font = "9px 'Space Grotesk'";
+            
+            for (let i = 0; i <= numDays; i++) {
+                const x = startX + i * dayWidth;
+                ctx.beginPath();
+                ctx.moveTo(x, 20);
+                ctx.lineTo(x, h - 50);
+                ctx.stroke();
+                
+                if (i % 2 === 0) {
+                    ctx.textAlign = 'center';
+                    ctx.fillText("D" + i, x, 15);
+                }
+            }
+            
+            const tasks = [
+                { name: "A. Diseño Producto", es: esA, ef: efA, h: hA, y: 35 },
+                { name: "B. Maquinado 3D", es: esB, ef: efB, h: hB, y: 65 },
+                { name: "C. Layout Planta", es: esC, ef: efC, h: hC, y: 95 },
+                { name: "D. Puesta en Marcha", es: esD, ef: efD, h: hD, y: 125 }
+            ];
+            
+            tasks.forEach(t => {
+                ctx.fillStyle = '#fff';
+                ctx.font = "10px 'Plus Jakarta Sans'";
+                ctx.textAlign = 'left';
+                ctx.fillText(t.name, 10, t.y + 10);
+                
+                if (t.h > 0) {
+                    ctx.fillStyle = 'rgba(255,255,255,0.06)';
+                    ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 3]);
+                    const hX = startX + t.ef * dayWidth;
+                    const hW = t.h * dayWidth;
+                    ctx.fillRect(hX, t.y, hW, 14);
+                    ctx.strokeRect(hX, t.y, hW, 14);
+                    ctx.setLineDash([]);
+                }
+                
+                const isCritical = (t.h === 0);
+                ctx.fillStyle = isCritical ? 'rgba(239, 68, 68, 0.8)' : 'rgba(59, 130, 246, 0.8)';
+                ctx.strokeStyle = isCritical ? '#ef4444' : '#3b82f6';
+                ctx.lineWidth = 1;
+                
+                const tX = startX + t.es * dayWidth;
+                const tW = (t.ef - t.es) * dayWidth;
+                
+                ctx.beginPath();
+                ctx.roundRect(tX, t.y, tW, 14, 4);
+                ctx.fill();
+                ctx.stroke();
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = "9px 'Space Grotesk'";
+                ctx.textAlign = 'center';
+                if (tW > 25) {
+                    ctx.fillText((t.ef - t.es) + "d", tX + tW/2, t.y + 10);
+                }
+            });
+            
+            const resY = h - 35;
+            const maxResHeight = 25;
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.font = "9px 'Plus Jakarta Sans'";
+            ctx.textAlign = 'left';
+            ctx.fillText("Ingenieros / día", 10, resY);
+            
+            for (let d = 0; d < totalDuration; d++) {
+                const load = dailyLoad[d] || 0;
+                const x = startX + d * dayWidth;
+                const rH = (load / 8) * maxResHeight;
+                
+                ctx.fillStyle = load > 5 ? 'rgba(239, 68, 68, 0.4)' : 'rgba(16, 185, 129, 0.4)';
+                ctx.strokeStyle = load > 5 ? '#ef4444' : '#10b981';
+                ctx.lineWidth = 1;
+                
+                ctx.fillRect(x + 1, resY - rH, dayWidth - 2, rH);
+                ctx.strokeRect(x + 1, resY - rH, dayWidth - 2, rH);
+                
+                ctx.fillStyle = '#fff';
+                ctx.font = "8px 'Space Grotesk'";
+                ctx.textAlign = 'center';
+                if (rH > 8) {
+                    ctx.fillText(load, x + dayWidth/2, resY - rH - 3);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
