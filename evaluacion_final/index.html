@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Completa — Unidad 3 y 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root{--bg:#080d0b;--bg2:#0f1a15;--card:#131f19;--card-h:#1a2b23;--bdr:#1e3329;--bdr2:#2a4a3a;--fg:#e4ece7;--fg2:#8a9f93;--fg3:#5a7068;--ac:#10b981;--acg:rgba(16,185,129,.15);--acd:#064e3b;--wn:#f59e0b;--wng:rgba(245,158,11,.12);--dn:#ef4444;--dng:rgba(239,68,68,.12);--ok:#22c55e;--okg:rgba(34,197,94,.12);--fl:#f43f5e;--flg:rgba(244,63,94,.12);--r:14px;--rs:8px;--sh:0 4px 24px rgba(0,0,0,.4);--sh2:0 12px 48px rgba(0,0,0,.6)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+        .bg-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+        .bg-blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:.3;animation:bf 20s ease-in-out infinite}
+        .bg-blob:nth-child(1){width:500px;height:500px;background:radial-gradient(circle,#064e3b,transparent 70%);top:-10%;left:-10%;animation-duration:22s}
+        .bg-blob:nth-child(2){width:400px;height:400px;background:radial-gradient(circle,#0d3b2e,transparent 70%);bottom:-15%;right:-5%;animation-duration:18s;animation-delay:-5s}
+        .bg-blob:nth-child(3){width:300px;height:300px;background:radial-gradient(circle,#134e3a,transparent 70%);top:40%;left:50%;animation-duration:25s;animation-delay:-10s}
+        @keyframes bf{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.08)}50%{transform:translate(-20px,40px) scale(.95)}75%{transform:translate(30px,20px) scale(1.05)}}
+        .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(16,185,129,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.03) 1px,transparent 1px);background-size:60px 60px}
+        .particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+        .particle{position:absolute;width:3px;height:3px;background:var(--ac);border-radius:50%;opacity:0;animation:pr linear infinite}
+        @keyframes pr{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.5}90%{opacity:.2}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+        .app{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+        .screen{display:none;width:100%;max-width:780px;animation:si .5s cubic-bezier(.16,1,.3,1) forwards}
+        .screen.active{display:block}
+        @keyframes si{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+        /* LOGIN */
+        .lcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:48px 40px;box-shadow:var(--sh2);text-align:center}
+        .llogo{width:72px;height:72px;background:linear-gradient(135deg,var(--ac),#059669);border-radius:18px;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:32px;color:#fff;box-shadow:0 8px 32px rgba(16,185,129,.3)}
+        .ltitle{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;margin-bottom:6px}
+        .lsub{color:var(--fg2);font-size:14px;margin-bottom:32px;line-height:1.6}
+        .gbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px 24px;background:#fff;color:#3c4043;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:all .25s;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+        .gbtn:hover{box-shadow:0 4px 16px rgba(0,0,0,.25);transform:translateY(-1px)}
+        .gbtn svg{width:20px;height:20px}
+        .ldiv{display:flex;align-items:center;gap:16px;margin:24px 0;color:var(--fg3);font-size:12px;text-transform:uppercase;letter-spacing:1px}
+        .ldiv::before,.ldiv::after{content:'';flex:1;height:1px;background:var(--bdr)}
+        .fgrp{margin-bottom:16px;text-align:left}
+        .fgrp label{display:block;font-size:13px;font-weight:500;color:var(--fg2);margin-bottom:6px}
+        .fgrp input{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+        .fgrp input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}
+        .fgrp input::placeholder{color:var(--fg3)}
+        .lsubm{width:100%;padding:14px;background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .25s;margin-top:8px}
+        .lsubm:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .lerr{color:var(--dn);font-size:13px;margin-top:12px;display:none}
+
+        /* INSTRUCCIONES */
+        .icard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:40px;box-shadow:var(--sh2)}
+        .ihdr{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--bdr)}
+        .iico{width:52px;height:52px;background:var(--acg);border:1px solid var(--bdr2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--ac);flex-shrink:0}
+        .ititle{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+        .isub{font-size:13px;color:var(--fg2);margin-top:2px}
+        .ubadge{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);margin-bottom:24px}
+        .uav{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#059669);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#fff;flex-shrink:0}
+        .uinfo{flex:1}.uname{font-weight:600;font-size:14px}.uemail{font-size:12px;color:var(--fg2)}
+        .sprev{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:28px}
+        .sbox{padding:18px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .sbox .sn{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ac);margin-bottom:6px}
+        .sbox .st{font-weight:600;font-size:14px;margin-bottom:4px}
+        .sbox .sd{font-size:12px;color:var(--fg2)}
+        .ilist{list-style:none;margin-bottom:28px}
+        .ilist li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;font-size:14px;line-height:1.6;color:var(--fg2);border-bottom:1px solid rgba(30,51,41,.5)}
+        .ilist li:last-child{border-bottom:none}
+        .ilist li .ii{width:28px;height:28px;background:var(--acg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ac);flex-shrink:0;margin-top:1px}
+        .strtbtn{width:100%;padding:16px;background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;letter-spacing:.3px}
+        .strtbtn:hover{box-shadow:0 8px 32px rgba(16,185,129,.4);transform:translateY(-2px)}
+
+        /* TRANSICIÓN */
+        .tcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:48px 40px;box-shadow:var(--sh2);text-align:center}
+        .tico{width:80px;height:80px;background:var(--acg);border:1px solid var(--bdr2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:var(--ac)}
+        .ttitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+        .tsub{color:var(--fg2);font-size:14px;margin-bottom:28px;line-height:1.6}
+        .ssum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+        .sst{padding:14px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .sst .sv{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+        .sst .sl{font-size:11px;color:var(--fg2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+        .sst.sok .sv{color:var(--ok)}.sst.sbad .sv{color:var(--fl)}.sst.semp .sv{color:var(--fg3)}
+
+        /* EVAL HEADER */
+        .ehdr{position:sticky;top:0;z-index:10;background:rgba(8,13,11,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr);padding:16px 0;margin-bottom:24px}
+        .etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+        .eslbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac)}
+        .etimer{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--fg2);font-variant-numeric:tabular-nums}
+        .etimer i{color:var(--wn);font-size:13px}
+        .pbt{width:100%;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+        .pbf{height:100%;background:linear-gradient(90deg,var(--ac),#34d399);border-radius:3px;transition:width .5s cubic-bezier(.16,1,.3,1);width:0%}
+
+        /* MAPA */
+        .qmap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+        .qmd{width:34px;height:34px;border-radius:8px;background:var(--bg2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--fg3);cursor:pointer;transition:all .2s}
+        .qmd:hover{border-color:var(--bdr2);color:var(--fg2)}
+        .qmd.cur{border-color:var(--ac);color:var(--ac);background:var(--acg)}
+        .qmd.don{background:var(--acd);border-color:var(--ac);color:var(--ac)}
+        .qmd.par{border-color:var(--wn);color:var(--wn);background:var(--wng)}
+
+        /* QUESTION CARD */
+        .qcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px;margin-bottom:20px;box-shadow:var(--sh)}
+        .qnum{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--acg);border:1px solid var(--bdr2);border-radius:8px;font-size:13px;font-weight:700;color:var(--ac);margin-bottom:14px}
+        .qtxt{font-size:16px;font-weight:500;line-height:1.7;margin-bottom:20px}
+
+        /* V/F */
+        .vfops{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+        .vfop{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:15px;font-weight:600;color:var(--fg2)}
+        .vfop:hover{border-color:var(--bdr2);background:var(--card-h);color:var(--fg)}
+        .vfop.st{border-color:var(--ok);background:var(--okg);color:var(--ok)}
+        .vfsf{border-color:var(--fl)!important;background:var(--flg)!important;color:var(--fl)!important}
+        .vfop i{font-size:18px}
+        .jarea{display:none;animation:fs .3s ease forwards}.jarea.vis{display:block}
+        @keyframes fs{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+        .jlbl{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--wn);margin-bottom:8px}
+        .jlbl i{font-size:14px}
+        .jtxt{width:100%;min-height:100px;padding:14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;resize:vertical;outline:none;transition:border-color .2s,box-shadow .2s}
+        .jtxt:focus{border-color:var(--wn);box-shadow:0 0 0 3px var(--wng)}
+        .jtxt::placeholder{color:var(--fg3)}
+        .qst{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;font-weight:500;opacity:0;transition:opacity .3s}
+        .qst.vis{opacity:1}.qst.cok{color:var(--ok)}.qst.cinc{color:var(--wn)}
+
+        /* MC */
+        .mcopts{display:flex;flex-direction:column;gap:10px}
+        .mcop{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:14px;line-height:1.6;color:var(--fg2)}
+        .mcop:hover{border-color:var(--bdr2);background:var(--card-h);color:var(--fg)}
+        .mcop.sel{border-color:var(--ac);background:var(--acg);color:var(--fg)}
+        .mclt{width:30px;height:30px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;transition:all .2s}
+        .mcop.sel .mclt{background:var(--ac);color:#fff;border-color:var(--ac)}
+        .mctx{flex:1;padding-top:3px}
+
+        /* ORDERING */
+        .ord-item-label{font-size:13px;font-weight:600;color:var(--wn);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .ord-pool{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+        .ord-sentence{padding:12px 16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);cursor:grab;transition:all .2s;font-size:14px;line-height:1.5;color:var(--fg2);display:flex;align-items:center;gap:10px;user-select:none}
+        .ord-sentence:active{cursor:grabbing}
+        .ord-sentence:hover{border-color:var(--bdr2);background:var(--card-h)}
+        .ord-sentence.dragging{opacity:.4;border-style:dashed}
+        .ord-sentence.drag-over{border-color:var(--ac);background:var(--acg)}
+        .ord-sentence.placed{background:var(--acd);border-color:var(--ac);color:var(--fg);cursor:grab}
+        .ord-sentence.correct-pos{border-color:var(--ok)!important;background:var(--okg)!important}
+        .ord-sentence.incorrect-pos{border-color:var(--fl)!important;background:var(--flg)!important}
+        .ord-nums{width:24px;height:24px;background:rgba(255,255,255,.06);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+        .ord-arrows{display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+        .ord-arrows button{width:22px;height:18px;border:1px solid var(--bdr);background:var(--bg2);color:var(--fg3);border-radius:4px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
+        .ord-arrows button:hover{border-color:var(--ac);color:var(--ac);background:var(--acg)}
+        .ord-check{width:100%;padding:12px;background:linear-gradient(135deg,var(--wn),#d97706);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;margin-top:12px}
+        .ord-check:hover{box-shadow:0 4px 16px rgba(245,158,11,.3);transform:translateY(-1px)}
+        .ord-result{margin-top:12px;padding:10px 14px;border-radius:var(--rs);font-size:13px;display:none;font-weight:500;align-items:center;gap:8px}
+        .ord-result.vis{display:flex}
+        .ord-result.ok{background:var(--okg);color:var(--ok);border:1px solid rgba(34,197,94,.2)}
+        .ord-result.bad{background:var(--flg);color:var(--fl);border:1px solid rgba(244,63,94,.2)}
+
+        /* FILL-IN */
+        .fill-sentence{font-size:15px;line-height:2;color:var(--fg2);margin-bottom:8px}
+        .fill-input{display:inline-block;width:180px;padding:6px 12px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .2s;vertical-align:middle;margin:0 4px}
+        .fill-input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}
+        .fill-input.ok{border-color:var(--ok);background:var(--okg)}
+        .fill-input.bad{border-color:var(--fl);background:var(--flg)}
+        .fill-hint{font-size:12px;color:var(--fg3);margin-top:6px;font-style:italic}
+
+        /* NAV */
+        .navs{display:flex;gap:12px;margin-top:8px;margin-bottom:40px}
+        .nbtn{flex:1;padding:14px 20px;border:1px solid var(--bdr);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+        .nbtn.prev{background:var(--card);color:var(--fg2)}
+        .nbtn.prev:hover{background:var(--card-h);color:var(--fg);border-color:var(--bdr2)}
+        .nbtn.nxt{background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border-color:transparent}
+        .nbtn.nxt:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .nbtn.fin{background:linear-gradient(135deg,var(--wn),#d97706);color:#fff;border-color:transparent}
+        .nbtn.fin:hover{box-shadow:0 6px 24px rgba(245,158,11,.35);transform:translateY(-1px)}
+        .nbtn.cont{background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border-color:transparent}
+        .nbtn.cont:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .nbtn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+        /* RESULTS */
+        .rcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:40px;box-shadow:var(--sh2);text-align:center}
+        .sring{width:180px;height:180px;margin:0 auto 24px;position:relative}
+        .sring svg{width:100%;height:100%;transform:rotate(-90deg)}
+        .sring .rbg{fill:none;stroke:var(--bg2);stroke-width:10}
+        .sring .rfill{fill:none;stroke:var(--ac);stroke-width:10;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 1.5s cubic-bezier(.16,1,.3,1) .3s}
+        .sring .rfill.low{stroke:var(--dn)}.sring .rfill.mid{stroke:var(--wn)}
+        .sval{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .snum{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:900;line-height:1}
+        .slbl{font-size:13px;color:var(--fg2);margin-top:4px}
+        .rtitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+        .rsub{color:var(--fg2);font-size:14px;margin-bottom:28px;line-height:1.6}
+        .strow{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px}
+        .stbx{padding:16px 12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .stbx .stv{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700}
+        .stbx .stl{font-size:11px;color:var(--fg2);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+        .stbx.sok .stv{color:var(--ok)}.stbx.sbad .stv{color:var(--fl)}.stbx.semp .stv{color:var(--fg3)}.stbx.ssc .stv{color:var(--ac)}
+        .sdiv{font-size:13px;font-weight:600;color:var(--fg3);text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;padding-top:16px;border-top:1px solid var(--bdr)}
+        .revsec{margin-top:28px;text-align:left}
+        .revtit{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
+        .ritem{padding:16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);margin-bottom:10px;border-left:4px solid var(--bdr)}
+        .ritem.rok{border-left-color:var(--ok)}.ritem.rbad{border-left-color:var(--fl)}.ritem.remp{border-left-color:var(--fg3)}
+        .rihead{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+        .rinum{font-size:12px;font-weight:700;color:var(--fg3)}
+        .ribadge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+        .ribadge.bok{background:var(--okg);color:var(--ok)}
+        .ribadge.bbad{background:var(--flg);color:var(--fl)}
+        .ribadge.bemp{background:rgba(90,112,104,.2);color:var(--fg3)}
+        .ribadge.bpar{background:var(--wng);color:var(--wn)}
+        .ritxt{font-size:14px;line-height:1.6;color:var(--fg2);margin-bottom:8px}
+        .rians{font-size:13px;color:var(--fg2)}
+        .rians strong{color:var(--fg)}
+        .rians .cok{color:var(--ok);font-weight:600}.rians .ubad{color:var(--fl);font-weight:600}
+        .riexpl{margin-top:8px;padding:10px 12px;background:var(--card);border-radius:6px;font-size:13px;color:var(--fg2);line-height:1.5;border-left:2px solid var(--ac);padding-left:12px}
+        .riexpl strong{color:var(--ac);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+        .rijust{margin-top:8px;padding:10px 12px;background:var(--card);border-radius:6px;font-size:13px;color:var(--fg2);line-height:1.5}
+        .rijust strong{color:var(--wn);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+        .ract{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+        .rbtn{padding:14px 20px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;border:none}
+        .rbtn.eml{background:linear-gradient(135deg,var(--ac),#059669);color:#fff}
+        .rbtn.eml:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .rbtn.ret{background:var(--bg2);color:var(--fg2);border:1px solid var(--bdr)}
+        .rbtn.ret:hover{background:var(--card-h);color:var(--fg);border-color:var(--bdr2)}
+
+        /* TOAST */
+        .tc{position:fixed;top:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:10px}
+        .toast{padding:14px 20px;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rs);box-shadow:var(--sh2);display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg);animation:ti .4s cubic-bezier(.16,1,.3,1) forwards;max-width:360px}
+        .toast.to{animation:too .3s ease forwards}
+        .toast i{font-size:18px;flex-shrink:0}
+        .toast.success i{color:var(--ok)}.toast.warning i{color:var(--wn)}.toast.error i{color:var(--dn)}
+        @keyframes ti{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes too{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
+
+        /* MODAL */
+        .movl{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px}
+        .movl.active{display:flex}
+        .mbox{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px;max-width:420px;width:100%;box-shadow:var(--sh2);animation:si .3s ease forwards}
+        .mico{width:56px;height:56px;background:var(--wng);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:var(--wn)}
+        .mtit{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;text-align:center;margin-bottom:8px}
+        .mtxt{font-size:14px;color:var(--fg2);text-align:center;line-height:1.6;margin-bottom:24px}
+        .macts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .mbtn{padding:12px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none}
+        .mbtn.canc{background:var(--bg2);color:var(--fg2);border:1px solid var(--bdr)}
+        .mbtn.canc:hover{background:var(--card-h);color:var(--fg)}
+        .mbtn.conf{background:linear-gradient(135deg,var(--wn),#d97706);color:#fff}
+        .mbtn.conf:hover{box-shadow:0 4px 16px rgba(245,158,11,.3)}
+
+        @media(max-width:600px){
+            .lcard,.icard,.rcard,.tcard{padding:28px 20px}
+            .qcard{padding:24px 18px}
+            .vfops{grid-template-columns:1fr}
+            .strow{grid-template-columns:1fr 1fr;gap:8px}
+            .sprev,.ssum{grid-template-columns:1fr}
+            .ract{grid-template-columns:1fr}
+            .snum{font-size:40px}
+            .sring{width:150px;height:150px}
+            .fill-input{width:130px;font-size:13px}
+        }
+        @media(prefers-reduced-motion:reduce){.bg-blob,.particle{animation:none!important}.screen{animation:none!important}*{transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+<div class="bg-layer"><div class="bg-blob"></div><div class="bg-blob"></div><div class="bg-blob"></div></div>
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="tc" id="toastC"></div>
+<div class="movl" id="modal"><div class="mbox"><div class="mico"><i class="fas fa-exclamation-triangle"></i></div><div class="mtit">Entregar evaluacion</div><div class="mtxt" id="modalTxt"></div><div class="macts"><button class="mbtn canc" onclick="closeModal()">Revisar</button><button class="mbtn conf" id="modalConf">Entregar</button></div></div></div>
+<div class="app">
+<!-- LOGIN --><div class="screen active" id="sLogin"><div class="lcard"><div class="llogo"><i class="fas fa-project-diagram"></i></div><h1 class="ltitle">Evaluacion Unidad 3 y 4</h1><p class="lsub">Gestion de Proyectos — Alcance, Localizacion, Requerimientos y Planificacion Productiva</p><button class="gbtn" onclick="gLogin()"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Continuar con Google</button><div class="ldiv">o ingresa manualmente</div><div class="fgrp"><label for="mN">Nombre completo</label><input type="text" id="mN" placeholder="Ej: Maria Garcia Lopez"></div><div class="fgrp"><label for="mE">Correo institucional</label><input type="email" id="mE" placeholder="Ej: maria@universidad.edu"></div><button class="lsubm" onclick="mLogin()"><i class="fas fa-sign-in-alt"></i> Iniciar evaluacion</button><div class="lerr" id="lErr"></div></div></div>
+<!-- INSTR --><div class="screen" id="sInstr"><div class="icard"><div class="ihdr"><div class="iico"><i class="fas fa-clipboard-list"></i></div><div><div class="ititle">Instrucciones de la evaluacion</div><div class="isub">4 secciones — 54 puntos totales</div></div></div><div class="ubadge"><div class="uav" id="uAv">M</div><div class="uinfo"><div class="uname" id="uNm">Maria Garcia</div><div class="uemail" id="uEm">maria@universidad.edu</div></div></div><div class="sprev"><div class="sbox"><div class="sn">Seccion 1</div><div class="st">V/F + Justificacion</div><div class="sd">10 preguntas — Gestion del Alcance (10 pts)</div></div><div class="sbox"><div class="sn">Seccion 2</div><div class="st">Seleccion unica</div><div class="sd">20 preguntas — Localizacion (20 pts)</div></div><div class="sbox"><div class="sn">Seccion 3</div><div class="st">Ordenamiento</div><div class="sd">2 items de 10 oraciones — Requerimientos (4 pts)</div></div><div class="sbox"><div class="sn">Seccion 4</div><div class="st">Completamiento</div><div class="sd">2 items de 10 preguntas — Planificacion y Logistica (20 pts)</div></div></div><ul class="ilist"><li><span class="ii"><i class="fas fa-clock"></i></span><span>Tiempo total: <strong style="color:var(--fg)">72 minutos</strong> distribuidos en las 4 secciones.</span></li><li><span class="ii"><i class="fas fa-pen-fancy"></i></span><span>S1: 1 pt c/u (0.5 respuesta + 0.5 justificacion). S2 y S4: 1 pt c/u. S3: 0.2 pt por posicion correcta.</span></li><li><span class="ii"><i class="fas fa-arrows-alt-v"></i></span><span>S3: Arrastra o usa flechas para ordenar. S4: Escribe la respuesta exacta en cada espacio en blanco.</span></li><li><span class="ii"><i class="fas fa-envelope"></i></span><span>Al finalizar, resultados automaticos con revision detallada y envio por correo.</span></li></ul><button class="strtbtn" onclick="startExam()"><i class="fas fa-play"></i> Comenzar evaluacion</button></div></div>
+<!-- TRANS --><div class="screen" id="sTrans"><div class="tcard"><div class="tico"><i class="fas fa-check-double"></i></div><div class="ttitle" id="transTitle">Seccion completada</div><div class="tsub" id="transSub"></div><div class="ssum" id="transSum"></div><button class="strtbtn" id="transBtn" onclick="nextSection()"><i class="fas fa-arrow-right"></i> Continuar</button></div></div>
+<!-- EXAM --><div class="screen" id="sExam"><div class="ehdr"><div class="etop"><span class="eslbl" id="eLbl">Seccion 1</span><span class="etimer"><i class="fas fa-hourglass-half"></i> <span id="eTim">25:00</span></span></div><div class="pbt"><div class="pbf" id="eProg"></div></div></div><div class="qmap" id="qMap"></div><div id="qCont"></div><div class="navs"><button class="nbtn prev" id="bPrev" onclick="navQ(-1)" disabled><i class="fas fa-arrow-left"></i> Anterior</button><button class="nbtn nxt" id="bNext" onclick="navQ(1)">Siguiente <i class="fas fa-arrow-right"></i></button></div></div>
+<!-- RESULTS --><div class="screen" id="sRes"><div class="rcard"><div class="sring"><svg viewBox="0 0 160 160"><circle class="rbg" cx="80" cy="80" r="70"/><circle class="rfill" id="rRing" cx="80" cy="80" r="70"/></svg><div class="sval"><div class="snum" id="rNum">0</div><div class="slbl" id="rLbl">de 54 puntos</div></div></div><h2 class="rtitle" id="rTit">Resultado</h2><p class="rsub" id="rSub"></p><div id="rStats"></div><div class="revsec"><div class="revtit">Revision detallada</div><div id="rRev"></div></div><div class="ract"><button class="rbtn eml" onclick="sendEmail()"><i class="fas fa-envelope"></i> Enviar por correo</button><button class="rbtn ret" onclick="retry()"><i class="fas fa-redo"></i> Reintentar</button></div></div></div>
+</div>
+<script>
+/* ==================================================================
+   DATOS COMPLETOS DE LA EVALUACIÓN
+   ================================================================== */
+
+/* --- SECCIÓN 1: V/F — Gestión del Alcance (10 preguntas) --- */
+const S1=[
+{id:1,text:"El alcance del proyecto incluye todos los trabajos necesarios para entregar un producto con las funciones especificadas, y excluye trabajo adicional no necesario.",answer:true,expl:"Según el PMBOK, el alcance es la totalidad del trabajo necesario para completar el proyecto, incluyendo solo lo requerido y excluyendo lo que no pertenece."},
+{id:2,text:"La Gestión del Alcance se limita únicamente a asegurar que el proyecto incluya todo el trabajo requerido, sin considerar la prevención de trabajo adicional.",answer:false,expl:"La Gestión del Alcance también asegura que NO se incluya trabajo adicional (scope creep). Ambos aspectos son fundamentales."},
+{id:3,text:"La EDT es una descomposición jerárquica orientada al trabajo que abarca el alcance total del equipo del proyecto, organizando las responsabilidades de cada miembro.",answer:false,expl:"La EDT abarca el alcance del PROYECTO, no del equipo. Organiza entregables y trabajo en componentes manejables, no responsabilidades individuales."},
+{id:4,text:"El proceso 'Planificar la Gestión del Alcance' tiene como resultado principal la creación del enunciado del alcance del proyecto.",answer:false,expl:"'Planificar la Gestión del Alcance' produce el Plan de Gestión del Alcance. El enunciado del alcance es resultado de 'Definir el Alcance'."},
+{id:5,text:"La línea base del alcance está compuesta por el enunciado del alcance, la EDT y el diccionario de la EDT asociado.",answer:true,expl:"La línea base del alcance es la versión aprobada del enunciado del alcance, la EDT y su diccionario, usada como referencia para comparar resultados."},
+{id:6,text:"El diccionario de la EDT proporciona una descripción detallada del trabajo, las actividades, los entregables y la información de programación para cada componente.",answer:true,expl:"El diccionario documenta descripciones detalladas incluyendo entregables, actividades, cronogramas, recursos, costos y criterios de aceptación."},
+{id:7,text:"La validación del alcance se realiza únicamente al final del proyecto como cierre formal cuando se entrega el producto final.",answer:false,expl:"La validación del alcance se realiza de forma iterativa cada vez que se completa un entregable o fase, no solo al final."},
+{id:8,text:"El alcance del producto se refiere a las funciones y características del producto, mientras que el alcance del proyecto abarca el trabajo necesario para crearlo.",answer:true,expl:"El PMBOK distingue: alcance del producto = funciones/características; alcance del proyecto = trabajo necesario para entregar ese producto."},
+{id:9,text:"El proceso 'Controlar el Alcance' se utiliza exclusivamente para monitorear el estado del alcance del producto.",answer:false,expl:"'Controlar el Alcance' monitorea el alcance del PROYECTO y del PRODUCTO, y gestiona cambios a la línea base. No se limita al producto."},
+{id:10,text:"Identificar las exclusiones en el enunciado del alcance es innecesario ya que define lo que se incluye.",answer:false,expl:"Las exclusiones son fundamentales para prevenir malentendidos, gestionar expectativas y evitar scope creep estableciendo fronteras claras."}
+];
+
+/* --- SECCIÓN 2: Selección única — Localización (20 preguntas) --- */
+const S2=[
+{id:11,text:"¿Cuál es el objetivo principal del estudio de localización?",opts:["Determinar el presupuesto total","Identificar el lugar geográfico óptimo para el proyecto","Definir el tamaño de la planta","Establecer el cronograma"],c:1,expl:"El estudio de localización busca determinar la ubicación geográfica más conveniente considerando múltiples factores de viabilidad y rentabilidad."},
+{id:12,text:"¿Qué tipo de factores incluye costos de mano de obra, terrenos, transporte y energía?",opts:["Factores sociales","Factores políticos","Factores económicos o cuantificables","Factores ambientales"],c:2,expl:"Los factores económicos son aquellos expresables en términos monetarios: mano de obra, terrenos, energía, transporte, materias primas."},
+{id:13,text:"En el método de factores ponderados, ¿qué representa el peso asignado a cada factor?",opts:["El costo monetario","La importancia relativa del factor","El número de ubicaciones que cumplen","La calificación máxima"],c:1,expl:"El peso refleja la importancia relativa de cada factor frente a los demás, permitiendo priorizar los más críticos."},
+{id:14,text:"¿Cuál es la diferencia entre macrolocalización y microlocalización?",opts:["Macro analiza costos, micro analiza leyes","Macro determina la región general, micro el sitio específico","Macro es para servicios, micro para industria","Son sinónimos"],c:1,expl:"Macrolocalización define la región/zona amplia; microlocalización identifica el sitio exacto, manzana o lote dentro de esa región."},
+{id:15,text:"¿Qué método utiliza coordenadas geográficas y volúmenes para minimizar costos de transporte?",opts:["Factores ponderados","Punto de equilibrio","Centro de gravedad","Modelo de asignación"],c:2,expl:"El método del centro de gravedad calcula un punto óptimo usando coordenadas ponderadas por volúmenes de flujo."},
+{id:16,text:"En el análisis de punto de equilibrio por localización, ¿qué se compara?",opts:["Calidad de vida","Costos fijos y variables para diferentes niveles de producción","Regulaciones ambientales","Disponibilidad de mano de obra"],c:1,expl:"Compara costos fijos y variables de cada ubicación para diferentes volúmenes, identificando rangos donde cada alternativa es más económica."},
+{id:17,text:"¿Cuál NO es un factor típico de localización industrial?",opts:["Disponibilidad de materias primas","Cercanía a mercados","Diseño organizacional de la empresa","Infraestructura de transporte"],c:2,expl:"El diseño organizacional es una decisión interna que no depende de la ubicación geográfica."},
+{id:18,text:"En localización de servicios, ¿cuál es el factor predominante?",opts:["Costo del terreno","Cercanía y accesibilidad para los usuarios","Disponibilidad de materias primas","Cercanía a puertos"],c:1,expl:"En servicios, el factor predominante es la cercanía al usuario final, ya que el cliente acude al servicio."},
+{id:19,text:"¿Qué son los costos hundidos en localización?",opts:["Costos que se recuperan al vender el terreno","Costos ya incurridos no recuperables al cambiar de ubicación","Costos variables que aumentan con la producción","Costos de transporte"],c:1,expl:"Los costos hundidos son inversiones ya realizadas que no pueden recuperarse independientemente de la decisión futura."},
+{id:20,text:"¿Qué ventaja representa la aglomeración industrial (clusters)?",opts:["Reduce la competencia","Permite compartir infraestructura y servicios especializados","Elimina necesidad de estudios","Garantiza menores costos de mano de obra"],c:1,expl:"Los clusters permiten compartir infraestructura, servicios, mano de obra especializada y redes de proveedores."},
+{id:21,text:"¿Qué técnica matemática usa el método de transporte para minimizar costos?",opts:["Regresión lineal","Programación lineal","Análisis de componentes principales","Simulación de Montecarlo"],c:1,expl:"El método de transporte usa programación lineal para la asignación óptima que minimiza costos totales de distribución."},
+{id:22,text:"¿Qué rol juegan los incentivos fiscales y zonas francas?",opts:["No tienen impacto","Son factores gubernamentales que reducen costos operativos","Determinan la viabilidad legal exclusivamente","Solo aplican a tecnología de punta"],c:1,expl:"Los incentivos fiscales pueden reducir significativamente costos operativos, haciendo atractiva una ubicación."},
+{id:23,text:"¿Cuál es la primera etapa del estudio de localización?",opts:["Evaluar alternativas cuantitativamente","Definir requisitos y factores de localización","Seleccionar el sitio exacto","Análisis de punto de equilibrio"],c:1,expl:"Primero se definen los requisitos del proyecto y factores relevantes, base para preseleccionar y evaluar ubicaciones."},
+{id:24,text:"Una industria orientada al mercado se localiza cerca de:",opts:["Fuentes de materias primas","Centros de consumo o demanda","Zonas rurales de bajo costo","Puertos marítimos exclusivamente"],c:1,expl:"La industria orientada al mercado se ubica cerca de los centros de consumo porque el costo de transportar el producto terminado es mayor."},
+{id:25,text:"Un índice de localización menor a 1 indica:",opts:["La región es ideal","Concentración del sector menor a la nacional, potencial de desarrollo","La región está saturada","No puede ser menor a 1"],c:1,expl:"Índice < 1 indica subrepresentación del sector en la región, lo que puede señalar potencial de desarrollo."},
+{id:26,text:"¿Qué factor ganó relevancia por los acuerdos comerciales internacionales?",opts:["El clima","Cercanía a puertos y fronteras para comercio exterior","El color de edificaciones","Número de universidades"],c:1,expl:"La globalización aumentó la importancia de cercanía a puertos, fronteras y corredores logísticos internacionales."},
+{id:27,text:"¿Qué se entiende por 'factores cualitativos'?",opts:["Medibles en dinero","No expresables directamente en términos monetarios","De calidad del producto","Solo importantes en microlocalización"],c:1,expl:"Son factores como calidad de vida, clima, actitud comunitaria, estabilidad política, que no se expresan fácilmente en dinero."},
+{id:28,text:"¿Cuál es la limitación principal del método del centro de gravedad?",opts:["Solo funciona para un proveedor","Solo considera costo de transporte","Requiere cálculo diferencial avanzado","Solo aplica a servicios"],c:1,expl:"Su limitación es que solo minimiza costos de transporte sin considerar otros factores importantes."},
+{id:29,text:"El 'nearshoring' se refiere a:",opts:["Localizar en el país de origen","Localizar en países cercanos al mercado objetivo","Cerrar y subcontratar todo","Localizar donde impuestos son más bajos"],c:1,expl:"Nearshoring es localizar operaciones en países cercanos geográficamente al mercado objetivo."},
+{id:30,text:"¿Por qué es importante la Evaluación de Impacto Ambiental (EIA)?",opts:["Es trámite burocrático sin consecuencias","Determina si el proyecto puede desarrollarse legalmente y mitigar daños","Solo mejora imagen pública","Reemplaza todos los demás factores"],c:1,expl:"La EIA es fundamental porque puede determinar la viabilidad legal de la ubicación e identificar impactos a mitigar."}
+];
+
+/* --- SECCIÓN 3: Ordenamiento — Requerimientos Tecnológicos (2 items) --- */
+const S3=[
+{id:'A',title:'Proceso de Determinación de Requerimientos Tecnológicos',
+sentences:[
+"El primer paso es identificar las necesidades tecnológicas del proyecto comparando el estado actual con el estado deseado.",
+"Se realiza un análisis de brechas (Gap Analysis) calculando Brecha_i = ED_i - EA_i para cada requerimiento identificado.",
+"Si la brecha resultante es mayor a cero, existe un déficit tecnológico que requiere inversión en equipamiento o infraestructura.",
+"Se elabora la especificación técnica incluyendo parámetros de desempeño, condiciones de operación y normativas aplicables.",
+"Se cuantifica el Costo Total de Propiedad (TCO) considerando adquisición, instalación, operación, mantenimiento y desecho.",
+"Se calculan los indicadores de confiabilidad: tasa de fallos (lambda), MTBF, MTTR y disponibilidad del equipo candidato.",
+"Se evalúa la inversión con ROI, NPV y análisis costo-beneficio para justificar económicamente el requerimiento.",
+"Se construye una matriz de evaluación ponderada comparando alternativas tecnológicas según criterios definidos.",
+"Se verifica el cumplimiento de normativas como IEC 61511 para niveles de integridad de seguridad SIL.",
+"Se integran criterios de redundancia y respaldo en el diseño final antes de la adquisición y puesta en marcha."
+]},
+{id:'B',title:'Dimensionamiento de Servicios Industriales',
+sentences:[
+"Se identifican todos los equipos y sistemas que requieren servicios industriales: eléctrico, agua, aire comprimido y vapor.",
+"Se calcula la potencia instalada total sumando las potencias nominales de todos los equipos eléctricos del proyecto.",
+"Se determina la demanda máxima multiplicando la potencia instalada por el factor de demanda, típicamente entre 0.6 y 0.8.",
+"Se dimensiona el transformador con reserva dividiendo la demanda entre 0.8 y multiplicando por un factor de 1.25.",
+"Se calcula el caudal de agua contra incendios según NFPA 15 como el producto del área por la densidad de aplicación.",
+"Se determina el volumen de reserva de agua como Q por T_descarga multiplicado por 1.1 como margen de seguridad.",
+"Se calcula el caudal de aire libre (FAD) requerido sumando consumos de cada equipo dividido por la eficiencia de red.",
+"Se determina la potencia del compresor usando la fórmula isotérmica con presiones de succión y descarga.",
+"Se dimensionan los sistemas HVAC considerando ventilación, presurización de áreas clasificadas y aire acondicionado.",
+"Se integran todos los servicios en el plan de infraestructura verificando capacidad y redundancia del sistema completo."
+]}
+];
+
+/* --- SECCIÓN 4: Completamiento — Planificación Productiva y Logística (2 items × 10) --- */
+const S4=[
+{id:'A',title:'Planificación de la Producción y Capacidad Productiva',
+questions:[
+{parts:["La planificación "," tiene un horizonte de 1 a 5 años y define la capacidad instalada y las inversiones en planta."],answer:"estratégica",alts:["estrategica"],expl:"La planificación estratégica es de largo plazo (1-5 años) y define capacidad instalada, inversiones y nuevos productos."},
+{parts:["El Programa Maestro de Producción (MPS) despliega el plan agregado en productos individuales con "," y fechas específicas."],answer:"cantidades",alts:["cantidad"],expl:"El MPS convierte el plan agregado en cantidades específicas de productos individuales con fechas definidas."},
+{parts:["En la lógica MRP, el requerimiento neto se calcula como RN_t = max{0, GB_t - IH_{t-1} - ","}."],answer:"RR_t",alts:["rr_t","recepciones programadas","recepcion"],expl:"RR_t son las recepciones programadas del período t, que se restan del requerimiento bruto junto con el inventario inicial."},
+{parts:["La capacidad de diseño se calcula como C_diseno = n × T × "," , donde n es el número de equipos y T el tiempo disponible."],answer:"r",alts:["tasa","tasa de produccion","produccion"],expl:"r es la tasa de producción por equipo (unidades/hora), el tercer factor de la fórmula de capacidad de diseño."},
+{parts:["La capacidad efectiva es igual a la capacidad de diseño multiplicada por la utilización y el "," (eficiencia del proceso)."],answer:"rendimiento",alts:["eficiencia","eta rendimiento","η_rendimiento"],expl:"Los dos factores que reducen la capacidad de diseño a capacidad efectiva son la utilización y el rendimiento."},
+{parts:["Operar sistemáticamente por encima del ","% de capacidad efectiva incrementa la probabilidad de fallos y errores humanos."],answer:"85",alts:["85%"],expl:"El umbral de riesgo es 85%. Por encima de este valor, hay poca flexibilidad, estrés en equipos y mayor probabilidad de incidentes."},
+{parts:["El OEE se calcula como el producto de tres factores: OEE = A × P × ","."],answer:"Q",alts:["calidad","q","factor de calidad"],expl:"OEE = Disponibilidad × Rendimiento × Calidad. La Q representa el factor de calidad."},
+{parts:["La disponibilidad en el OEE se calcula como A = (T_planificado - T_paradas) / ","."],answer:"T_planificado",alts:["t_planificado","tiempo planificado","tp"],expl:"La disponibilidad es el tiempo de producción dividido entre el tiempo planificado de operación."},
+{parts:["En el balanceo de líneas, el tiempo de ciclo objetivo se calcula como C = T_disponible / ","."],answer:"D_requerida",alts:["d_requerida","demanda requerida","demanda","d"],expl:"El tiempo de ciclo objetivo es el tiempo disponible dividido por la demanda requerida en el mismo período."},
+{parts:["La holgura de balanceo se calcula como H = N_real × C_max - la "," de todos los tiempos de tarea."],answer:"suma",alts:["sumatoria","total","σ","sum"],expl:"La holgura es la diferencia entre el tiempo total asignado y la suma de los tiempos de todas las tareas."}
+]},
+{id:'B',title:'Logística y Gestión de Inventarios',
+questions:[
+{parts:["El EOQ se calcula como Q* = raiz(2 × D × S / ","), donde D es la demanda anual y S el costo por pedido."],answer:"H",alts:["h","costo de mantenimiento","ch"],expl:"H es el costo de mantener una unidad por año ($/unidad·año), el denominador de la fórmula del EOQ."},
+{parts:["Si se conoce el costo unitario C y la tasa de mantenimiento h, entonces H = h × ","."],answer:"C",alts:["c","costo unitario","costo"],expl:"H se calcula multiplicando la tasa de mantenimiento por el costo unitario del artículo."},
+{parts:["El número de pedidos por año se calcula como N = "," / Q*."],answer:"D",alts:["d","demanda","demanda anual"],expl:"Se divide la demanda anual D entre la cantidad económica de pedido Q*."},
+{parts:["El tiempo entre pedidos (TBO) se calcula como TBO = (Q* / D) × "," días."],answer:"365",alts:["365 dias","365d","trescientos sesenta y cinco"],expl:"El TBO convierte la fracción Q*/D (proporción del año) a días multiplicando por 365."},
+{parts:["El punto de reorden determinístico se calcula como ROP = d × "," , donde d es la demanda diaria."],answer:"L",alts:["l","lead time","tiempo de entrega","lt"],expl:"L es el lead time (tiempo de reposición) en días. ROP = demanda diaria × lead time."},
+{parts:["El punto de reorden con stock de seguridad es ROP = d̄ × L + ","."],answer:"SS",alts:["ss","stock de seguridad","stock seguridad"],expl:"SS es el stock de seguridad, que se suma al producto de la demanda promedio por el lead time."},
+{parts:["El stock de seguridad se calcula como SS = Z × σ_d × raiz("," ), donde L es el lead time."],answer:"L",alts:["l","lead time","lt"],expl:"La fórmula del stock de seguridad multiplica Z por la desviación estándar de la demanda por la raíz cuadrada del lead time."},
+{parts:["Para materiales de seguridad como EPP, se requiere un nivel de servicio del ","% o superior, con Z = 2.33."],answer:"99",alts:["99%","noventa y nueve"],expl:"Los EPP y materiales de seguridad requieren nivel de servicio de 99% o superior según normativa de seguridad industrial."},
+{parts:["Cuando la demanda y el lead time son variables, SS = Z × raiz(L × σ_d² + d̄² × "," )."],answer:"σ_L²",alts:["sigma_l²","varianza del lead time","varianza lt","sigma_l al cuadrado"],expl:"Se agrega el término de la varianza del lead time (σ_L²) ponderado por la demanda promedio al cuadrado."},
+{parts:["En el EOQ con descuentos por volumen, se evalúa el costo total CT para cada rango de "," y se selecciona el de menor costo."],answer:"precio",alts:["precios","c_j","costo","costos","precio c_j"],expl:"Se evalúa el costo total para cada rango de precio (C_j) y se elige el rango que minimiza el costo total."}
+]}
+];
+
+/* ==================================================================
+   ESTADO GLOBAL
+   ================================================================== */
+let CU=null, curSec=1, curQ=0, answers=[], timerInt=null, timeRem=0;
+let secScores={s1:null,s2:null,s3:null,s4:null};
+const SEC_TIME=[0,25*60,20*60,12*60,15*60]; // minutos por sección
+const SEC_TOTAL=[0,10,20,4,20]; // puntos por sección
+const SEC_START=[0,0,10,30,32]; // índice inicial en allQ
+const SEC_END=[0,10,30,32,52]; // índice final en allQ
+
+function initAnswers(){
+    answers=[];
+    S1.forEach(()=>answers.push({type:'vf',sel:null,just:''}));
+    S2.forEach(()=>answers.push({type:'mc',sel:null}));
+    // S3: 2 items, cada uno con array de 10 posiciones
+    S3.forEach((item,i)=>{
+        let order=[];
+        for(let j=0;j<item.sentences.length;j++) order.push(j);
+        // Mezclar
+        for(let j=order.length-1;j>0;j--){let k=Math.floor(Math.random()*(j+1));[order[j],order[k]]=[order[k],order[j]];}
+        answers.push({type:'ord',order:order,checked:false,score:0});
+    });
+    // S4: 2 items × 10 preguntas
+    S4.forEach(item=>{
+        let qs=[];
+        item.questions.forEach(()=>qs.push(''));
+        answers.push({type:'fill',responses:qs});
+    });
+}
+
+/* ==================================================================
+   PARTÍCULAS Y UTILIDADES
+   ================================================================== */
+(function(){const c=document.getElementById('particles');for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';const s=(2+Math.random()*3)+'px';p.style.width=s;p.style.height=s;p.style.animationDuration=(12+Math.random()*18)+'s';p.style.animationDelay=(Math.random()*15)+'s';c.appendChild(p);}})();
+
+function toast(m,t='success'){const c=document.getElementById('toastC');const e=document.createElement('div');e.className=`toast ${t}`;const ic={success:'fa-check-circle',warning:'fa-exclamation-circle',error:'fa-times-circle'};e.innerHTML=`<i class="fas ${ic[t]}"></i><span>${m}</span>`;c.appendChild(e);setTimeout(()=>{e.classList.add('to');setTimeout(()=>e.remove(),300);},3500);}
+function showModal(t,fn){document.getElementById('modalTxt').textContent=t;document.getElementById('modal').classList.add('active');document.getElementById('modalConf').onclick=fn;}
+function closeModal(){document.getElementById('modal').classList.remove('active');}
+function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[_\-\s]+/g,' ').trim();}
+
+/* ==================================================================
+   LOGIN
+   ================================================================== */
+function gLogin(){toast('Conectando con Google...','success');setTimeout(()=>{const n=['Carlos Andres','Maria Fernanda','Juan Pablo','Ana Sofia','Diego Alejandro','Valentina Rosa','Sebastian Nicolas','Camila Isabel'];const l=['Rodriguez Vega','Lopez Martinez','Hernandez Garcia','Torres Sanchez','Ramirez Diaz','Flores Morales','Gomez Herrera','Jimenez Castro'];const i=Math.floor(Math.random()*n.length);CU={name:n[i]+' '+l[i],email:n[i].toLowerCase().replace(/ /g,'.')+'@gmail.com'};setupInstr();showScr('sInstr');toast(`Bienvenido/a, ${n[i]}`,'success');},1200);}
+function mLogin(){const n=document.getElementById('mN').value.trim(),e=document.getElementById('mE').value.trim(),er=document.getElementById('lErr');if(!n||n.length<3){er.textContent='Ingresa tu nombre completo.';er.style.display='block';return;}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){er.textContent='Ingresa un correo válido.';er.style.display='block';return;}er.style.display='none';CU={name:n,email:e};setupInstr();showScr('sInstr');toast(`Bienvenido/a, ${n.split(' ')[0]}`,'success');}
+function setupInstr(){document.getElementById('uNm').textContent=CU.name;document.getElementById('uEm').textContent=CU.email;document.getElementById('uAv').textContent=CU.name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();}
+document.getElementById('mE').addEventListener('keydown',e=>{if(e.key==='Enter')mLogin();});
+document.getElementById('mN').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('mE').focus();});
+
+/* ==================================================================
+   INICIAR EXAMEN Y SECCIONES
+   ================================================================== */
+function startExam(){initAnswers();curSec=1;curQ=0;secScores={s1:null,s2:null,s3:null,s4:null};timeRem=SEC_TIME[1];buildMap();buildQs();showQ(0);startTimer();document.getElementById('eLbl').textContent='Seccion 1 — Verdadero / Falso';showScr('sExam');}
+
+function finishSection(){clearInterval(timerInt);document.querySelector('.etimer').style.color='';const si=curSec-1;const scores=['s1','s2','s3','s4'];secScores[scores[si]]=calcSecScore(curSec);showTransition(curSec);}
+
+function showTransition(sec){
+    const t=document.getElementById('transTitle'),s=document.getElementById('transSub'),sm=document.getElementById('transSum'),b=document.getElementById('transBtn');
+    if(sec===1){t.textContent='Seccion 1 completada';s.textContent='Has finalizado Verdadero / Falso. Resumen:';const r=secScores.s1;sm.innerHTML=`<div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Incorrectas</div></div><div class="sst semp"><div class="sv">${r.empty}</div><div class="sl">Sin responder</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Seccion 2 — Seleccion unica';}
+    else if(sec===2){t.textContent='Seccion 2 completada';s.textContent='Has finalizado Seleccion unica. Resumen:';const r=secScores.s2;sm.innerHTML=`<div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Incorrectas</div></div><div class="sst semp"><div class="sv">${r.empty}</div><div class="sl">Sin responder</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Seccion 3 — Ordenamiento';}
+    else if(sec===3){t.textContent='Seccion 3 completada';s.textContent='Has finalizado Ordenamiento. Resumen:';const r=secScores.s3;sm.innerHTML=`<div class="sst ssc"><div class="sv">${r.score}</div><div class="sl">Puntos (de 4)</div></div><div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Posiciones correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Posiciones incorrectas</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Seccion 4 — Completamiento';}
+    else if(sec===4){submitExam();return;}
+    showScr('sTrans');
+}
+
+function nextSection(){
+    curSec++;timeRem=SEC_TIME[curSec];
+    const labels=['','Seccion 1 — Verdadero / Falso','Seccion 2 — Seleccion unica','Seccion 3 — Ordenamiento','Seccion 4 — Completamiento'];
+    document.getElementById('eLbl').textContent=labels[curSec];
+    curQ=SEC_START[curSec];buildMap();buildQs();showQ(curQ);startTimer();showScr('sExam');
+}
+
+/* ==================================================================
+   TIMER
+   ================================================================== */
+function startTimer(){updateTimerD();timerInt=setInterval(()=>{timeRem--;updateTimerD();if(timeRem<=0){clearInterval(timerInt);if(curSec<4){toast('Tiempo agotado.','warning');finishSection();}else{toast('Tiempo agotado. Entregando...','warning');setTimeout(submitExam,1000);}}const te=document.querySelector('.etimer');if(timeRem<=120)te.style.color='var(--dn)';else if(timeRem<=300)te.style.color='var(--wn)';},1000);}
+function updateTimerD(){const m=Math.floor(timeRem/60),s=timeRem%60;document.getElementById('eTim').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+
+/* ==================================================================
+   MAPA DE PREGUNTAS
+   ================================================================== */
+function buildMap(){const m=document.getElementById('qMap');m.innerHTML='';const s=SEC_START[curSec],e=SEC_END[curSec];if(curSec===3||curSec===4){S3.forEach((item,i)=>{if(curSec===3){const d=document.createElement('div');d.className='qmd';d.textContent=String.fromCharCode(65+i);d.style.width='60px';d.setAttribute('data-idx',s+i);d.onclick=()=>showQ(s+i);m.appendChild(d);}else{S4.forEach((it,j)=>{const d=document.createElement('div');d.className='qmd';d.textContent=String.fromCharCode(65+j);d.style.width='60px';d.setAttribute('data-idx',s+j);d.onclick=()=>showQ(s+j);m.appendChild(d);});}});return;}for(let i=s;i<e;i++){const d=document.createElement('div');d.className='qmd';d.textContent=i+1;d.setAttribute('data-idx',i);d.onclick=()=>showQ(i);m.appendChild(d);}}
+function updateMap(){document.querySelectorAll('.qmd').forEach(d=>{const i=parseInt(d.getAttribute('data-idx'));d.className='qmd';if(i===curQ)d.classList.add('cur');else if(isComplete(i))d.classList.add('don');else if(isPartial(i))d.classList.add('par');});}
+function isComplete(i){const a=answers[i];if(!a)return false;if(a.type==='vf')return a.sel!==null&&a.just.trim().length>10;if(a.type==='mc')return a.sel!==null;if(a.type==='ord')return a.checked;if(a.type==='fill')return a.responses.every(r=>r.trim().length>0);return false;}
+function isPartial(i){const a=answers[i];if(!a)return false;if(a.type==='vf')return a.sel!==null||a.just.trim().length>0;return false;}
+function updateProg(){const s=SEC_START[curSec],e=SEC_END[curSec];let c=0;for(let i=s;i<e;i++)if(isComplete(i))c++;document.getElementById('eProg').style.width=(c/(e-s)*100)+'%';}
+
+/* ==================================================================
+   CONSTRUIR PREGUNTAS
+   ================================================================== */
+function buildQs(){const c=document.getElementById('qCont');c.innerHTML='';
+    // S1: V/F
+    S1.forEach((q,i)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+i;card.style.display='none';card.innerHTML=`<div class="qnum">${i+1}</div><div class="qtxt">${q.text}</div><div class="vfops"><div class="vfop" data-q="${i}" data-v="true" onclick="selVF(${i},true)"><i class="fas fa-check"></i> Verdadero</div><div class="vfop" data-q="${i}" data-v="false" onclick="selVF(${i},false)"><i class="fas fa-times"></i> Falso</div></div><div class="jarea" id="ja-${i}"><div class="jlbl"><i class="fas fa-pen-nib"></i> Justifica tu respuesta</div><textarea class="jtxt" id="jt-${i}" placeholder="Explica por qué..." oninput="updJust(${i})"></textarea></div><div class="qst" id="qs-${i}"><i class="fas fa-info-circle"></i><span></span></div>`;c.appendChild(card);});
+    // S2: MC
+    S2.forEach((q,i)=>{const gi=i+10;const card=document.createElement('div');card.className='qcard';card.id='q-'+gi;card.style.display='none';let oh='<div class="mcopts">';const lt=['A','B','C','D'];q.opts.forEach((o,oi)=>{oh+=`<div class="mcop" data-q="${gi}" data-o="${oi}" onclick="selMC(${gi},${oi})"><span class="mclt">${lt[oi]}</span><span class="mctx">${o}</span></div>`;});oh+='</div>';card.innerHTML=`<div class="qnum">${gi+1}</div><div class="qtxt">${q.text}</div>${oh}`;c.appendChild(card);});
+    // S3: Ordenamiento
+    const s3i=SEC_START[3];S3.forEach((item,ii)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+(s3i+ii);card.style.display='none';let sh=`<div class="qnum">${String.fromCharCode(65+ii)}</div><div class="ord-item-label"><i class="fas fa-sort-amount-down"></i> ${item.title}</div><div class="ord-pool" id="ordpool-${ii}">`;const order=answers[s3i+ii].order;order.forEach((si,pi)=>{sh+=`<div class="ord-sentence" draggable="true" data-ii="${ii}" data-pi="${pi}" id="ords-${ii}-${pi}"><span class="ord-nums">${pi+1}</span><span>${item.sentences[si]}</span><div class="ord-arrows"><button onclick="moveOrd(${ii},${pi},-1)" title="Subir"><i class="fas fa-chevron-up"></i></button><button onclick="moveOrd(${ii},${pi},1)" title="Bajar"><i class="fas fa-chevron-down"></i></button></div></div>`;});sh+=`</div><div class="ord-result" id="ordres-${ii}"></div><button class="ord-check" id="ordchk-${ii}" onclick="checkOrd(${ii})"><i class="fas fa-check"></i> Verificar orden</button>`;card.innerHTML=sh;c.appendChild(card);});
+    // S4: Completamiento
+    const s4i=SEC_START[4];S4.forEach((item,ii)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+(s4i+ii);card.style.display='none';let sh=`<div class="qnum">${String.fromCharCode(65+ii)}</div><div class="ord-item-label"><i class="fas fa-pen"></i> ${item.title}</div>`;item.questions.forEach((q,qi)=>{sh+=`<div style="margin-bottom:18px">`;let sent='';for(let p=0;p<q.parts.length;p++){if(p>0)sent+=`<input class="fill-input" id="fi-${ii}-${qi}-${p}" type="text" autocomplete="off" oninput="updFill(${ii},${qi},${p})">`;sent+=q.parts[p];}sh+=`<div class="fill-sentence">${sent}</div></div>`;});card.innerHTML=sh;c.appendChild(card);});
+}
+
+/* ==================================================================
+   INTERACCIONES
+   ================================================================== */
+function selVF(qi,v){answers[qi].sel=v;document.querySelectorAll(`.vfop[data-q="${qi}"]`).forEach(o=>{o.classList.remove('st','vfsf');if(o.getAttribute('data-v')===String(v))o.classList.add(v?'st':'vfsf');});document.getElementById('ja-'+qi).classList.add('vis');setTimeout(()=>document.getElementById('jt-'+qi).focus(),100);updVFSt(qi);updateProg();updateMap();}
+function updJust(qi){answers[qi].just=document.getElementById('jt-'+qi).value;updVFSt(qi);updateProg();updateMap();}
+function updVFSt(qi){const el=document.getElementById('qs-'+qi),sp=el.querySelector('span');el.classList.remove('vis','cok','cinc');const hs=answers[qi].sel!==null,hj=answers[qi].just.trim().length>10;if(hs&&hj){sp.textContent='Respuesta completa';el.classList.add('vis','cok');}else if(hs||answers[qi].just.trim().length>0){sp.textContent='Falta '+(hs?'justificar (mín. 10 caracteres)':'seleccionar V/F');el.classList.add('vis','cinc');}}
+function selMC(qi,oi){answers[qi].sel=oi;document.querySelectorAll(`.mcop[data-q="${qi}"]`).forEach(o=>{o.classList.remove('sel');if(parseInt(o.getAttribute('data-o'))===oi)o.classList.add('sel');});updateProg();updateMap();}
+
+/* Ordenamiento */
+function moveOrd(ii,pi,dir){const a=answers[SEC_START[3]+ii];const ni=pi+dir;if(ni<0||ni>=a.order.length)return;[a.order[pi],a.order[ni]]=[a.order[ni],a.order[pi]];renderOrd(ii);}
+function renderOrd(ii){const pool=document.getElementById('ordpool-'+ii);const a=answers[SEC_START[3]+ii];const item=S3[ii];pool.innerHTML='';a.order.forEach((si,pi)=>{pool.innerHTML+=`<div class="ord-sentence" draggable="true" data-ii="${ii}" data-pi="${pi}" id="ords-${ii}-${pi}"><span class="ord-nums">${pi+1}</span><span>${item.sentences[si]}</span><div class="ord-arrows"><button onclick="moveOrd(${ii},${pi},-1)"><i class="fas fa-chevron-up"></i></button><button onclick="moveOrd(${ii},${pi},1)"><i class="fas fa-chevron-down"></i></button></div></div>`;});initDrag(ii);}
+function initDrag(ii){document.querySelectorAll(`.ord-sentence[data-ii="${ii}"]`).forEach(el=>{el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',el.getAttribute('data-pi'));el.classList.add('dragging');});el.addEventListener('dragend',()=>el.classList.remove('dragging'));el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');const fi=parseInt(e.dataTransfer.getData('text/plain'));const ti=parseInt(el.getAttribute('data-pi'));if(fi!==ti){const a=answers[SEC_START[3]+ii];const v=a.order[fi];a.order.splice(fi,1);a.order.splice(ti,0,v);renderOrd(ii);}});});}
+function checkOrd(ii){const a=answers[SEC_START[3]+ii];const item=S3[ii];let correct=0;const pool=document.getElementById('ordpool-'+ii);pool.querySelectorAll('.ord-sentence').forEach((el,pi)=>{el.classList.remove('correct-pos','incorrect-pos');if(a.order[pi]===pi){el.classList.add('correct-pos');correct++;}else{el.classList.add('incorrect-pos');}});a.checked=true;a.score=correct*0.2;const res=document.getElementById('ordres-'+ii);res.className='ord-result vis '+(correct===10?'ok':'bad');res.innerHTML=`<i class="fas fa-${correct===10?'check-circle':'times-circle'}"></i> ${correct}/10 posiciones correctas — ${correct*0.2} puntos`;document.getElementById('ordchk-'+ii).disabled=true;updateProg();updateMap();}
+
+/* Completamiento */
+function updFill(ii,qi,pi){const inp=document.getElementById(`fi-${ii}-${qi}-${pi}`);answers[SEC_START[4]+ii].responses[qi*10+pi]=inp.value;updateProg();updateMap();}
+
+/* ==================================================================
+   MOSTRAR PREGUNTA
+   ================================================================== */
+function showQ(idx){document.querySelectorAll('.qcard').forEach(c=>c.style.display='none');curQ=idx;const el=document.getElementById('q-'+idx);if(el)el.style.display='block';
+const s=SEC_START[curSec],e=SEC_END[curSec];document.getElementById('bPrev').disabled=idx===s;const bn=document.getElementById('bNext');
+if(curSec===3||curSec===4){const maxI=curSec===3?S3.length-1:S4.length-1;const ci=idx-s;if(ci>=maxI){bn.className='nbtn fin';bn.innerHTML='<i class="fas fa-flag-checkered"></i> Entregar evaluacion';bn.onclick=trySubmit;}else{bn.className='nbtn nxt';bn.innerHTML='Siguiente <i class="fas fa-arrow-right"></i>';bn.onclick=()=>navQ(1);}}else{if(idx>=e-1){bn.className=curSec<4?'nbtn cont':'nbtn fin';bn.innerHTML=curSec<4?'<i class="fas fa-arrow-right"></i> Terminar seccion':'<i class="fas fa-flag-checkered"></i> Entregar evaluacion';bn.onclick=curSec<4?finishSection:trySubmit;}else{bn.className='nbtn nxt';bn.innerHTML='Siguiente <i class="fas fa-arrow-right"></i>';bn.onclick=()=>navQ(1);}}
+updateMap();if(answers[idx]&&answers[idx].type==='vf')updVFSt(idx);if(curSec===3){const ii=idx-s;setTimeout(()=>initDrag(ii),50);}}
+function navQ(d){const s=SEC_START[curSec],e=SEC_END[curSec];const ni=curQ+d;if(ni>=s&&ni<=e)showQ(ni);}
+
+/* ==================================================================
+   CALCULOS DE PUNTUACIÓN
+   ================================================================== */
+function calcSecScore(sec){let correct=0,incorrect=0,empty=0,score=0,details=[];
+if(sec===1){S1.forEach((q,i)=>{const a=answers[i];const ic=a.sel===q.answer;const hj=a.just.trim().length>10;let qs=0,st='empty';if(a.sel===null){empty++;st='empty';}else if(ic&&hj){correct++;qs=1;score+=1;st='correct';}else if(ic&&!hj){correct++;qs=0.5;score+=0.5;st='partial';}else{incorrect++;st='incorrect';}details.push({q,a,ic,hj,qs,st,type:'vf'});});}
+else if(sec===2){S2.forEach((q,i)=>{const gi=i+10;const a=answers[gi];const ic=a.sel===q.c;let qs=0,st='empty';if(a.sel===null){empty++;st='empty';}else if(ic){correct++;qs=1;score+=1;st='correct';}else{incorrect++;st='incorrect';}details.push({q,a,ic,qs,st,type:'mc'});});}
+else if(sec===3){S3.forEach((item,ii)=>{const ai=SEC_START[3]+ii;const a=answers[ai];let cor=0;const posDetails=[];a.order.forEach((si,pi)=>{const ok=si===pi;if(ok)cor++;posDetails.push({userPos:pi,correctPos:si,isCorrect:ok});});correct=cor;incorrect=10-cor;score+=a.score;details.push({item,a,correct:cor,score:a.score,posDetails,type:'ord'});});}
+else if(sec===4){S4.forEach((item,ii)=>{const ai=SEC_START[4]+ii;const a=answers[ai];let cor=0;const qDetails=[];item.questions.forEach((q,qi)=>{const userAns=a.responses[qi*10]||'';const nu=norm(userAns);let isOk=false;const allAns=[q.answer,...q.alts];for(const ca of allAns){if(nu===norm(ca)){isOk=true;break;}}if(isOk)cor++;qDetails.push({q,userAns,isOk,correctAns:q.answer});});correct=cor;incorrect=10-cor;score+=cor;details.push({item,qDetails,correct:cor,score:cor,type:'fill'});});}
+return{score,correct,incorrect,empty,details,count:SEC_END[sec]-SEC_START[sec]};}
+
+/* ==================================================================
+   ENTREGAR Y RESULTADOS
+   ================================================================== */
+function trySubmit(){let ua=0;if(curSec===4){S4.forEach((item,ii)=>{const a=answers[SEC_START[4]+ii];item.questions.forEach((_,qi)=>{if(!(a.responses[qi*10]||'').trim())ua++;});});}else{for(let i=SEC_START[curSec];i<SEC_END[curSec];i++){if(answers[i].type==='mc'&&answers[i].sel===null)ua++;if(answers[i].type==='vf'&&answers[i].sel===null)ua++;}}if(ua>0)showModal(`Tienes ${ua} campo(s) sin completar. Deseas entregar de todas formas?`,submitExam);else submitExam();}
+function submitExam(){closeModal();clearInterval(timerInt);if(!secScores.s1)secScores.s1=calcSecScore(1);if(!secScores.s2)secScores.s2=calcSecScore(2);if(!secScores.s3)secScores.s3=calcSecScore(3);if(!secScores.s4)secScores.s4=calcSecScore(4);const total=secScores.s1.score+secScores.s2.score+secScores.s3.score+secScores.s4.score;saveRes(total);showRes(total);showScr('sRes');}
+
+function saveRes(total){const h=JSON.parse(localStorage.getItem('evalH')||'[]');h.push({user:CU,date:new Date().toISOString(),s1:secScores.s1.score,s2:secScores.s2.score,s3:secScores.s3.score,s4:secScores.s4.score,total,max:54});localStorage.setItem('evalH',JSON.stringify(h));toast('Resultados guardados.','success');}
+
+function showRes(total){
+const ring=document.getElementById('rRing');ring.classList.remove('low','mid');const pct=total/54;if(pct<.4)ring.classList.add('low');else if(pct<.7)ring.classList.add('mid');const circ=2*Math.PI*70;setTimeout(()=>{ring.style.strokeDashoffset=circ-pct*circ;},100);
+const sn=document.getElementById('rNum');let cur=0;const st=total/54;const iv=setInterval(()=>{cur+=st/50;if(cur>=st){cur=st;clearInterval(iv);}sn.textContent=cur%1===0?cur:cur.toFixed(1);},25);
+document.getElementById('rLbl').textContent='de 54 puntos';
+const tt=document.getElementById('rTit'),ts=document.getElementById('rSub');
+if(pct>=.9){tt.textContent='Excelente desempeño';ts.textContent='Dominas los temas de las 4 secciones evaluadas.';}else if(pct>=.7){tt.textContent='Buen resultado';ts.textContent='Buena comprensión general con áreas de mejora.';}else if(pct>=.5){tt.textContent='Resultado aceptable';ts.textContent='Necesitas reforzar varios conceptos. Revisa el material.';}else{tt.textContent='Necesitas estudiar más';ts.textContent='Se recomienda revisar a fondo todos los temas.';}
+
+const sc=document.getElementById('rStats');
+sc.innerHTML=`<div class="strow"><div class="stbx ssc"><div class="stv">${total}</div><div class="stl">Puntaje total</div></div><div class="stbx sok"><div class="stv">${secScores.s1.correct+secScores.s2.correct+secScores.s3.correct+secScores.s4.correct}</div><div class="stl">Correctas / posiciones ok</div></div></div>
+<div class="sdiv">Seccion 1 — V/F</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s1.score}/10</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s1.correct}</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s1.incorrect}</div><div class="stl">Incorrectas</div></div><div class="stbx semp"><div class="stv">${secScores.s1.empty}</div><div class="stl">Sin responder</div></div></div>
+<div class="sdiv">Seccion 2 — Seleccion unica</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s2.score}/20</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s2.correct}</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s2.incorrect}</div><div class="stl">Incorrectas</div></div><div class="stbx semp"><div class="stv">${secScores.s2.empty}</div><div class="stl">Sin responder</div></div></div>
+<div class="sdiv">Seccion 3 — Ordenamiento</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s3.score}/4</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s3.correct}/20</div><div class="stl">Posiciones correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s3.incorrect}/20</div><div class="stl">Posiciones incorrectas</div></div></div>
+<div class="sdiv">Seccion 4 — Completamiento</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s4.score}/20</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s4.correct}/20</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s4.incorrect}/20</div><div class="stl">Incorrectas</div></div></div>`;
+
+// Revisión detallada
+const rc=document.getElementById('rRev');rc.innerHTML='';
+// S1
+secScores.s1.details.forEach((d,i)=>{const el=document.createElement('div');let bc='remp',bg='<span class="ribadge bemp">Sin responder</span>';if(d.st==='correct'){bc='rok';bg='<span class="ribadge bok">Correcta (1.0 pt)</span>';}else if(d.st==='partial'){bc='rok';bg='<span class="ribadge bpar">Parcial (0.5 pt)</span>';}else if(d.st==='incorrect'){bc='rbad';bg='<span class="ribadge bbad">Incorrecta (0.0 pt)</span>';}
+const at=d.a.sel===null?'No respondida':(d.a.sel?'Verdadero':'Falso');const ct=d.q.answer?'Verdadero':'Falso';let al=`<span class="ubad">${at}</span>`;if(d.st==='incorrect')al+=` — Correcta: <span class="cok">${ct}</span>`;
+el.className=`ritem ${bc}`;el.innerHTML=`<div class="rihead"><span class="rinum">P${i+1} [V/F]</span>${bg}</div><div class="ritxt">${d.q.text}</div><div class="rians"><strong>Tu respuesta:</strong> ${al}</div><div class="rijust"><strong>Tu justificacion:</strong><br>${d.a.just.trim()||'<em style="color:var(--fg3)">Sin justificacion</em>'}</div>${d.st==='incorrect'?`<div class="riexpl"><strong>Explicacion:</strong><br>${d.q.expl}</div>`:''}`;rc.appendChild(el);});
+// S2
+secScores.s2.details.forEach((d,i)=>{const el=document.createElement('div');const gi=i+10;let bc='remp',bg='<span class="ribadge bemp">Sin responder</span>';if(d.st==='correct'){bc='rok';bg='<span class="ribadge bok">Correcta (1.0 pt)</span>';}else if(d.st==='incorrect'){bc='rbad';bg='<span class="ribadge bbad">Incorrecta (0.0 pt)</span>';}
+const lt=['A','B','C','D'];const at=d.a.sel===null?'No respondida':`${lt[d.a.sel]}. ${d.q.opts[d.a.sel]}`;const ct=`${lt[d.q.c]}. ${d.q.opts[d.q.c]}`;let al=`<span class="ubad">${at}</span>`;if(d.st==='incorrect')al+=`<br>Correcta: <span class="cok">${ct}</span>`;
+el.className=`ritem ${bc}`;el.innerHTML=`<div class="rihead"><span class="rinum">P${gi+1} [MC]</span>${bg}</div><div class="ritxt">${d.q.text}</div><div class="rians"><strong>Tu respuesta:</strong> ${al}</div>${d.st==='incorrect'?`<div class="riexpl"><strong>Explicacion:</strong><br>${d.q.expl}</div>`:''}`;rc.appendChild(el);});
+// S3
+secScores.s3.details.forEach((d,ii)=>{const el=document.createElement('div');el.className='ritem';el.style.borderLeftColor=d.score>=1.6?'var(--ok)':d.score>=0.8?'var(--wn)':'var(--fl)';let h=`<div class="rihead"><span class="rinum">Item ${String.fromCharCode(65+ii)} [Ord.]</span><span class="ribadge ${d.score>=1.6?'bok':d.score>=0.8?'bpar':'bbad'}">${d.correct}/10 posiciones — ${d.score} pt</span></div><div class="ritxt">${d.item.title}</div>`;d.posDetails.forEach((pd,pi)=>{const col=pd.isCorrect?'var(--ok)':'var(--fl)';h+=`<div style="font-size:13px;color:var(--fg2);margin:4px 0 4px 12px"><span style="color:${col};font-weight:700">Pos ${pi+1}:</span> ${pd.isCorrect?'<i class="fas fa-check" style="color:var(--ok)"></i>':'<i class="fas fa-times" style="color:var(--fl)"></i> Colocaste: "'+d.item.sentences[d.a.order[pi]].substring(0,60)+'..."'} ${!pd.isCorrect?'— Correcta en pos '+(pd.correctPos+1):''}</div>`;});el.innerHTML=h;rc.appendChild(el);});
+// S4
+secScores.s4.details.forEach((d,ii)=>{const el=document.createElement('div');el.className='ritem';el.style.borderLeftColor=d.score>=8?'var(--ok)':d.score>=5?'var(--wn)':'var(--fl)';let h=`<div class="rihead"><span class="rinum">Item ${String.fromCharCode(65+ii)} [Compl.]</span><span class="ribadge ${d.score>=8?'bok':d.score>=5?'bpar':'bbad'}">${d.correct}/10 — ${d.score} pt</span></div><div class="ritxt">${d.item.title}</div>`;d.qDetails.forEach((qd,qi)=>{const col=qd.isOk?'var(--ok)':'var(--fl)';const ico=qd.isOk?'fa-check':'fa-times';h+=`<div style="font-size:13px;color:var(--fg2);margin:6px 0 6px 12px;padding:8px 10px;background:var(--card);border-radius:6px;border-left:3px solid ${col}"><i class="fas ${ico}" style="color:${col};margin-right:6px"></i><strong>P${qi+1}:</strong> Tu respuesta: "<span style="color:${qd.isOk?'var(--ok)':'var(--fl)';font-weight:600}">${qd.userAns||'(vacio)'}</span>" ${!qd.isOk?'— Correcta: <span style="color:var(--ok);font-weight:600">'+qd.correctAns+'</span>':''}<br><span style="font-size:12px;color:var(--fg3)">${qd.q.expl}</span></div>`;});el.innerHTML=h;rc.appendChild(el);});
+}
+
+/* ==================================================================
+   ENVIAR POR CORREO
+   ================================================================== */
+function sendEmail(){const t=secScores.s1.score+secScores.s2.score+secScores.s3.score+secScores.s4.score;let b=`EVALUACION COMPLETA — UNIDADES 3 Y 4\n${'='.repeat(55)}\n\nEstudiante: ${CU.name}\nCorreo: ${CU.email}\nFecha: ${new Date().toLocaleString('es-ES')}\n\n${'─'.repeat(55)}\nRESULTADO: ${t}/54 puntos\nS1 (V/F): ${secScores.s1.score}/10 | S2 (MC): ${secScores.s2.score}/20\nS3 (Ord): ${secScores.s3.score}/4 | S4 (Compl): ${secScores.s4.score}/20\n${'─'.repeat(55)}\n\n`;
+b+=`=== SECCION 1: V/F ===\n\n`;secScores.s1.details.forEach((d,i)=>{const a=d.a.sel===null?'—':(d.a.sel?'V':'F');const c=d.q.answer?'V':'F';b+=`P${i+1}. ${a} ${d.ic?'[OK]':'[X]'} (Correcta: ${c}) — ${d.qs} pt\nJust: ${d.a.just.trim().substring(0,80)||'Sin just.'}\n${!d.ic?'Expl: '+d.q.expl.substring(0,100)+'\n':''}\n`;});
+b+=`\n=== SECCION 2: SELECCION ===\n\n`;const lt=['A','B','C','D'];secScores.s2.details.forEach((d,i)=>{const a=d.a.sel===null?'—':lt[d.a.sel];const c=lt[d.q.c];b+=`P${i+11}. ${a} ${d.ic?'[OK]':'[X]'} (Correcta: ${c}) — ${d.qs} pt\n${!d.ic?'Expl: '+d.q.expl.substring(0,100)+'\n':''}\n`;});
+b+=`\n=== SECCION 3: ORDENAMIENTO ===\n\n`;secScores.s3.details.forEach((d,ii)=>{b+=`Item ${String.fromCharCode(65+ii)}: ${d.correct}/10 posiciones — ${d.score} pt\n`;});
+b+=`\n=== SECCION 4: COMPLETAMIENTO ===\n\n`;secScores.s4.details.forEach((d,ii)=>{b+=`Item ${String.fromCharCode(65+ii)}: ${d.correct}/10 — ${d.score} pt\n`;d.qDetails.forEach((qd,qi)=>{b+=`  P${qi+1}: "${qd.userAns||'(vacio)'}" ${qd.isOk?'[OK]':'[X] Correcta: '+qd.correctAns}\n`;});});
+window.location.href=`mailto:${CU.email}?subject=${encodeURIComponent(`Resultado Evaluacion U3-U4 - ${CU.name} - ${t}/54`)}&body=${encodeURIComponent(b)}`;toast('Abriendo cliente de correo...','success');}
+
+/* ==================================================================
+   REINTENTAR
+   ================================================================== */
+function retry(){curSec=1;curQ=0;secScores={s1:null,s2:null,s3:null,s4:null};initAnswers();document.getElementById('rRing').style.strokeDashoffset=440;document.getElementById('rRing').classList.remove('low','mid');document.querySelector('.etimer').style.color='';showScr('sInstr');toast('Evaluacion reiniciada.','success');}
+</script>
+</body>
+</html>
