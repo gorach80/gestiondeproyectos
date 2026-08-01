@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Completa — Sin Registro (Unidades 3, 4 y 5)</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    
+    <!-- KaTeX para renderizado ultra-rápido de fórmulas matemáticas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <style>
+        :root{--bg:#060a08;--bg2:#0d1411;--card:#101a16;--card-h:#16251f;--bdr:#1a2b24;--bdr2:#243e33;--fg:#e2ebe6;--fg2:#879c91;--fg3:#576d63;--ac:#10b981;--acg:rgba(16,185,129,.15);--acd:#064e3b;--wn:#f59e0b;--wng:rgba(245,158,11,.12);--dn:#ef4444;--dng:rgba(239,68,68,.12);--ok:#22c55e;--okg:rgba(34,197,94,.12);--fl:#f43f5e;--flg:rgba(244,63,94,.12);--r:14px;--rs:8px;--sh:0 4px 24px rgba(0,0,0,.4);--sh2:0 12px 48px rgba(0,0,0,.6)}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--fg);min-height:100vh;overflow-x:hidden}
+        .bg-layer{position:fixed;inset:0;z-index:0;pointer-events:none}
+        .bg-blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:.3;animation:bf 20s ease-in-out infinite}
+        .bg-blob:nth-child(1){width:500px;height:500px;background:radial-gradient(circle,#064e3b,transparent 70%);top:-10%;left:-10%;animation-duration:22s}
+        .bg-blob:nth-child(2){width:400px;height:400px;background:radial-gradient(circle,#0d3b2e,transparent 70%);bottom:-15%;right:-5%;animation-duration:18s;animation-delay:-5s}
+        .bg-blob:nth-child(3){width:300px;height:300px;background:radial-gradient(circle,#134e3a,transparent 70%);top:40%;left:50%;animation-duration:25s;animation-delay:-10s}
+        @keyframes bf{0%,100%{transform:translate(0,0) scale(1)}25%{transform:translate(40px,-30px) scale(1.08)}50%{transform:translate(-20px,40px) scale(.95)}75%{transform:translate(30px,20px) scale(1.05)}}
+        .bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(16,185,129,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(16,185,129,.03) 1px,transparent 1px);background-size:60px 60px}
+        .particles{position:fixed;inset:0;z-index:0;pointer-events:none}
+        .particle{position:absolute;width:3px;height:3px;background:var(--ac);border-radius:50%;opacity:0;animation:pr linear infinite}
+        @keyframes pr{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:.5}90%{opacity:.2}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+        .app{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+        .screen{display:none;width:100%;max-width:880px;animation:si .5s cubic-bezier(.16,1,.3,1) forwards}
+        .screen.active{display:block}
+        @keyframes si{from{opacity:0;transform:translateY(30px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+        /* INSTRUCCIONES */
+        .icard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:40px;box-shadow:var(--sh2)}
+        .ihdr{display:flex;align-items:center;gap:16px;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--bdr)}
+        .iico{width:52px;height:52px;background:var(--acg);border:1px solid var(--bdr2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;color:var(--ac);flex-shrink:0}
+        .ititle{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+        .isub{font-size:13px;color:var(--fg2);margin-top:2px}
+        .fgrp{margin-bottom:16px;text-align:left}
+        .fgrp label{display:block;font-size:13px;font-weight:500;color:var(--fg2);margin-bottom:6px}
+        .fgrp input{width:100%;padding:12px 14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+        .fgrp input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}
+        .fgrp input::placeholder{color:var(--fg3)}
+        .sprev{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+        .sbox{padding:14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .sbox .sn{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--ac);margin-bottom:4px}
+        .sbox .st{font-weight:600;font-size:13px;margin-bottom:2px}
+        .sbox .sd{font-size:11px;color:var(--fg2)}
+        .ilist{list-style:none;margin-bottom:28px}
+        .ilist li{display:flex;align-items:flex-start;gap:12px;padding:10px 0;font-size:13px;line-height:1.5;color:var(--fg2);border-bottom:1px solid rgba(30,51,41,.5)}
+        .ilist li:last-child{border-bottom:none}
+        .ilist li .ii{width:28px;height:28px;background:var(--acg);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--ac);flex-shrink:0;margin-top:1px}
+        .strtbtn{width:100%;padding:16px;background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .25s;letter-spacing:.3px}
+        .strtbtn:hover{box-shadow:0 8px 32px rgba(16,185,129,.4);transform:translateY(-2px)}
+
+        /* TRANSICIÓN */
+        .tcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:48px 40px;box-shadow:var(--sh2);text-align:center}
+        .tico{width:80px;height:80px;background:var(--acg);border:1px solid var(--bdr2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px;color:var(--ac)}
+        .ttitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+        .tsub{color:var(--fg2);font-size:14px;margin-bottom:28px;line-height:1.6}
+        .ssum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+        .sst{padding:14px 10px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .sst .sv{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700}
+        .sst .sl{font-size:11px;color:var(--fg2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+        .sst.sok .sv{color:var(--ok)}.sst.sbad .sv{color:var(--fl)}.sst.semp .sv{color:var(--fg3)}
+
+        /* EVAL HEADER */
+        .ehdr{position:sticky;top:0;z-index:10;background:rgba(6,10,8,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--bdr);padding:16px 0;margin-bottom:24px}
+        .etop{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+        .eslbl{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--ac)}
+        .etimer{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--fg2);font-variant-numeric:tabular-nums}
+        .etimer i{color:var(--wn);font-size:13px}
+        .pbt{width:100%;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+        .pbf{height:100%;background:linear-gradient(90deg,var(--ac),#34d399);border-radius:3px;transition:width .5s cubic-bezier(.16,1,.3,1);width:0%}
+
+        /* MAPA */
+        .qmap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+        .qmd{width:34px;height:34px;border-radius:8px;background:var(--bg2);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--fg3);cursor:pointer;transition:all .2s}
+        .qmd:hover{border-color:var(--bdr2);color:var(--fg2)}
+        .qmd.cur{border-color:var(--ac);color:var(--ac);background:var(--acg)}
+        .qmd.don{background:var(--acd);border-color:var(--ac);color:var(--ac)}
+        .qmd.par{border-color:var(--wn);color:var(--wn);background:var(--wng)}
+
+        /* QUESTION CARD */
+        .qcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px;margin-bottom:20px;box-shadow:var(--sh)}
+        .qnum{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;background:var(--acg);border:1px solid var(--bdr2);border-radius:8px;font-size:13px;font-weight:700;color:var(--ac);margin-bottom:14px}
+        .qtxt{font-size:16px;font-weight:500;line-height:1.7;margin-bottom:20px}
+
+        /* V/F */
+        .vfops{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+        .vfop{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:15px;font-weight:600;color:var(--fg2)}
+        .vfop:hover{border-color:var(--bdr2);background:var(--card-h);color:var(--fg)}
+        .vfop.st{border-color:var(--ok);background:var(--okg);color:var(--ok)}
+        .vfsf{border-color:var(--fl)!important;background:var(--flg)!important;color:var(--fl)!important}
+        .vfop i{font-size:18px}
+        .jarea{display:none;animation:fs .3s ease forwards}.jarea.vis{display:block}
+        @keyframes fs{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+        .jlbl{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--wn);margin-bottom:8px}
+        .jlbl i{font-size:14px}
+        .jtxt{width:100%;min-height:100px;padding:14px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;resize:vertical;outline:none;transition:border-color .2s,box-shadow .2s}
+        .jtxt:focus{border-color:var(--wn);box-shadow:0 0 0 3px var(--wng)}
+        .jtxt::placeholder{color:var(--fg3)}
+        .qst{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;font-weight:500;opacity:0;transition:opacity .3s}
+        .qst.vis{opacity:1}.qst.cok{color:var(--ok)}.qst.cinc{color:var(--wn)}
+
+        /* MC */
+        .mcopts{display:flex;flex-direction:column;gap:10px}
+        .mcop{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);cursor:pointer;transition:all .2s;font-size:14px;line-height:1.6;color:var(--fg2)}
+        .mcop:hover{border-color:var(--bdr2);background:var(--card-h);color:var(--fg)}
+        .mcop.sel{border-color:var(--ac);background:var(--acg);color:var(--fg)}
+        .mclt{width:30px;height:30px;background:rgba(255,255,255,.05);border:1px solid var(--bdr);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;transition:all .2s}
+        .mcop.sel .mclt{background:var(--ac);color:#fff;border-color:var(--ac)}
+        .mctx{flex:1;padding-top:3px}
+
+        /* ORDERING */
+        .ord-item-label{font-size:13px;font-weight:600;color:var(--wn);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .ord-pool{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+        .ord-sentence{padding:12px 16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);cursor:grab;transition:all .2s;font-size:14px;line-height:1.5;color:var(--fg2);display:flex;align-items:center;gap:10px;user-select:none}
+        .ord-sentence:active{cursor:grabbing}
+        .ord-sentence:hover{border-color:var(--bdr2);background:var(--card-h)}
+        .ord-sentence.dragging{opacity:.4;border-style:dashed}
+        .ord-sentence.drag-over{border-color:var(--ac);background:var(--acg)}
+        .ord-sentence.placed{background:var(--acd);border-color:var(--ac);color:var(--fg);cursor:grab}
+        .ord-sentence.correct-pos{border-color:var(--ok)!important;background:var(--okg)!important}
+        .ord-sentence.incorrect-pos{border-color:var(--fl)!important;background:var(--flg)!important}
+        .ord-nums{width:24px;height:24px;background:rgba(255,255,255,.06);border:1px solid var(--bdr);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+        .ord-arrows{display:flex;flex-direction:column;gap:2px;flex-shrink:0}
+        .ord-arrows button{width:22px;height:18px;border:1px solid var(--bdr);background:var(--bg2);color:var(--fg3);border-radius:4px;cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
+        .ord-arrows button:hover{border-color:var(--ac);color:var(--ac);background:var(--acg)}
+        .ord-check{width:100%;padding:12px;background:linear-gradient(135deg,var(--wn),#d97706);color:#fff;border:none;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;margin-top:12px}
+        .ord-check:hover{box-shadow:0 4px 16px rgba(245,158,11,.3);transform:translateY(-1px)}
+        .ord-result{margin-top:12px;padding:10px 14px;border-radius:var(--rs);font-size:13px;display:none;font-weight:500;align-items:center;gap:8px}
+        .ord-result.vis{display:flex}
+        .ord-result.ok{background:var(--okg);color:var(--ok);border:1px solid rgba(34,197,94,.2)}
+        .ord-result.bad{background:var(--flg);color:var(--fl);border:1px solid rgba(244,63,94,.2)}
+
+        /* FILL-IN */
+        .fill-sentence{font-size:15px;line-height:2;color:var(--fg2);margin-bottom:8px}
+        .fill-input{display:inline-block;width:180px;padding:6px 12px;background:var(--bg2);border:2px solid var(--bdr);border-radius:var(--rs);color:var(--fg);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:all .2s;vertical-align:middle;margin:0 4px}
+        .fill-input:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acg)}
+        .fill-input.ok{border-color:var(--ok);background:var(--okg)}
+        .fill-input.bad{border-color:var(--fl);background:var(--flg)}
+        .fill-hint{font-size:12px;color:var(--fg3);margin-top:6px;font-style:italic}
+
+        /* MATCHING COLUMN STYLES */
+        .match-grp { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .match-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; padding: 10px 14px; background: var(--bg2); border: 1px solid var(--bdr); border-radius: var(--rs); }
+        .match-left { font-size: 13px; font-weight: 500; color: var(--fg); line-height: 1.4; }
+        .match-select { width: 100%; padding: 8px 12px; background: var(--bg); border: 2px solid var(--bdr); border-radius: var(--rs); color: var(--fg2); outline: none; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .match-select:focus { border-color: var(--ac); color: var(--fg); box-shadow: 0 0 0 3px var(--acg); }
+        .match-select.ok { border-color: var(--ok); background: var(--okg); color: var(--ok); }
+        .match-select.bad { border-color: var(--fl); background: var(--flg); color: var(--fl); }
+        .match-select option { background: var(--bg2); color: var(--fg); }
+        .match-col-right { margin-top: 20px; padding: 18px; background: rgba(255,255,255,0.02); border: 1px dashed var(--bdr); border-radius: var(--rs); }
+        .match-col-right-title { font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:700; color:var(--wn); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.5px; }
+        .match-option-desc { font-size: 13px; color: var(--fg2); line-height: 1.5; margin-bottom: 8px; }
+        .match-option-desc:last-child { margin-bottom: 0; }
+        .match-option-desc strong { color: var(--ac); margin-right: 4px; }
+
+        /* NAV */
+        .navs{display:flex;gap:12px;margin-top:8px;margin-bottom:40px}
+        .nbtn{flex:1;padding:14px 20px;border:1px solid var(--bdr);border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px}
+        .nbtn.prev{background:var(--card);color:var(--fg2)}
+        .nbtn.prev:hover{background:var(--card-h);color:var(--fg);border-color:var(--bdr2)}
+        .nbtn.nxt{background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border-color:transparent}
+        .nbtn.nxt:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .nbtn.fin{background:linear-gradient(135deg,var(--wn),#d97706);color:#fff;border-color:transparent}
+        .nbtn.fin:hover{box-shadow:0 6px 24px rgba(245,158,11,.35);transform:translateY(-1px)}
+        .nbtn.cont{background:linear-gradient(135deg,var(--ac),#059669);color:#fff;border-color:transparent}
+        .nbtn.cont:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .nbtn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+        /* RESULTS */
+        .rcard{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:40px;box-shadow:var(--sh2);text-align:center}
+        .sring{width:180px;height:180px;margin:0 auto 24px;position:relative}
+        .sring svg{width:100%;height:100%;transform:rotate(-90deg)}
+        .sring .rbg{fill:none;stroke:var(--bg2);stroke-width:10}
+        .sring .rfill{fill:none;stroke:var(--ac);stroke-width:10;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 1.5s cubic-bezier(.16,1,.3,1) .3s}
+        .sring .rfill.low{stroke:var(--dn)}.sring .rfill.mid{stroke:var(--wn)}
+        .sval{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .snum{font-family:'Space Grotesk',sans-serif;font-size:48px;font-weight:900;line-height:1}
+        .slbl{font-size:13px;color:var(--fg2);margin-top:4px}
+        .rtitle{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;margin-bottom:8px}
+        .rsub{color:var(--fg2);font-size:14px;margin-bottom:28px;line-height:1.6}
+        .strow{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px}
+        .stbx{padding:16px 12px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs)}
+        .stbx .stv{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700}
+        .stbx .stl{font-size:11px;color:var(--fg2);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+        .stbx.sok .stv{color:var(--ok)}.stbx.sbad .stv{color:var(--fl)}.stbx.semp .stv{color:var(--fg3)}.stbx.ssc .stv{color:var(--ac)}
+        .sdiv{font-size:13px;font-weight:600;color:var(--fg3);text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;padding-top:16px;border-top:1px solid var(--bdr)}
+        .revsec{margin-top:28px;text-align:left}
+        .revtit{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--bdr)}
+        .ritem{padding:16px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--rs);margin-bottom:10px;border-left:4px solid var(--bdr)}
+        .ritem.rok{border-left-color:var(--ok)}.ritem.rbad{border-left-color:var(--fl)}.ritem.remp{border-left-color:var(--fg3)}
+        .rihead{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+        .rinum{font-size:12px;font-weight:700;color:var(--fg3)}
+        .ribadge{font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
+        .ribadge.bok{background:var(--okg);color:var(--ok)}
+        .ribadge.bbad{background:var(--flg);color:var(--fl)}
+        .ribadge.bemp{background:rgba(90,112,104,.2);color:var(--fg3)}
+        .ribadge.bpar{background:var(--wng);color:var(--wn)}
+        .ritxt{font-size:14px;line-height:1.6;color:var(--fg2);margin-bottom:8px}
+        .rians{font-size:13px;color:var(--fg2)}
+        .rians strong{color:var(--fg)}
+        .rians .cok{color:var(--ok);font-weight:600}.rians .ubad{color:var(--fl);font-weight:600}
+        .riexpl{margin-top:8px;padding:10px 12px;background:var(--card);border-radius:6px;font-size:13px;color:var(--fg2);line-height:1.5;border-left:2px solid var(--ac);padding-left:12px}
+        .riexpl strong{color:var(--ac);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+        .rijust{margin-top:8px;padding:10px 12px;background:var(--card);border-radius:6px;font-size:13px;color:var(--fg2);line-height:1.5}
+        .rijust strong{color:var(--wn);font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+        .ract{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:24px}
+        .rbtn{padding:14px 20px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .25s;display:flex;align-items:center;justify-content:center;gap:8px;border:none}
+        .rbtn.eml{background:linear-gradient(135deg,var(--ac),#059669);color:#fff}
+        .rbtn.eml:hover{box-shadow:0 6px 24px rgba(16,185,129,.35);transform:translateY(-1px)}
+        .rbtn.pdf{background:linear-gradient(135deg,var(--dn),#b91c1c);color:#fff}
+        .rbtn.pdf:hover{box-shadow:0 6px 24px rgba(239,68,68,.35);transform:translateY(-1px)}
+        .rbtn.ret{background:var(--bg2);color:var(--fg2);border:1px solid var(--bdr);grid-column: span 2}
+        .rbtn.ret:hover{background:var(--card-h);color:var(--fg);border-color:var(--bdr2)}
+
+        /* TOAST */
+        .tc{position:fixed;top:24px;right:24px;z-index:1000;display:flex;flex-direction:column;gap:10px}
+        .toast{padding:14px 20px;background:var(--card);border:1px solid var(--bdr);border-radius:var(--rs);box-shadow:var(--sh2);display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg);animation:ti .4s cubic-bezier(.16,1,.3,1) forwards;max-width:360px}
+        .toast.to{animation:too .3s ease forwards}
+        .toast i{font-size:18px;flex-shrink:0}
+        .toast.success i{color:var(--ok)}.toast.warning i{color:var(--wn)}.toast.error i{color:var(--dn)}
+        @keyframes ti{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes too{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(40px)}}
+
+        /* MODAL */
+        .movl{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);z-index:100;display:none;align-items:center;justify-content:center;padding:24px}
+        .movl.active{display:flex}
+        .mbox{background:var(--card);border:1px solid var(--bdr);border-radius:var(--r);padding:32px;max-width:420px;width:100%;box-shadow:var(--sh2);animation:si .3s ease forwards}
+        .mico{width:56px;height:56px;background:var(--wng);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px;color:var(--wn)}
+        .mtit{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;text-align:center;margin-bottom:8px}
+        .mtxt{font-size:14px;color:var(--fg2);text-align:center;line-height:1.6;margin-bottom:24px}
+        .macts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .mbtn{padding:12px;border-radius:var(--rs);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;border:none}
+        .mbtn.canc{background:var(--bg2);color:var(--fg2);border:1px solid var(--bdr)}
+        .mbtn.canc:hover{background:var(--card-h);color:var(--fg)}
+        .mbtn.conf{background:linear-gradient(135deg,var(--wn),#d97706);color:#fff}
+        .mbtn.conf:hover{box-shadow:0 4px 16px rgba(245,158,11,.3)}
+
+        @media(max-width:600px){
+            .icard,.rcard,.tcard{padding:28px 20px}
+            .qcard{padding:24px 18px}
+            .vfops{grid-template-columns:1fr}
+            .strow{grid-template-columns:1fr 1fr;gap:8px}
+            .sprev,.ssum{grid-template-columns:1fr}
+            .ract{grid-template-columns:1fr}
+            .snum{font-size:40px}
+            .sring{width:150px;height:150px}
+            .fill-input{width:130px;font-size:13px}
+            .match-row { grid-template-columns: 1fr; gap: 8px; }
+        }
+        @media(prefers-reduced-motion:reduce){.bg-blob,.particle{animation:none!important}.screen{animation:none!important}*{transition-duration:.01ms!important}}
+    </style>
+</head>
+<body>
+<div class="bg-layer"><div class="bg-blob"></div><div class="bg-blob"></div><div class="bg-blob"></div></div>
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+<div class="tc" id="toastC"></div>
+<div class="movl" id="modal"><div class="mbox"><div class="mico"><i class="fas fa-exclamation-triangle"></i></div><div class="mtit">Entregar evaluación</div><div class="mtxt" id="modalTxt"></div><div class="macts"><button class="mbtn canc" onclick="closeModal()">Revisar</button><button class="mbtn conf" id="modalConf">Entregar</button></div></div></div>
+
+<div class="app">
+<!-- INSTR --><div class="screen active" id="sInstr"><div class="icard"><div class="ihdr"><div class="iico"><i class="fas fa-clipboard-list"></i></div><div><div class="ititle">Evaluación Completa (Sin Registro)</div><div class="isub">5 secciones — 64 puntos totales</div></div></div><div class="fgrp" style="margin-bottom: 24px;"><label for="studentNameInput" style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:var(--ac);">Nombre del Estudiante (Opcional para el reporte PDF):</label><input type="text" id="studentNameInput" placeholder="Ej: María García López" style="width:100%; padding:14px; background:var(--bg2); border:1px solid var(--bdr); border-radius:var(--rs); color:var(--fg); font-family:'DM Sans',sans-serif; font-size:14px; outline:none; transition:border-color .2s,box-shadow .2s; margin-top:8px;"></div><div class="sprev"><div class="sbox"><div class="sn">Sección 1</div><div class="st">V/F + Justificación</div><div class="sd">10 preguntas — Diseño del Producto (10 pts)</div></div><div class="sbox"><div class="sn">Sección 2</div><div class="st">Selección única</div><div class="sd">20 preguntas — Localización (20 pts)</div></div><div class="sbox"><div class="sn">Sección 3</div><div class="st">Ordenamiento</div><div class="sd">2 items de 10 oraciones — Requerimientos (4 pts)</div></div><div class="sbox"><div class="sn">Sección 4</div><div class="st">Completamiento</div><div class="sd">2 items de 10 preguntas — Planificación y Logística (20 pts)</div></div><div class="sbox" style="grid-column: span 2"><div class="sn">Sección 5</div><div class="st">Unir las Columnas</div><div class="sd">2 items de 10 correspondencias — Indicadores Financieros (10 pts)</div></div></div><ul class="ilist"><li><span class="ii"><i class="fas fa-clock"></i></span><span>Tiempo total: <strong style="color:var(--fg)">90 minutos</strong> distribuidos en las 5 secciones.</span></li><li><span class="ii"><i class="fas fa-pen-fancy"></i></span><span>S1: 1 pt c/u (0.5 respuesta + 0.5 justificación). S2, S4: 1 pt c/u. S3: 0.2 pt por posición. S5: 0.5 pt por correspondencia.</span></li><li><span class="ii"><i class="fas fa-exchange-alt"></i></span><span>S5: Selecciona la letra de la columna derecha que corresponda al concepto de la columna izquierda.</span></li><li><span class="ii"><i class="fas fa-file-pdf"></i></span><span>Al finalizar, se guardarán los resultados y podrás **Descargar el Reporte en PDF** con tu nombre.</span></li></ul><button class="strtbtn" onclick="startExam()"><i class="fas fa-play"></i> Comenzar evaluación</button></div></div>
+<!-- TRANS --><div class="screen" id="sTrans"><div class="tcard"><div class="tico"><i class="fas fa-check-double"></i></div><div class="ttitle" id="transTitle">Sección completada</div><div class="tsub" id="transSub"></div><div class="ssum" id="transSum"></div><button class="strtbtn" id="transBtn" onclick="nextSection()"><i class="fas fa-arrow-right"></i> Continuar</button></div></div>
+<!-- EXAM --><div class="screen" id="sExam"><div class="ehdr"><div class="etop"><span class="eslbl" id="eLbl">Sección 1</span><span class="etimer"><i class="fas fa-hourglass-half"></i> <span id="eTim">25:00</span></span></div><div class="pbt"><div class="pbf" id="eProg"></div></div></div><div class="qmap" id="qMap"></div><div id="qCont"></div><div class="navs"><button class="nbtn prev" id="bPrev" onclick="navQ(-1)" disabled><i class="fas fa-arrow-left"></i> Anterior</button><button class="nbtn nxt" id="bNext" onclick="navQ(1)">Siguiente <i class="fas fa-arrow-right"></i></button></div></div>
+<!-- RESULTS --><div class="screen" id="sRes"><div class="rcard"><div class="sring"><svg viewBox="0 0 160 160"><circle class="rbg" cx="80" cy="80" r="70"/><circle class="rfill" id="rRing" cx="80" cy="80" r="70"/></svg><div class="sval"><div class="snum" id="rNum">0</div><div class="slbl" id="rLbl">de 64 puntos</div></div></div><h2 class="rtitle" id="rTit">Resultado</h2><p class="rsub" id="rSub"></p><div id="rStats"></div><div class="revsec"><div class="revtit">Revisión detallada</div><div id="rRev"></div></div><div class="ract"><button class="rbtn pdf" onclick="exportPDF()"><i class="fas fa-file-pdf"></i> Guardar como PDF</button><button class="rbtn eml" onclick="sendEmail()"><i class="fas fa-envelope"></i> Enviar por correo</button><button class="rbtn ret" onclick="retry()"><i class="fas fa-redo"></i> Reintentar</button></div></div></div>
+</div>
+
+<script>
+/* ==================================================================
+   DATOS COMPLETOS DE LA EVALUACIÓN
+   ================================================================== */
+
+/* --- SECCIÓN 1: V/F — Diseño del Producto (10 preguntas) --- */
+const S1=[
+{id:1,text:"El Despliegue de la Función de Calidad (QFD) utiliza la matriz denominada \"Casa de la Calidad\" para traducir la Voz del Cliente (VoC) en Características Críticas para la Calidad (CTQ).",answer:true,expl:"El QFD es una metodología de diseño sistemática que captura la VoC y la mapea estructuradamente mediante la Casa de la Calidad para obtener parámetros críticos CTQ."},
+{id:2,text:"En la fórmula del cálculo del QFD \\(A_j = \\sum_{i=1}^{n} (d_i \\cdot W_{ij})\\), el término \\(d_i\\) representa la matriz de ponderación y \\(W_{ij}\\) representa la importancia relativa de los requerimientos.",answer:false,expl:"Es al revés: \\(d_i\\) representa el vector de importancia relativa asignado por el mercado a cada requerimiento, y \\(W_{ij}\\) es la matriz de ponderación."},
+{id:3,text:"La Norma ISO 128 rige la estandarización del dibujo técnico, estableciendo que las líneas continuas gruesas representan contornos vistos y las líneas de trazo/punto representan ejes de simetría.",answer:true,expl:"La norma ISO 128 estandariza los tipos de líneas en planos técnicos, asignando líneas gruesas a las aristas y contornos visibles, y líneas de trazo y punto para ejes y centros de simetría."},
+{id:4,text:"La Ingeniería de Valor (VE) define el valor del producto como la proporción inversa entre el costo y la función, expresada matemáticamente como \\(V = C / F\\).",answer:false,expl:"La Ingeniería de Valor define el valor como la proporción directa entre la función y el costo, es decir, \\(V = F / C\\)."},
+{id:5,text:"El índice de capacidad del proceso \\(C_p\\) toma en cuenta el centrado de la media del proceso con respecto a los límites de especificación superior (USL) e inferior (LSL).",answer:false,expl:"El índice \\(C_p\\) solo evalúa la dispersión total (ancho) del proceso frente al rango de especificaciones. El índice que considera el centrado de la media es el \\(C_{pk}\\)."},
+{id:6,text:"Para calcular la velocidad del husillo (\\(n\\)) en un torno CNC, se utiliza la fórmula \\(n = \\frac{v_c \\cdot 1000}{\pi \cdot D_0}\\), donde \\(v_c\\) es la velocidad de corte y \\(D_0\\) es el diámetro de la pieza.",answer:true,expl:"Esta es la fórmula metalúrgica estándar para convertir la velocidad de corte lineal (m/min) a velocidad de rotación angular del husillo (RPM), compensando el diámetro en milímetros."},
+{id:7,text:"La eficiencia global de una línea de producción (\\(E\\)) se calcula como la sumatoria de los tiempos de todas las tareas dividida por el producto del número de estaciones (\\(K\\)) y el tiempo de ciclo (\\(T_c\\)).",answer:true,expl:"La fórmula matemática es \\(E = \\frac{\\sum t_i}{K \\cdot T_c} \\times 100\\%\\), donde se compara la suma del tiempo neto de trabajo contra el tiempo total asignado a todas las estaciones de trabajo."},
+{id:8,text:"En el método de la Ruta Crítica (CPM), las actividades críticas son aquellas que ponen una holgura total positiva (\\(H > 0\\)).",answer:false,expl:"Las actividades críticas son aquellas que tienen una holgura total igual a cero (\\(H = 0\\)), lo que significa que cualquier retraso en ellas retrasará todo el proyecto."},
+{id:9,text:"El Valor Actual Neto (VAN) se define como la sumatoria de los flujos netos de caja futuros descontados a una tasa de costo de oportunidad, sin restar la inversión inicial.",answer:false,expl:"El cálculo del VAN requiere restar explícitamente la inversión inicial (\\(I_0\\)) en el año cero, tal como se expresa en la ecuación: \\(VAN = -I_0 + \\sum \\frac{F_t}{(1+k)^t}\\)."},
+{id:10,text:"La Tasa Interna de Retorno (TIR) es la tasa de descuento que hace que el Valor Actual Neto (VAN) de un proyecto sea exactamente igual a cero.",answer:true,expl:"Por definición, la TIR es la tasa de rendimiento de la inversión que satisface la condición matemática de igualar la suma de los flujos de caja descontados con la inversión inicial, haciendo que el VAN sea cero."}
+];
+
+/* --- SECCIÓN 2: Selección única — Localización (20 preguntas) --- */
+const S2=[
+{id:11,text:"¿Cuál es el objetivo principal del estudio de localización?",opts:["Determinar el presupuesto total","Identificar el lugar geográfico óptimo para el proyecto","Definir el tamaño de la planta","Establecer el cronograma"],c:1,expl:"El estudio de localización busca determinar la ubicación geográfica más conveniente considerando múltiples factores de viabilidad y rentabilidad."},
+{id:12,text:"¿Qué tipo de factores incluye costos de mano de obra, terrenos, transporte y energía?",opts:["Factores sociales","Factores políticos","Factores económicos o cuantificables","Factores ambientales"],c:2,expl:"Los factores económicos son aquellos expresables en términos monetarios: mano de obra, terrenos, energía, transporte, materias primas."},
+{id:13,text:"En el método de factores ponderados, ¿qué representa el peso asignado a cada factor?",opts:["El costo monetario","La importancia relativa del factor","El número de ubicaciones que cumplen","La calificación máxima"],c:1,expl:"El peso refleja la importancia relativa de cada factor frente a los demás, permitiendo priorizar los más críticos."},
+{id:14,text:"¿Cuál es la diferencia entre macrolocalización y microlocalización?",opts:["Macro analiza costos, micro analiza leyes","Macro determina la región general, micro el sitio específico","Macro es para servicios, micro para industria","Son sinónimos"],c:1,expl:"Macrolocalización define la región/zona amplia; microlocalización identifica el sitio exacto, manzana o lote dentro de esa región."},
+{id:15,text:"¿Qué método utiliza coordenadas geográficas y volúmenes para minimizar costos de transporte?",opts:["Factores ponderados","Punto de equilibrio","Centro de gravedad","Modelo de asignación"],c:2,expl:"El método del centro de gravedad calcula un punto óptimo usando coordenadas ponderadas por volúmenes de flujo."},
+{id:16,text:"En el análisis de punto de equilibrio por localización, ¿qué se compara?",opts:["Calidad de vida","Costos fijos y variables para diferentes niveles de producción","Regulaciones ambientales","Disponibilidad de mano de obra"],c:1,expl:"Compara costos fijos y variables de cada ubicación para diferentes volúmenes, identificando rangos donde cada alternativa es más económica."},
+{id:17,text:"¿Cuál NO es un factor típico de localización industrial?",opts:["Disponibilidad de materias primas","Cercanía a mercados","Diseño organizacional de la empresa","Infraestructura de transporte"],c:2,expl:"El diseño organizacional es una decisión interna que no depende de la ubicación geográfica."},
+{id:18,text:"En localización de servicios, ¿cuál es el factor predominante?",opts:["Costo del terreno","Cercanía y accesibilidad para los usuarios","Disponibilidad de materias primas","Cercanía a puertos"],c:1,expl:"En servicios, el factor predominante es la cercanía al usuario final, ya que el cliente acude al servicio."},
+{id:19,text:"¿Qué son los costos hundidos en localización?",opts:["Costos que se recuperan al vender el terreno","Costos ya incurridos no recuperables al cambiar de ubicación","Costos de transporte","Costos variables que aumentan con la producción"],c:1,expl:"Los costos hundidos son inversiones ya realizadas que no pueden recuperarse independientemente de la decisión futura."},
+{id:20,text:"¿Qué ventaja representa la aglomeración industrial (clusters)?",opts:["Reduce la competencia","Permite compartir infraestructura y servicios especializados","Elimina necesidad de estudios","Garantiza menores costos de mano de obra"],c:1,expl:"Los clusters permiten compartir infraestructura, servicios, mano de obra especializada y redes de proveedores."},
+{id:21,text:"¿Qué técnica matemática usa el método de transporte para minimizar costos?",opts:["Regresión lineal","Programación lineal","Análisis de componentes principales","Simulación de Montecarlo"],c:1,expl:"El método de transporte usa programación lineal para la asignación óptima que minimiza costos totales de distribución."},
+{id:22,text:"¿Qué rol juegan los incentivos fiscales y zonas francas?",opts:["No tienen impacto","Son factores gubernamentales que reducen costos operativos","Determinan la viabilidad legal exclusivamente","Solo aplican a tecnología de punta"],c:1,expl:"Los incentivos fiscales pueden reducir significativamente costos operativos, haciendo atractiva una ubicación."},
+{id:23,text:"¿Cuál es la primera etapa del estudio de localización?",opts:["Evaluar alternativas cuantitativamente","Definir requisitos y factores de localización","Seleccionar el sitio exacto","Análisis de punto de equilibrio"],c:1,expl:"Primero se definen los requisitos del proyecto y factores relevantes, base para preseleccionar y evaluar ubicaciones."},
+{id:24,text:"Una industria orientada al mercado se localiza cerca de:",opts:["Fuentes de materias primas","Centros de consumo o demanda","Zonas rurales de bajo costo","Puertos marítimos exclusivamente"],c:1,expl:"La industria orientada al mercado se ubica cerca de los centros de consumo porque el costo de transportar el producto terminado es mayor."},
+{id:25,text:"Un índice de localización menor a 1 indica:",opts:["La región es ideal","Concentración del sector menor a la nacional, potencial de desarrollo","La región está saturada","No puede ser menor a 1"],c:1,expl:"Índice < 1 indica subrepresentación del sector en la región, lo que puede señalar potencial de desarrollo."},
+{id:26,text:"¿Qué factor ganó relevancia por los acuerdos comerciales internacionales?",opts:["El clima","Cercanía a puertos y fronteras para comercio exterior","El color de edificaciones","Número de universidades"],c:1,expl:"La globalización aumentó la importancia de cercanía a puertos, fronteras y corredores logísticos internacionales."},
+{id:27,text:"¿Qué se entiende por 'factores cualitativos'?",opts:["Medibles en dinero","No expresables directamente en términos monetarios","De calidad del producto","Solo importantes en microlocalización"],c:1,expl:"Son factores como calidad de vida, clima, actitud comunitaria, estabilidad política, que no se expresan fácilmente en dinero."},
+{id:28,text:"¿Cuál es la limitación principal del método del centro de gravedad?",opts:["Solo funciona para un proveedor","Solo considera costo de transporte","Requiere cálculo diferencial avanzado","Solo aplica a servicios"],c:1,expl:"Su limitación es que solo minimiza costos de transporte sin considerar otros factores importantes."},
+{id:29,text:"El 'nearshoring' se refiere a:",opts:["Localizar en el país de origen","Localizar en países cercanos al mercado objetivo","Cerrar y subcontratar todo","Localizar donde impuestos son más bajos"],c:1,expl:"Nearshoring es localizar operaciones en países cercanos geográficamente al mercado objetivo."},
+{id:30,text:"¿Por qué es importante la Evaluación de Impacto Ambiental (EIA)?",opts:["Es trámite burocrático sin consecuencias","Determina si el proyecto puede desarrollarse legalmente y mitigar daños","Solo mejora imagen pública","Reemplaza todos los demás factores"],c:1,expl:"La EIA es fundamental porque puede determinar la viabilidad legal de la ubicación e identificar impactos a mitigar."}
+];
+
+/* --- SECCIÓN 3: Ordenamiento — Requerimientos Tecnológicos (2 items) --- */
+const S3=[
+{id:'A',title:'Proceso de Determinación de Requerimientos Tecnológicos',
+sentences:[
+"El primer paso es identificar las necesidades tecnológicas del proyecto comparando el estado actual con el estado deseado.",
+"Se realiza un análisis de brechas (Gap Analysis) calculando Brecha_i = ED_i - EA_i para cada requerimiento identificado.",
+"Si la brecha resultante es mayor a cero, existe un déficit tecnológico que requiere inversión en equipamiento o infraestructura.",
+"Se elabora la especificación técnica incluyendo parámetros de desempeño, condiciones de operación y normativas aplicables.",
+"Se cuantifica el Costo Total de Propiedad (TCO) considerando adquisición, instalación, operación, mantenimiento y desecho.",
+"Se calculan los indicadores de confiabilidad: tasa de fallos (lambda), MTBF, MTTR y disponibilidad del equipo candidato.",
+"Se evalúa la inversión con ROI, NPV y análisis costo-beneficio para justificar económicamente el requerimiento.",
+"Se construye una matriz de evaluación ponderada comparando alternativas tecnológicas según criterios definidos.",
+"Se verifica el cumplimiento de normativas como IEC 61511 para niveles de integridad de seguridad SIL.",
+"Se integran criterios de redundancia y respaldo en el diseño final antes de la adquisición y puesta en marcha."
+]},
+{id:'B',title:'Dimensionamiento de Servicios Industriales',
+sentences:[
+"Se identifican todos los equipos y sistemas que requieren servicios industriales: eléctrico, agua, aire comprimido y vapor.",
+"Se calcula la potencia instalada total sumando las potencias nominales de todos los equipos eléctricos del proyecto.",
+"Se determina la demanda máxima multiplicando la potencia instalada por el factor de demanda, típicamente entre 0.6 y 0.8.",
+"Se dimensiona el transformador con reserva dividiendo la demanda entre 0.8 y multiplicando por un factor de 1.25.",
+"Se calcula el caudal de agua contra incendios según NFPA 15 como el producto del área por la densidad de aplicación.",
+"Se determina el volumen de reserva de agua como Q por T_descarga multiplicado por 1.1 como margen de seguridad.",
+"Se calcula el caudal de aire libre (FAD) requerido sumando consumos de cada equipo dividido por la eficiencia de red.",
+"Se determina la potencia del compresor usando la fórmula isotérmica con presiones de succión y descarga.",
+"Se dimensionan los sistemas HVAC considerando ventilación, presurización de áreas clasificadas y aire acondicionado.",
+"Se integran todos los servicios en el plan de infraestructura verificando capacidad y redundancia del sistema completo."
+]}
+];
+
+/* --- SECCIÓN 4: Completamiento — Planificación Productiva y Logística (2 items × 10) --- */
+const S4=[
+{id:'A',title:'Planificación de la Producción y Capacidad Productiva',
+questions:[
+{parts:["La planificación "," tiene un horizonte de 1 a 5 años y define la capacidad instalada y las inversiones en planta."],answer:"estratégica",alts:["estrategica"],expl:"La planificación estratégica es de largo plazo (1-5 años) y define capacidad instalada, inversiones y nuevos productos."},
+{parts:["El Programa Maestro de Producción (MPS) despliega el plan agregado en productos individuales con "," y fechas específicas."],answer:"cantidades",alts:["cantidad"],expl:"El MPS convierte el plan agregado en cantidades específicas de productos individuales con fechas definidas."},
+{parts:["En la lógica MRP, el requerimiento neto se calcula como RN_t = max{0, GB_t - IH_{t-1} - ","}."],answer:"RR_t",alts:["rr_t","recepciones programadas","recepcion"],expl:"RR_t son las recepciones programadas del período t, que se restan del requerimiento bruto junto con el inventario inicial."},
+{parts:["La capacidad de diseño se calcula como C_diseno = n × T × "," , donde n es el número de equipos y T el tiempo disponible."],answer:"r",alts:["tasa","tasa de produccion","produccion"],expl:"r es la tasa de producción por equipo (unidades/hora), el tercer factor de la fórmula de capacidad de diseño."},
+{parts:["La capacidad efectiva es igual a la capacidad de diseño multiplicada por la utilización y el "," (eficiencia del proceso)."],answer:"rendimiento",alts:["eficiencia","eta rendimiento","η_rendimiento"],expl:"Los dos factores que reducen la capacidad de diseño a capacidad efectiva son la utilización y el rendimiento."},
+{parts:["Operar sistemáticamente por encima del ","% de capacidad efectiva incrementa la probabilidad de fallos y errores humanos."],answer:"85",alts:["85%"],expl:"El umbral de riesgo es 85%. Por encima de este valor, hay poca flexibilidad, estrés en equipos y mayor probabilidad de incidentes."},
+{parts:["El OEE se calcula como el producto de tres factores: OEE = A × P × ","."],answer:"Q",alts:["calidad","q","factor de calidad"],expl:"OEE = Disponibilidad × Rendimiento × Calidad. La Q representa el factor de calidad."},
+{parts:["La disponibilidad en el OEE se calcula como A = (T_planificado - T_paradas) / ","."],answer:"T_planificado",alts:["t_planificado","tiempo planificado","tp"],expl:"La disponibilidad es el tiempo de producción dividido entre el tiempo planificado de operación."},
+{parts:["En el balanceo de líneas, el tiempo de ciclo objetivo se calcula como C = T_disponible / ","."],answer:"D_requerida",alts:["d_requerida","demanda requerida","demanda","d"],expl:"El tiempo de ciclo objetivo es el tiempo disponible dividido por la demanda requerida en el mismo período."},
+{parts:["La holgura de balanceo se calcula como H = N_real × C_max - la "," de todos los tiempos de tarea."],answer:"suma",alts:["sumatoria","total","σ","sum"],expl:"La holgura es la diferencia entre el tiempo total asignado y la suma de los tiempos de todas las tareas."}
+]},
+{id:'B',title:'Logística y Gestión de Inventarios',
+questions:[
+{parts:["El EOQ se calcula como Q* = raiz(2 × D × S / ","), donde D es la demanda anual y S el costo por pedido."],answer:"H",alts:["h","costo de mantenimiento","ch"],expl:"H es el costo de mantener una unidad por año ($/unidad·año), el denominador de la fórmula del EOQ."},
+{parts:["Si se conoce el costo unitario C y la tasa de mantenimiento h, entonces H = h × ","."],answer:"C",alts:["c","costo unitario","costo"],expl:"H se calcula multiplicando la tasa de mantenimiento por el costo unitario del artículo."},
+{parts:["El número de pedidos por año se calcula como N = "," / Q*."],answer:"D",alts:["d","demanda","demanda anual"],expl:"Se divide la demanda anual D entre la cantidad económica de pedido Q*."},
+{parts:["El tiempo entre pedidos (TBO) se calcula como TBO = (Q* / D) × "," días."],answer:"365",alts:["365 dias","365d","trescientos sesenta y cinco"],expl:"El TBO convierte la fracción Q*/D (proporción del año) a días multiplicando por 365."},
+{parts:["El punto de reorden determinístico se calcula como ROP = d × "," , donde d es la demanda diaria."],answer:"L",alts:["l","lead time","tiempo de entrega","lt"],expl:"L es el lead time (tiempo de reposición) en días. ROP = demanda diaria × lead time."},
+{parts:["El punto de reorden con stock de seguridad es ROP = d̄ × L + ","."],answer:"SS",alts:["ss","stock de seguridad","stock seguridad"],expl:"SS es el stock de seguridad, que se suma al producto de la demanda promedio por el lead time."},
+{parts:["El stock de seguridad se calcula como SS = Z × σ_d × raiz("," ), donde L es el lead time."],answer:"L",alts:["l","lead time","lt"],expl:"La fórmula del stock de seguridad multiplica Z por la desviación estándar de la demanda por la raíz cuadrada del lead time."},
+{parts:["Para materiales de seguridad como EPP, se requiere un nivel de servicio del ","% o superior, con Z = 2.33."],answer:"99",alts:["99%","noventa y nueve"],expl:"Los EPP y materiales de seguridad requieren nivel de servicio de 99% o superior según normativa de seguridad industrial."},
+{parts:["Cuando la demanda y el lead time son variables, SS = Z × raiz(L × σ_d² + d̄² × "," )."],answer:"σ_L²",alts:["sigma_l²","varianza del lead time","varianza lt","sigma_l al cuadrado"],expl:"Se agrega el término de la varianza del lead time (σ_L²) ponderado por la demanda promedio al cuadrado."},
+{parts:["En el EOQ con descuentos por volumen, se evalúa el costo total CT para cada rango de "," y se selecciona el de menor costo."],answer:"precio",alts:["precios","c_j","costo","costos","precio c_j"],expl:"Se evalúa el costo total para cada rango de precio (C_j) y se elige el rango que minimiza el costo total."}
+]}
+];
+
+/* --- SECCIÓN 5: Unir Columnas — Indicadores Financieros (2 items) --- */
+const S5=[
+{
+    id:'A',
+    title:'Ítem A: Conceptos Clave de Indicadores Financieros',
+    leftItems:[
+        {id:1, text:"Valor Actual Neto (VAN)"},
+        {id:2, text:"Tasa Interna de Retorno (TIR)"},
+        {id:3, text:"Periodo de Recuperación (PRI) Simple"},
+        {id:4, text:"Periodo de Recuperación (PRI) Descontado"},
+        {id:5, text:"Tasa Mínima Aceptable de Rendimiento (TMAR)"},
+        {id:6, text:"Apalancamiento Financiero"},
+        {id:7, text:"Costo de Oportunidad del Capital"},
+        {id:8, text:"Prima por Riesgo"},
+        {id:9, text:"Curva de Perfil del VAN"},
+        {id:10, text:"Decisión Viable de Inversión"}
+    ],
+    rightItems:[
+        {val:"A", text:"Mide la ganancia neta en valor presente de hoy, descontando flujos a la TMAR y restando la inversión inicial."},
+        {val:"B", text:"Tasa de descuento que iguala el VAN exactamente a cero, representando la rentabilidad del proyecto."},
+        {val:"C", text:"Tiempo necesario para recuperar la inversión inicial sin considerar el costo del dinero en el tiempo."},
+        {val:"D", text:"Tiempo de recuperación obtenido aplicando la tasa de descuento a cada flujo de caja futuro."},
+        {val:"E", text:"Tasa mínima que exige el inversionista para cubrir inflación, riesgo y costo de oportunidad."},
+        {val:"F", text:"Efecto de financiamiento que incrementa la TIR del inversionista frente a la del proyecto."},
+        {val:"G", text:"Rendimiento que se obtendría en la mejor alternativa de inversión con riesgo equivalente."},
+        {val:"H", text:"Compensación exigida por la incertidumbre y complejidad asociada al proyecto de ingeniería."},
+        {val:"I", text:"Línea gráfica que muestra la sensibilidad del VAN frente a variaciones de la tasa de descuento."},
+        {val:"J", text:"Condición de aceptación donde VAN > 0, TIR > TMAR y el PRI está dentro del horizonte útil del proyecto."}
+    ]
+},
+{
+    id:'B',
+    title:'Ítem B: Fórmulas y Ecuaciones del Tema 5.4',
+    leftItems:[
+        {id:1, text:"Valor Presente de un Flujo Futuro"},
+        {id:2, text:"Ecuación General del VAN"},
+        {id:3, text:"Condición de Frontera para la TIR"},
+        {id:4, text:"Fórmula de Interpolación Lineal para TIR"},
+        {id:5, text:"Cálculo de la Cuerda para el PRI Simple"},
+        {id:6, text:"Fórmula Teórica de la TMAR"},
+        {id:7, text:"Factor de Descuento (FD)"},
+        {id:8, text:"Flujo Acumulado Descontado"},
+        {id:9, text:"Criterio de Viabilidad del VAN"},
+        {id:10, text:"Ecuación de la Proporción de Valor (VE)"}
+    ],
+    rightItems:[
+        {val:"A", text:"$$VP(F_t) = \\frac{F_t}{(1+i)^t}$$"},
+        {val:"B", text:"$$VAN = -I_0 + \\sum_{t=1}^{n} \\frac{F_t}{(1+i)^t}$$"},
+        {val:"C", text:"$$VAN(TIR) = 0$$"},
+        {val:"D", text:"$$TIR = i_1 + \\frac{VAN_1}{VAN_1 - VAN_2} \\times (i_2 - i_1)$$"},
+        {val:"E", text:"$$PRI = t^{-} + \\frac{|FA_{t^{-}}|}{FNP_{t^{+}}}$$"},
+        {val:"F", text:"$$TMAR = i_o + \\pi + r_p$$"},
+        {val:"G", text:"$$FD_t = \\frac{1}{(1+i)^t}$$"},
+        {val:"H", text:"$$FA_{desc,t} = \\sum_{k=0}^{t} \\frac{FNP_k}{(1+i)^k}$$"},
+        {val:"I", text:"$$VAN > 0$$"},
+        {val:"J", text:"$$V = \\frac{F}{C}$$"}
+    ]
+}
+];
+
+/* ==================================================================
+   ESTADO GLOBAL
+   ================================================================== */
+let CU=null, curSec=1, curQ=0, answers=[], timerInt=null, timeRem=0, s5Shuffled=[];
+let secScores={s1:null,s2:null,s3:null,s4:null,s5:null};
+const SEC_TIME=[0,25*60,20*60,12*60,15*60,18*60]; // 5 secciones
+const SEC_TOTAL=[0,10,20,4,20,10]; // puntos por sección
+const SEC_START=[0,0,10,30,32,34]; // índice inicial en allQ
+const SEC_END=[0,10,30,32,34,36]; // índice final en allQ
+
+function initS5Shuffled(){
+    s5Shuffled = [];
+    S5.forEach((item) => {
+        let pool = item.rightItems.map((ri) => ({originalVal: ri.val, text: ri.text}));
+        // Mezclar el pool
+        for(let j=pool.length-1; j>0; j--){
+            let k = Math.floor(Math.random()*(j+1));
+            [pool[j], pool[k]] = [pool[k], pool[j]];
+        }
+        // Asignar letras A-J en el orden mezclado
+        const letters = ['A','B','C','D','E','F','G','H','I','J'];
+        let choices = pool.map((el, idx) => ({
+            letter: letters[idx],
+            originalVal: el.originalVal,
+            text: el.text
+        }));
+        s5Shuffled.push(choices);
+    });
+}
+
+function initAnswers(){
+    answers=[];
+    S1.forEach(()=>answers.push({type:'vf',sel:null,just:''}));
+    S2.forEach(()=>answers.push({type:'mc',sel:null}));
+    S3.forEach((item)=>{
+        let order=[];
+        for(let j=0;j<item.sentences.length;j++) order.push(j);
+        // Mezclar
+        for(let j=order.length-1;j>0;j--){let k=Math.floor(Math.random()*(j+1));[order[j],order[k]]=[order[k],order[j]];}
+        answers.push({type:'ord',order:order,checked:false,score:0});
+    });
+    S4.forEach(item=>{
+        let qs=[];
+        item.questions.forEach(()=>qs.push(''));
+        answers.push({type:'fill',responses:qs});
+    });
+    initS5Shuffled();
+    S5.forEach(()=>{
+        answers.push({type:'match',selections: Array(10).fill('')});
+    });
+}
+
+/* ==================================================================
+   PARTÍCULAS Y UTILIDADES
+   ================================================================== */
+(function(){const c=document.getElementById('particles');for(let i=0;i<20;i++){const p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';const s=(2+Math.random()*3)+'px';p.style.width=s;p.style.height=s;p.style.animationDuration=(12+Math.random()*18)+'s';p.style.animationDelay=(Math.random()*15)+'s';c.appendChild(p);}})();
+
+function toast(m,t='success'){const c=document.getElementById('toastC');const e=document.createElement('div');e.className=`toast ${t}`;const ic={success:'fa-check-circle',warning:'fa-exclamation-circle',error:'fa-times-circle',info:'fa-info-circle'};e.innerHTML=`<i class="fas ${ic[t]}"></i><span>${m}</span>`;c.appendChild(e);setTimeout(()=>{e.classList.add('to');setTimeout(()=>e.remove(),300);},3500);}
+function showModal(t,fn){document.getElementById('modalTxt').textContent=t;document.getElementById('modal').classList.add('active');document.getElementById('modalConf').onclick=fn;}
+function closeModal(){document.getElementById('modal').classList.remove('active');}
+function showScr(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function norm(s){return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[_\-\s]+/g,' ').trim();}
+
+/* ==================================================================
+   INICIAR EXAMEN Y SECCIONES
+   ================================================================== */
+function startExam(){
+    const n = document.getElementById('studentNameInput').value.trim();
+    CU = { name: n || 'Estudiante Anónimo', email: 'sin_registro@upse.edu.ec' };
+    initAnswers();
+    curSec=1;
+    curQ=0;
+    secScores={s1:null,s2:null,s3:null,s4:null,s5:null};
+    timeRem=SEC_TIME[1];
+    buildMap();
+    buildQs();
+    showQ(0);
+    startTimer();
+    document.getElementById('eLbl').textContent='Sección 1 — Verdadero / Falso';
+    showScr('sExam');
+}
+
+function finishSection(){
+    clearInterval(timerInt);document.querySelector('.etimer').style.color='';
+    const si=curSec-1;
+    const scores=['s1','s2','s3','s4','s5'];
+    secScores[scores[si]]=calcSecScore(curSec);
+    showTransition(curSec);
+}
+
+function showTransition(sec){
+    const t=document.getElementById('transTitle'),s=document.getElementById('transSub'),sm=document.getElementById('transSum'),b=document.getElementById('transBtn');
+    if(sec===1){t.textContent='Sección 1 completada';s.textContent='Has finalizado Verdadero / Falso. Resumen:';const r=secScores.s1;sm.innerHTML=`<div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Incorrectas</div></div><div class="sst semp"><div class="sv">${r.empty}</div><div class="sl">Sin responder</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Sección 2 — Selección única';}
+    else if(sec===2){t.textContent='Sección 2 completada';s.textContent='Has finalizado Selección única. Resumen:';const r=secScores.s2;sm.innerHTML=`<div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Incorrectas</div></div><div class="sst semp"><div class="sv">${r.empty}</div><div class="sl">Sin responder</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Sección 3 — Ordenamiento';}
+    else if(sec===3){t.textContent='Sección 3 completada';s.textContent='Has finalizado Ordenamiento. Resumen:';const r=secScores.s3;sm.innerHTML=`<div class="sst ssc"><div class="sv">${r.score}</div><div class="sl">Puntos (de 4)</div></div><div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Posiciones correctas</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Posiciones incorrectas</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Sección 4 — Completamiento';}
+    else if(sec===4){t.textContent='Sección 4 completada';s.textContent='Has finalizado Completamiento. Resumen:';const r=secScores.s4;sm.innerHTML=`<div class="sst ssc"><div class="sv">${r.score}</div><div class="sl">Puntos (de 20)</div></div><div class="sst sok"><div class="sv">${r.correct}</div><div class="sl">Respuestas OK</div></div><div class="sst sbad"><div class="sv">${r.incorrect}</div><div class="sl">Incorrectas</div></div>`;b.innerHTML='<i class="fas fa-arrow-right"></i> Continuar a Sección 5 — Unir Columnas';}
+    else if(sec===5){submitExam();return;}
+    showScr('sTrans');
+}
+
+function nextSection(){
+    curSec++;timeRem=SEC_TIME[curSec];
+    const labels=['','Sección 1 — Verdadero / Falso','Sección 2 — Selección única','Sección 3 — Ordenamiento','Sección 4 — Completamiento','Sección 5 — Unir las Columnas'];
+    document.getElementById('eLbl').textContent=labels[curSec];
+    curQ=SEC_START[curSec];buildMap();buildQs();showQ(curQ);startTimer();showScr('sExam');
+}
+
+/* ==================================================================
+   TIMER
+   ================================================================== */
+function startTimer(){updateTimerD();timerInt=setInterval(()=>{timeRem--;updateTimerD();if(timeRem<=0){clearInterval(timerInt);if(curSec<5){toast('Tiempo agotado.','warning');finishSection();}else{toast('Tiempo agotado. Entregando...','warning');setTimeout(submitExam,1000);}}const te=document.querySelector('.etimer');if(timeRem<=120)te.style.color='var(--dn)';else if(timeRem<=300)te.style.color='var(--wn)';},1000);}
+function updateTimerD(){const m=Math.floor(timeRem/60),s=timeRem%60;document.getElementById('eTim').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');}
+
+/* ==================================================================
+   MAPA DE PREGUNTAS
+   ================================================================== */
+function buildMap(){const m=document.getElementById('qMap');m.innerHTML='';const s=SEC_START[curSec],e=SEC_END[curSec];
+if(curSec===3||curSec===4||curSec===5){
+    const items_cnt = curSec===3? S3.length: curSec===4? S4.length : S5.length;
+    for(let i=0; i<items_cnt; i++){
+        const d=document.createElement('div');d.className='qmd';d.textContent=String.fromCharCode(65+i);d.style.width='60px';d.setAttribute('data-idx',s+i);d.onclick=()=>showQ(s+i);m.appendChild(d);
+    }
+    return;
+}
+for(let i=s;i<e;i++){const d=document.createElement('div');d.className='qmd';d.textContent=i+1;d.setAttribute('data-idx',i);d.onclick=()=>showQ(i);m.appendChild(d);}}
+function updateMap(){document.querySelectorAll('.qmd').forEach(d=>{const i=parseInt(d.getAttribute('data-idx'));d.className='qmd';if(i===curQ)d.classList.add('cur');else if(isComplete(i))d.classList.add('don');else if(isPartial(i))d.classList.add('par');});}
+function isComplete(i){const a=answers[i];if(!a)return false;if(a.type==='vf')return a.sel!==null&&a.just.trim().length>10;if(a.type==='mc')return a.sel!==null;if(a.type==='ord')return a.checked;if(a.type==='fill')return a.responses.every(r=>r.trim().length>0);if(a.type==='match')return a.selections.every(s=>s!=='');return false;}
+function isPartial(i){const a=answers[i];if(!a)return false;if(a.type==='vf')return a.sel!==null||a.just.trim().length>0;if(a.type==='match')return a.selections.some(s=>s!=='');return false;}
+function updateProg(){const s=SEC_START[curSec],e=SEC_END[curSec];let c=0;for(let i=s;i<e;i++)if(isComplete(i))c++;document.getElementById('eProg').style.width=(c/(e-s)*100)+'%';}
+
+/* ==================================================================
+   CONSTRUIR PREGUNTAS
+   ================================================================== */
+function buildQs(){const c=document.getElementById('qCont');c.innerHTML='';
+    // S1: V/F
+    S1.forEach((q,i)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+i;card.style.display='none';card.innerHTML=`<div class="qnum">${i+1}</div><div class="qtxt">${q.text}</div><div class="vfops"><div class="vfop" data-q="${i}" data-v="true" onclick="selVF(${i},true)"><i class="fas fa-check"></i> Verdadero</div><div class="vfop" data-q="${i}" data-v="false" onclick="selVF(${i},false)"><i class="fas fa-times"></i> Falso</div></div><div class="jarea" id="ja-${i}"><div class="jlbl"><i class="fas fa-pen-nib"></i> Justifica tu respuesta</div><textarea class="jtxt" id="jt-${i}" placeholder="Explica por qué..." oninput="updJust(${i})"></textarea></div><div class="qst" id="qs-${i}"><i class="fas fa-info-circle"></i><span></span></div>`;c.appendChild(card);});
+    // S2: MC
+    S2.forEach((q,i)=>{const gi=i+10;const card=document.createElement('div');card.className='qcard';card.id='q-'+gi;card.style.display='none';let oh='<div class="mcopts">';const lt=['A','B','C','D'];q.opts.forEach((o,oi)=>{oh+=`<div class="mcop" data-q="${gi}" data-o="${oi}" onclick="selMC(${gi},${oi})"><span class="mclt">${lt[oi]}</span><span class="mctx">${o}</span></div>`;});oh+='</div>';card.innerHTML=`<div class="qnum">${gi+1}</div><div class="qtxt">${q.text}</div>${oh}`;c.appendChild(card);});
+    // S3: Ordenamiento
+    const s3i=SEC_START[3];S3.forEach((item,ii)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+(s3i+ii);card.style.display='none';let sh=`<div class="qnum">${String.fromCharCode(65+ii)}</div><div class="ord-item-label"><i class="fas fa-sort-amount-down"></i> ${item.title}</div><div class="ord-pool" id="ordpool-${ii}">`;const order=answers[s3i+ii].order;order.forEach((si,pi)=>{sh+=`<div class="ord-sentence" draggable="true" data-ii="${ii}" data-pi="${pi}" id="ords-${ii}-${pi}"><span class="ord-nums">${pi+1}</span><span>${item.sentences[si]}</span><div class="ord-arrows"><button onclick="moveOrd(${ii},${pi},-1)" title="Subir"><i class="fas fa-chevron-up"></i></button><button onclick="moveOrd(${ii},${pi},1)" title="Bajar"><i class="fas fa-chevron-down"></i></button></div></div>`;});sh+=`</div><div class="ord-result" id="ordres-${ii}"></div><button class="ord-check" id="ordchk-${ii}" onclick="checkOrd(${ii})"><i class="fas fa-check"></i> Verificar orden</button>`;card.innerHTML=sh;c.appendChild(card);});
+    // S4: Completamiento
+    const s4i=SEC_START[4];S4.forEach((item,ii)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+(s4i+ii);card.style.display='none';let sh=`<div class="qnum">${String.fromCharCode(65+ii)}</div><div class="ord-item-label"><i class="fas fa-pen"></i> ${item.title}</div>`;item.questions.forEach((q,qi)=>{sh+=`<div style="margin-bottom:18px">`;let sent='';for(let p=0;p<q.parts.length;p++){if(p>0)sent+=`<input class="fill-input" id="fi-${ii}-${qi}-${p}" type="text" autocomplete="off" oninput="updFill(${ii},${qi},${p})">`;sent+=q.parts[p];}sh+=`<div class="fill-sentence">${sent}</div></div>`;});card.innerHTML=sh;c.appendChild(card);});
+    // S5: Unir Columnas
+    const s5i=SEC_START[5];S5.forEach((item,ii)=>{const card=document.createElement('div');card.className='qcard';card.id='q-'+(s5i+ii);card.style.display='none';
+    let sh=`<div class="qnum">${String.fromCharCode(65+ii)}</div><div class="ord-item-label"><i class="fas fa-exchange-alt"></i> ${item.title}</div><div class="match-grp">`;
+    item.leftItems.forEach((li,pi)=>{
+        sh+=`<div class="match-row"><div class="match-left">${li.id}. ${li.text}</div><div><select class="match-select" id="ms-${ii}-${pi}" onchange="updMatch(${ii},${pi})"><option value="">Selecciona correspondencia...</option>`;
+        const letters = ['A','B','C','D','E','F','G','H','I','J'];
+        letters.forEach(l=>{sh+=`<option value="${l}">${l}</option>`;});
+        sh+=`</select></div></div>`;
+    });
+    sh+=`</div><div class="match-col-right"><div class="match-col-right-title">Opciones de correspondencia</div>`;
+    s5Shuffled[ii].forEach(ch=>{sh+=`<div class="match-option-desc"><strong>[${ch.letter}]</strong> ${ch.text}</div>`;});
+    sh+=`</div>`;
+    card.innerHTML=sh;c.appendChild(card);});
+}
+
+/* ==================================================================
+   INTERACCIONES
+   ================================================================== */
+function selVF(qi,v){answers[qi].sel=v;document.querySelectorAll(`.vfop[data-q="${qi}"]`).forEach(o=>{o.classList.remove('st','vfsf');if(o.getAttribute('data-v')===String(v))o.classList.add(v?'st':'vfsf');});document.getElementById('ja-'+qi).classList.add('vis');setTimeout(()=>document.getElementById('jt-'+qi).focus(),100);updVFSt(qi);updateProg();updateMap();}
+function updJust(qi){answers[qi].just=document.getElementById('jt-'+qi).value;updVFSt(qi);updateProg();updateMap();}
+function updVFSt(qi){const el=document.getElementById('qs-'+qi),sp=el.querySelector('span');el.classList.remove('vis','cok','cinc');const hs=answers[qi].sel!==null,hj=answers[qi].just.trim().length>10;if(hs&&hj){sp.textContent='Respuesta completa';el.classList.add('vis','cok');}else if(hs||answers[qi].just.trim().length>0){sp.textContent='Falta '+(hs?'justificar (mín. 10 caracteres)':'seleccionar V/F');el.classList.add('vis','cinc');}}
+function selMC(qi,oi){answers[qi].sel=oi;document.querySelectorAll(`.mcop[data-q="${qi}"]`).forEach(o=>{o.classList.remove('sel');if(parseInt(o.getAttribute('data-o'))===oi)o.classList.add('sel');});updateProg();updateMap();}
+
+/* Ordenamiento */
+function moveOrd(ii,pi,dir){const a=answers[SEC_START[3]+ii];const ni=pi+dir;if(ni<0||ni>=a.order.length)return;[a.order[pi],a.order[ni]]=[a.order[ni],a.order[pi]];renderOrd(ii);}
+function renderOrd(ii){const pool=document.getElementById('ordpool-'+ii);const a=answers[SEC_START[3]+ii];const item=S3[ii];pool.innerHTML='';a.order.forEach((si,pi)=>{pool.innerHTML+=`<div class="ord-sentence" draggable="true" data-ii="${ii}" data-pi="${pi}" id="ords-${ii}-${pi}"><span class="ord-nums">${pi+1}</span><span>${item.sentences[si]}</span><div class="ord-arrows"><button onclick="moveOrd(${ii},${pi},-1)"><i class="fas fa-chevron-up"></i></button><button onclick="moveOrd(${ii},${pi},1)"><i class="fas fa-chevron-down"></i></button></div></div>`;});initDrag(ii);}
+function initDrag(ii){document.querySelectorAll(`.ord-sentence[data-ii="${ii}"]`).forEach(el=>{el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',el.getAttribute('data-pi'));el.classList.add('dragging');});el.addEventListener('dragend',()=>el.classList.remove('dragging'));el.addEventListener('dragover',e=>{e.preventDefault();el.classList.add('drag-over');});el.addEventListener('dragleave',()=>el.classList.remove('drag-over'));el.addEventListener('drop',e=>{e.preventDefault();el.classList.remove('drag-over');const fi=parseInt(e.dataTransfer.getData('text/plain'));const ti=parseInt(el.getAttribute('data-pi'));if(fi!==ti){const a=answers[SEC_START[3]+ii];const v=a.order[fi];a.order.splice(fi,1);a.order.splice(ti,0,v);renderOrd(ii);}});});}
+function checkOrd(ii){const a=answers[SEC_START[3]+ii];const item=S3[ii];let correct=0;const pool=document.getElementById('ordpool-'+ii);pool.querySelectorAll('.ord-sentence').forEach((el,pi)=>{el.classList.remove('correct-pos','incorrect-pos');if(a.order[pi]===pi){el.classList.add('correct-pos');correct++;}else{el.classList.add('incorrect-pos');}});a.checked=true;a.score=correct*0.2;const res=document.getElementById('ordres-'+ii);res.className='ord-result vis '+(correct===10?'ok':'bad');res.innerHTML=`<i class="fas fa-${correct===10?'check-circle':'times-circle'}"></i> ${correct}/10 posiciones correctas — ${correct*0.2} puntos`;document.getElementById('ordchk-'+ii).disabled=true;updateProg();updateMap();}
+
+/* Completamiento */
+function updFill(ii,qi,pi){const inp=document.getElementById(`fi-${ii}-${qi}-${pi}`);answers[SEC_START[4]+ii].responses[qi*10+pi]=inp.value;updateProg();updateMap();}
+
+/* Unir Columnas */
+function updMatch(ii,pi){const sel=document.getElementById(`ms-${ii}-${pi}`).value;answers[SEC_START[5]+ii].selections[pi]=sel;updateProg();updateMap();}
+
+/* ==================================================================
+   MOSTRAR PREGUNTA
+   ================================================================== */
+function showQ(idx){document.querySelectorAll('.qcard').forEach(c=>c.style.display='none');curQ=idx;const el=document.getElementById('q-'+idx);if(el)el.style.display='block';
+const s=SEC_START[curSec],e=SEC_END[curSec];document.getElementById('bPrev').disabled=idx===s;const bn=document.getElementById('bNext');
+if(curSec===3||curSec===4||curSec===5){
+    const maxI=curSec===3?S3.length-1: curSec===4?S4.length-1 : S5.length-1;
+    const ci=idx-s;if(ci>=maxI){bn.className='nbtn fin';bn.innerHTML='<i class="fas fa-flag-checkered"></i> Entregar evaluación';bn.onclick=trySubmit;}else{bn.className='nbtn nxt';bn.innerHTML='Siguiente <i class="fas fa-arrow-right"></i>';bn.onclick=()=>navQ(1);}}
+else{if(idx>=e-1){bn.className=curSec<5?'nbtn cont':'nbtn fin';bn.innerHTML=curSec<5?'<i class="fas fa-arrow-right"></i> Terminar sección':'<i class="fas fa-flag-checkered"></i> Entregar evaluación';bn.onclick=curSec<5?finishSection:trySubmit;}else{bn.className='nbtn nxt';bn.innerHTML='Siguiente <i class="fas fa-arrow-right"></i>';bn.onclick=()=>navQ(1);}}
+updateMap();if(answers[idx]&&answers[idx].type==='vf')updVFSt(idx);if(curSec===3){const ii=idx-s;setTimeout(()=>initDrag(ii),50);}}
+function navQ(d){const s=SEC_START[curSec],e=SEC_END[curSec];const ni=curQ+d;if(ni>=s&&ni<=e)showQ(ni);}
+
+/* ==================================================================
+   CÁLCULOS DE PUNTUACIÓN
+   ================================================================== */
+function calcSecScore(sec){let correct=0,incorrect=0,empty=0,score=0,details=[];
+if(sec===1){S1.forEach((q,i)=>{const a=answers[i];const ic=a.sel===q.answer;const hj=a.just.trim().length>10;let qs=0,st='empty';if(a.sel===null){empty++;st='empty';}else if(ic&&hj){correct++;qs=1;score+=1;st='correct';}else if(ic&&!hj){correct++;qs=0.5;score+=0.5;st='partial';}else{incorrect++;st='incorrect';}details.push({q,a,ic,hj,qs,st,type:'vf'});});}
+else if(sec===2){S2.forEach((q,i)=>{const gi=i+10;const a=answers[gi];const ic=a.sel===q.c;let qs=0,st='empty';if(a.sel===null){empty++;st='empty';}else if(ic){correct++;qs=1;score+=1;st='correct';}else{incorrect++;st='incorrect';}details.push({q,a,ic,qs,st,type:'mc'});});}
+else if(sec===3){S3.forEach((item,ii)=>{const ai=SEC_START[3]+ii;const a=answers[ai];let cor=0;const posDetails=[];a.order.forEach((si,pi)=>{const ok=si===pi;if(ok)cor++;posDetails.push({userPos:pi,correctPos:si,isCorrect:ok});});correct=cor;incorrect=10-cor;score+=a.score;details.push({item,a,correct:cor,score:a.score,posDetails,type:'ord'});});}
+else if(sec===4){S4.forEach((item,ii)=>{const ai=SEC_START[4]+ii;const a=answers[ai];let cor=0;const qDetails=[];item.questions.forEach((q,qi)=>{const userAns=a.responses[qi*10]||'';const nu=norm(userAns);let isOk=false;const allAns=[q.answer,...q.alts];for(const ca of allAns){if(nu===norm(ca)){isOk=true;break;}}if(isOk)cor++;qDetails.push({q,userAns,isOk,correctAns:q.answer});});correct=cor;incorrect=10-cor;score+=cor;details.push({item,qDetails,correct:cor,score:cor,type:'fill'});});}
+else if(sec===5){S5.forEach((item,ii)=>{const ai=SEC_START[5]+ii;const a=answers[ai];let cor=0;const matchDetails=[];
+    a.selections.forEach((sel,pi)=>{
+        const expectedLetter = String.fromCharCode(65 + pi); // A=65, B=66, etc.
+        const selectedChoice = s5Shuffled[ii].find(ch=>ch.letter===sel);
+        const ok = selectedChoice && selectedChoice.originalVal === expectedLetter;
+        if(ok) cor++;
+        matchDetails.push({
+            leftItem: item.leftItems[pi],
+            userSel: sel,
+            isCorrect: ok,
+            correctLetter: s5Shuffled[ii].find(ch=>ch.originalVal===expectedLetter)?.letter || ''
+        });
+    });
+    correct=cor;incorrect=10-cor;score+=cor*0.5;
+    details.push({item,matchDetails,correct:cor,score:cor*0.5,type:'match'});
+});}
+return{score,correct,incorrect,empty,details,count:SEC_END[sec]-SEC_START[sec]};}
+
+/* ==================================================================
+   ENTREGAR Y RESULTADOS
+   ================================================================== */
+function trySubmit(){let ua=0;
+if(curSec===5){S5.forEach((item,ii)=>{const a=answers[SEC_START[5]+ii];a.selections.forEach(sel=>{if(!sel)ua++;});});}
+else if(curSec===4){S4.forEach((item,ii)=>{const a=answers[SEC_START[4]+ii];item.questions.forEach((_,qi)=>{if(!(a.responses[qi*10]||'').trim())ua++;});});}
+else{for(let i=SEC_START[curSec];i<SEC_END[curSec];i++){if(answers[i].type==='mc'&&answers[i].sel===null)ua++;if(answers[i].type==='vf'&&answers[i].sel===null)ua++;}}
+if(ua>0)showModal(`Tienes ${ua} campo(s) sin completar. ¿Deseas entregar de todas formas?`,submitExam);else submitExam();}
+
+function submitExam(){closeModal();clearInterval(timerInt);
+if(!secScores.s1)secScores.s1=calcSecScore(1);
+if(!secScores.s2)secScores.s2=calcSecScore(2);
+if(!secScores.s3)secScores.s3=calcSecScore(3);
+if(!secScores.s4)secScores.s4=calcSecScore(4);
+if(!secScores.s5)secScores.s5=calcSecScore(5);
+const total=secScores.s1.score+secScores.s2.score+secScores.s3.score+secScores.s4.score+secScores.s5.score;saveRes(total);showRes(total);showScr('sRes');}
+
+function saveRes(total){const h=JSON.parse(localStorage.getItem('evalH_v5_sinreg')||'[]');h.push({user:CU,date:new Date().toISOString(),s1:secScores.s1.score,s2:secScores.s2.score,s3:secScores.s3.score,s4:secScores.s4.score,s5:secScores.s5.score,total,max:64});localStorage.setItem('evalH_v5_sinreg',JSON.stringify(h));}
+
+function showRes(total){
+const ring=document.getElementById('rRing');ring.classList.remove('low','mid');const pct=total/64;if(pct<.4)ring.classList.add('low');else if(pct<.7)ring.classList.add('mid');const circ=2*Math.PI*70;setTimeout(()=>{ring.style.strokeDashoffset=circ-pct*circ;},100);
+const sn=document.getElementById('rNum');let cur=0;const st=total/64;const iv=setInterval(()=>{cur+=st/50;if(cur>=st){cur=st;clearInterval(iv);}sn.textContent=cur%1===0?cur:cur.toFixed(1);},25);
+document.getElementById('rLbl').textContent='de 64 puntos';
+const tt=document.getElementById('rTit'),ts=document.getElementById('rSub');
+if(pct>=.9){tt.textContent='Excelente desempeño';ts.textContent='Dominas los temas de las 5 secciones evaluadas.';}else if(pct>=.7){tt.textContent='Buen resultado';ts.textContent='Buena comprensión general con áreas de mejora.';}else if(pct>=.5){tt.textContent='Resultado aceptable';ts.textContent='Necesitas reforzar varios conceptos. Revisa el material.';}else{tt.textContent='Necesitas estudiar más';ts.textContent='Se recomienda revisar a fondo todos los temas.';}
+
+const sc=document.getElementById('rStats');
+sc.innerHTML=`<div class="strow"><div class="stbx ssc"><div class="stv">${total}</div><div class="stl">Puntaje total</div></div><div class="stbx sok"><div class="stv">${secScores.s1.correct+secScores.s2.correct+secScores.s3.correct+secScores.s4.correct+secScores.s5.correct}</div><div class="stl">Correctas / correspondencias ok</div></div></div>
+<div class="sdiv">Sección 1 — V/F</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s1.score}/10</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s1.correct}</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s1.incorrect}</div><div class="stl">Incorrectas</div></div><div class="stbx semp"><div class="stv">${secScores.s1.empty}</div><div class="stl">Sin responder</div></div></div>
+<div class="sdiv">Sección 2 — Selección única</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s2.score}/20</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s2.correct}</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s2.incorrect}</div><div class="stl">Incorrectas</div></div><div class="stbx semp"><div class="stv">${secScores.s2.empty}</div><div class="stl">Sin responder</div></div></div>
+<div class="sdiv">Sección 3 — Ordenamiento</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s3.score}/4</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s3.correct}/20</div><div class="stl">Posiciones correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s3.incorrect}/20</div><div class="stl">Posiciones incorrectas</div></div></div>
+<div class="sdiv">Sección 4 — Completamiento</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s4.score}/20</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s4.correct}/20</div><div class="stl">Correctas</div></div><div class="stbx sbad"><div class="stv">${secScores.s4.incorrect}/20</div><div class="stl">Incorrectas</div></div></div>
+<div class="sdiv">Sección 5 — Unir Columnas</div><div class="strow"><div class="stbx ssc"><div class="stv">${secScores.s5.score}/10</div><div class="stl">Puntaje</div></div><div class="stbx sok"><div class="stv">${secScores.s5.correct}/20</div><div class="stl">Correspondencias OK</div></div><div class="stbx sbad"><div class="stv">${secScores.s5.incorrect}/20</div><div class="stl">Incorrectas</div></div></div>`;
+
+// Revisión detallada
+const rc=document.getElementById('rRev');rc.innerHTML='';
+// S1
+secScores.s1.details.forEach((d,i)=>{const el=document.createElement('div');let bc='remp',bg='<span class="ribadge bemp">Sin responder</span>';if(d.st==='correct'){bc='rok';bg='<span class="ribadge bok">Correcta (1.0 pt)</span>';}else if(d.st==='partial'){bc='rok';bg='<span class="ribadge bpar">Parcial (0.5 pt)</span>';}else if(d.st==='incorrect'){bc='rbad';bg='<span class="ribadge bbad">Incorrecta (0.0 pt)</span>';}
+const at=d.a.sel===null?'No respondida':(d.a.sel?'Verdadero':'Falso');const ct=d.q.answer?'Verdadero':'Falso';let al=`<span class="ubad">${at}</span>`;if(d.st==='incorrect')al+=` — Correcta: <span class="cok">${ct}</span>`;
+el.className=`ritem ${bc}`;el.innerHTML=`<div class="rihead"><span class="rinum">P${i+1} [V/F]</span>${bg}</div><div class="ritxt">${d.q.text}</div><div class="rians"><strong>Tu respuesta:</strong> ${al}</div><div class="rijust"><strong>Tu justificación:</strong><br>${d.a.just.trim()||'<em style="color:var(--fg3)">Sin justificación</em>'}</div>${d.st==='incorrect'?`<div class="riexpl"><strong>Explicación:</strong><br>${d.q.expl}</div>`:''}`;rc.appendChild(el);});
+// S2
+secScores.s2.details.forEach((d,i)=>{const el=document.createElement('div');const gi=i+10;let bc='remp',bg='<span class="ribadge bemp">Sin responder</span>';if(d.st==='correct'){bc='rok';bg='<span class="ribadge bok">Correcta (1.0 pt)</span>';}else if(d.st==='incorrect'){bc='rbad';bg='<span class="ribadge bbad">Incorrecta (0.0 pt)</span>';}
+const lt=['A','B','C','D'];const at=d.a.sel===null?'No respondida':`${lt[d.a.sel]}. ${d.q.opts[d.a.sel]}`;const ct=`${lt[d.q.c]}. ${d.q.opts[d.q.c]}`;let al=`<span class="ubad">${at}</span>`;if(d.st==='incorrect')al+=`<br>Correcta: <span class="cok">${ct}</span>`;
+el.className=`ritem ${bc}`;el.innerHTML=`<div class="rihead"><span class="rinum">P${gi+1} [MC]</span>${bg}</div><div class="ritxt">${d.q.text}</div><div class="rians"><strong>Tu respuesta:</strong> ${al}</div>${d.st==='incorrect'?`<div class="riexpl"><strong>Explicación:</strong><br>${d.q.expl}</div>`:''}`;rc.appendChild(el);});
+// S3
+secScores.s3.details.forEach((d,ii)=>{const el=document.createElement('div');el.className='ritem';el.style.borderLeftColor=d.score>=1.6?'var(--ok)':'var(--fl)';let h=`<div class="rihead"><span class="rinum">Ítem ${String.fromCharCode(65+ii)} [Ord.]</span><span class="ribadge ${d.score>=1.6?'bok':'bbad'}">${d.correct}/10 posiciones — ${d.score} pt</span></div><div class="ritxt">${d.item.title}</div>`;d.posDetails.forEach((pd,pi)=>{const col=pd.isCorrect?'var(--ok)':'var(--fl)';h+=`<div style="font-size:13px;color:var(--fg2);margin:4px 0 4px 12px"><span style="color:${col};font-weight:700">Pos ${pi+1}:</span> ${pd.isCorrect?'<i class="fas fa-check" style="color:var(--ok)"></i>':'<i class="fas fa-times" style="color:var(--fl)"></i> Colocaste: "'+d.item.sentences[d.a.order[pi]].substring(0,60)+'..."'} ${!pd.isCorrect?'— Correcta en pos '+(pd.correctPos+1):''}</div>`;});el.innerHTML=h;rc.appendChild(el);});
+// S4
+secScores.s4.details.forEach((d,ii)=>{const el=document.createElement('div');el.className='ritem';el.style.borderLeftColor=d.score>=8?'var(--ok)':d.score>=5?'var(--wn)':'var(--fl)';let h=`<div class="rihead"><span class="rinum">Ítem ${String.fromCharCode(65+ii)} [Compl.]</span><span class="ribadge ${d.score>=8?'bok':d.score>=5?'bpar':'bbad'}">${d.correct}/10 — ${d.score} pt</span></div><div class="ritxt">${d.item.title}</div>`;d.qDetails.forEach((qd,qi)=>{const col=qd.isOk?'var(--ok)':'var(--fl)';const ico=qd.isOk?'fa-check':'fa-times';h+=`<div style="font-size:13px;color:var(--fg2);margin:6px 0 6px 12px;padding:8px 10px;background:var(--card);border-radius:6px;border-left:3px solid ${col}"><i class="fas ${ico}" style="color:${col};margin-right:6px"></i><strong>P${qi+1}:</strong> Tu respuesta: "<span style="color:${qd.isOk?'var(--ok)':'var(--fl)'};font-weight:600">${qd.userAns||'(vacío)'}</span>" ${!qd.isOk?'— Correcta: <span style="color:var(--ok);font-weight:600">'+qd.correctAns+'</span>':''}<br><span style="font-size:12px;color:var(--fg3)">${qd.q.expl}</span></div>`;});el.innerHTML=h;rc.appendChild(el);});
+// S5
+secScores.s5.details.forEach((d,ii)=>{const el=document.createElement('div');el.className='ritem';el.style.borderLeftColor=d.score>=4?'var(--ok)':d.score>=2.5?'var(--wn)':'var(--fl)';
+let h=`<div class="rihead"><span class="rinum">Ítem ${String.fromCharCode(65+ii)} [Unir]</span><span class="ribadge ${d.score>=4?'bok':d.score>=2.5?'bpar':'bbad'}">${d.correct}/10 — ${d.score} pt</span></div><div class="ritxt">${d.item.title}</div>`;
+d.matchDetails.forEach((md,pi)=>{
+    const col=md.isCorrect?'var(--ok)':'var(--fl)';
+    const ico=md.isCorrect?'fa-check':'fa-times';
+    h+=`<div style="font-size:13px;color:var(--fg2);margin:6px 0 6px 12px;padding:8px 10px;background:var(--card);border-radius:6px;border-left:3px solid ${col}">
+    <i class="fas ${ico}" style="color:${col};margin-right:6px"></i>
+    <strong>${pi+1}. ${md.leftItem.text}:</strong> 
+    Tu opción: "<span style="color:${md.isCorrect?'var(--ok)':'var(--fl)'};font-weight:600">${md.userSel||'(sin seleccionar)'}</span>" 
+    ${!md.isCorrect?' — Correcta: <span style="color:var(--ok);font-weight:600">'+md.correctLetter+'</span>':''}
+    </div>`;
+});
+el.innerHTML=h;rc.appendChild(el);});
+
+setTimeout(()=>rK(document.getElementById('rRev')),100);
+}
+
+/* ==================================================================
+   ENVIAR POR CORREO
+   ================================================================== */
+function sendEmail(){const t=secScores.s1.score+secScores.s2.score+secScores.s3.score+secScores.s4.score+secScores.s5.score;let b=`EVALUACION COMPLETA — UNIDADES 3, 4 Y 5\n${'='.repeat(55)}\n\nEstudiante: ${CU.name}\nCorreo: ${CU.email}\nFecha: ${new Date().toLocaleString('es-ES')}\n\n${'─'.repeat(55)}\nRESULTADO: ${t}/64 puntos\nS1 (V/F): ${secScores.s1.score}/10 | S2 (MC): ${secScores.s2.score}/20\nS3 (Ord): ${secScores.s3.score}/4 | S4 (Compl): ${secScores.s4.score}/20\nS5 (Unir): ${secScores.s5.score}/10\n${'─'.repeat(55)}\n\n`;
+b+=`=== SECCION 1: V/F ===\n\n`;secScores.s1.details.forEach((d,i)=>{const a=d.a.sel===null?'—':(d.a.sel?'V':'F');const c=d.q.answer?'V':'F';b+=`P${i+1}. ${a} ${d.ic?'[OK]':'[X]'} (Correcta: ${c}) — ${d.qs} pt\nJust: ${d.a.just.trim().substring(0,80)||'Sin just.'}\n${!d.ic?'Expl: '+d.q.expl.substring(0,100)+'\n':''}\n`;});
+b+=`\n=== SECCION 2: SELECCION ===\n\n`;const lt=['A','B','C','D'];secScores.s2.details.forEach((d,i)=>{const a=d.a.sel===null?'—':lt[d.a.sel];const c=lt[d.q.c];b+=`P${i+11}. ${a} ${d.ic?'[OK]':'[X]'} (Correcta: ${c}) — ${d.qs} pt\n${!d.ic?'Expl: '+d.q.expl.substring(0,100)+'\n':''}\n`;});
+b+=`\n=== SECCION 3: ORDENAMIENTO ===\n\n`;secScores.s3.details.forEach((d,ii)=>{b+=`Item ${String.fromCharCode(65+ii)}: ${d.correct}/10 posiciones — ${d.score} pt\n`;});
+b+=`\n=== SECCION 4: COMPLETAMIENTO ===\n\n`;secScores.s4.details.forEach((d,ii)=>{b+=`Item ${String.fromCharCode(65+ii)}: ${d.correct}/10 — ${d.score} pt\n`;d.qDetails.forEach((qd,qi)=>{b+=`  P${qi+1}: "${qd.userAns||'(vacio)'}" ${qd.isOk?'[OK]':'[X] Correcta: '+qd.correctAns}\n`;});});
+b+=`\n=== SECCION 5: UNIR COLUMNAS ===\n\n`;secScores.s5.details.forEach((d,ii)=>{b+=`Item ${String.fromCharCode(65+ii)}: ${d.correct}/10 correspondencias — ${d.score} pt\n`;d.matchDetails.forEach((md,qi)=>{b+=`  ${qi+1}. ${md.leftItem.text}: "${md.userSel||'(sin sel)'}" ${md.isCorrect?'[OK]':'[X] Correcta: '+md.correctLetter}\n`;});});
+window.location.href=`mailto:${CU.email}?subject=${encodeURIComponent(`Resultado Evaluacion U3-U4-U5 - ${CU.name} - ${t}/64`)}&body=${encodeURIComponent(b)}`;toast('Abriendo cliente de correo...','success');}
+
+/* ==================================================================
+   EXPORTAR PDF DE RESULTADOS
+   ================================================================== */
+function exportPDF() {
+    toast('Generando PDF de resultados...', 'info');
+    setTimeout(() => {
+        const w = window.open('', '_blank');
+        const studentName = CU ? CU.name : 'Estudiante Anónimo';
+        const studentEmail = CU ? CU.email : 'Sin registrar';
+        const totalScore = secScores.s1.score + secScores.s2.score + secScores.s3.score + secScores.s4.score + secScores.s5.score;
+        
+        let h = `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Reporte de Evaluación - ${studentName}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+            <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>
+            <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>
+            <style>
+                body { font-family: 'Source Sans 3', sans-serif; color: #1a1a1a; padding: 30px; line-height: 1.5; background: #fff; }
+                h1, h2, h3, h4 { font-family: 'Outfit', sans-serif; color: #0f172a; margin-top: 0; }
+                .header-report { border-bottom: 3px solid #10b981; padding-bottom: 15px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end; }
+                .header-report h1 { margin-bottom: 5px; font-size: 24px; }
+                .header-report p { font-size: 13px; color: #64748b; margin: 2px 0; }
+                .score-box { background: #f0fdf4; border: 2px solid #86efac; border-radius: 8px; padding: 15px 25px; text-align: center; }
+                .score-box h3 { font-size: 36px; color: #15803d; margin: 0; font-family: 'Outfit', sans-serif; }
+                .score-box p { font-size: 12px; color: #166534; margin: 4px 0 0; text-transform: uppercase; font-weight: 600; }
+                .sec-summary { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+                .sec-summary th, .sec-summary td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 13px; }
+                .sec-summary th { background: #f8fafc; color: #475569; font-weight: 600; text-transform: uppercase; font-size: 11px; }
+                .sec-summary td strong { color: #0f172a; }
+                .rev-title { font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px; margin-top: 40px; }
+                .ritem { padding: 15px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; page-break-inside: avoid; background: #fafafa; }
+                .ritem.rok { border-left: 4px solid #10b981; }
+                .ritem.rbad { border-left: 4px solid #ef4444; }
+                .ritem.remp { border-left: 4px solid #94a3b8; }
+                .rihead { display: flex; justify-content: space-between; font-weight: 600; font-size: 12px; color: #475569; margin-bottom: 10px; }
+                .ritxt { font-size: 14px; font-weight: 500; margin-bottom: 10px; color: #0f172a; }
+                .rians { font-size: 13px; margin-bottom: 10px; }
+                .rians .cok { color: #16a34a; font-weight: 600; }
+                .rians .ubad { color: #dc2626; font-weight: 600; }
+                .rijust { font-size: 12px; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 8px; color: #475569; }
+                .rijust strong { color: #b45309; }
+                .riexpl { font-size: 12px; background: #f8fafc; padding: 10px; border-radius: 6px; border-left: 2px solid #10b981; margin-top: 8px; color: #475569; }
+                .riexpl strong { color: #10b981; }
+                .ord-pos { font-size: 12px; color: #475569; padding-left: 10px; margin: 3px 0; }
+                .fill-res { font-size: 12px; padding: 8px; background: #fff; border-radius: 6px; border: 1px solid #e2e8f0; margin-top: 5px; }
+                @media print {
+                    body { padding: 0; }
+                    .no-print { display: none; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="header-report">
+                <div>
+                    <h1>Reporte de Resultados de Evaluación</h1>
+                    <p><strong>Estudiante:</strong> ${studentName}</p>
+                    <p><strong>Correo:</strong> ${studentEmail}</p>
+                    <p><strong>Fecha de Emisión:</strong> ${new Date().toLocaleString('es-ES')}</p>
+                </div>
+                <div class="score-box">
+                    <h3>${totalScore} / 64</h3>
+                    <p>Puntaje obtenido</p>
+                </div>
+            </div>
+            
+            <h2>Resumen por Sección</h2>
+            <table class="sec-summary">
+                <thead>
+                    <tr>
+                        <th>Sección</th>
+                        <th>Preguntas / Items</th>
+                        <th>Respuestas Correctas</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sección 1:</strong> Verdadero o Falso (Diseño del Producto)</td>
+                        <td>10</td>
+                        <td>${secScores.s1.correct}</td>
+                        <td><strong>${secScores.s1.score} / 10</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 2:</strong> Selección única (Localización)</td>
+                        <td>20</td>
+                        <td>${secScores.s2.correct}</td>
+                        <td><strong>${secScores.s2.score} / 20</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 3:</strong> Ordenamiento (Requerimientos Tecnológicos)</td>
+                        <td>2</td>
+                        <td>${secScores.s3.correct} / 20 pos.</td>
+                        <td><strong>${secScores.s3.score} / 4</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 4:</strong> Completamiento (Planificación y Logística)</td>
+                        <td>20</td>
+                        <td>${secScores.s4.correct}</td>
+                        <td><strong>${secScores.s4.score} / 20</strong></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sección 5:</strong> Unir Columnas (Indicadores Financieros)</td>
+                        <td>20</td>
+                        <td>${secScores.s5.correct}</td>
+                        <td><strong>${secScores.s5.score} / 10</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="rev-title">Detalle de Respuestas</div>
+            <div id="printRev"></div>
+            
+            <script>
+                const printRev = document.getElementById('printRev');
+                const originalRev = window.opener.document.getElementById('rRev');
+                printRev.innerHTML = originalRev.innerHTML;
+                
+                printRev.querySelectorAll('.riexpl, .rijust').forEach(el => {
+                    el.style.background = '#fff';
+                });
+                
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(printRev, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '\\\\(', right: '\\\\)', display: false},
+                            {left: '\\\\[', right: '\\\\]', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                }
+                
+                setTimeout(() => {
+                    window.print();
+                }, 500);
+            <\/script>
+        </body>
+        </html>`;
+        w.document.write(h);
+        w.document.close();
+    }, 400);
+}
+
+/* ==================================================================
+   REINTENTAR
+   ================================================================== */
+function retry(){curSec=1;curQ=0;secScores={s1:null,s2:null,s3:null,s4:null,s5:null};initAnswers();document.getElementById('rRing').style.strokeDashoffset=440;document.getElementById('rRing').classList.remove('low','mid');document.querySelector('.etimer').style.color='';showScr('sInstr');toast('Evaluación reiniciada.','success');}
+
+/* ==================================================================
+   KATEX RENDER HELPER
+   ================================================================== */
+function rK(el){if(typeof renderMathInElement==='function')renderMathInElement(el||document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false})}
+</script>
+</body>
+</html>
