@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Avanzado: Optimización de Red Logística</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .exercise-box {
+            background: #f8f9fa;
+            border-left: 5px solid #2a5298;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+        }
+
+        .exercise-box h2 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .data-table th {
+            background: #4a6fa5;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .data-table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table tr:hover {
+            background: #f0f4f8;
+        }
+
+        .formula {
+            background: #fff8e1;
+            border: 2px dashed #ffa000;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        .key-section {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .key-section h3 {
+            color: #c0392b;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .key-input {
+            padding: 15px;
+            font-size: 1.2em;
+            border: 3px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+            text-align: center;
+            margin: 10px;
+            transition: border-color 0.3s;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .answer-section {
+            display: none;
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: 20px;
+            color: white;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-section h3 {
+            margin-bottom: 20px;
+            font-size: 1.6em;
+        }
+
+        .dropdown {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            border: 2px solid white;
+            background: white;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .error-msg {
+            color: #c0392b;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .hint {
+            background: #e3f2fd;
+            padding: 15px;
+            border-left: 4px solid #1976d2;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .constraints {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        footer {
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Taller Avanzado: Optimización de Red Logística</h1>
+            <p>Nivel: Avanzado | Tema: Programación Lineal con Restricciones Múltiples</p>
+            <span class="badge">🔒 Ejercicio con Clave de Acceso</span>
+        </header>
+
+        <div class="content">
+            <!-- ENUNCIADO -->
+            <div class="exercise-box">
+                <h2>📋 Enunciado del Problema</h2>
+                <p>
+                    Una empresa de distribución debe optimizar el envío de productos desde <strong>3 centros de distribución</strong> 
+                    (CD1, CD2, CD3) hacia <strong>4 mercados regionales</strong> (M1, M2, M3, M4). 
+                    Sin embargo, existen restricciones complejas que deben considerarse:
+                </p>
+
+                <div class="constraints">
+                    <strong>Restricciones del Sistema:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>CD1 tiene capacidad máxima de 500 unidades/mes</li>
+                        <li>CD2 tiene capacidad máxima de 600 unidades/mes</li>
+                        <li>CD3 tiene capacidad máxima de 450 unidades/mes</li>
+                        <li>M1 requiere mínimo 300 unidades</li>
+                        <li>M2 requiere mínimo 400 unidades</li>
+                        <li>M3 requiere mínimo 350 unidades</li>
+                        <li>M4 requiere mínimo 400 unidades</li>
+                        <li>El costo de transporte desde CD3 a M2 está incrementado un 25% por peajes especiales</li>
+                        <li>Existe un contrato que obliga a enviar al menos 150 unidades de CD1 a M1</li>
+                    </ul>
+                </div>
+
+                <h3 style="margin-top: 20px; color: #1e3c72;">Matriz de Costos Unitarios de Transporte ($/unidad):</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Origen \ Destino</th>
+                            <th>M1</th>
+                            <th>M2</th>
+                            <th>M3</th>
+                            <th>M4</th>
+                            <th>Capacidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CD1</strong></td>
+                            <td>$8</td>
+                            <td>$12</td>
+                            <td>$10</td>
+                            <td>$15</td>
+                            <td>500</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CD2</strong></td>
+                            <td>$11</td>
+                            <td>$9</td>
+                            <td>$7</td>
+                            <td>$13</td>
+                            <td>600</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CD3</strong></td>
+                            <td>$14</td>
+                            <td>$10 × 1.25 = $12.5</td>
+                            <td>$9</td>
+                            <td>$11</td>
+                            <td>450</td>
+                        </tr>
+                        <tr style="background: #e3f2fd; font-weight: bold;">
+                            <td><strong>Demanda Mínima</strong></td>
+                            <td>300</td>
+                            <td>400</td>
+                            <td>350</td>
+                            <td>400</td>
+                            <td>1450</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="formula">
+                    <strong>Función Objetivo:</strong> Minimizar Z = ΣΣ C<sub>ij</sub> × X<sub>ij</sub>
+                </div>
+
+                <h3 style="color: #1e3c72; margin-top: 20px;">🎯 Pregunta del Taller:</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    <strong>Utilizando el Método de la Esquina Noroeste modificado con las restricciones adicionales,</strong>
+                    determine:
+                </p>
+                <ol style="margin-left: 30px; margin-top: 10px; line-height: 2;">
+                    <li>La asignación óptima de envíos desde cada centro de distribución a cada mercado</li>
+                    <li>El <strong>costo total mínimo de transporte</strong> considerando todas las restricciones</li>
+                    <li>¿Cuál es el costo total óptimo del sistema de distribución?</li>
+                </ol>
+
+                <div class="hint">
+                    <strong>💡 Pista:</strong> Recuerde que debe satisfacer primero la restricción contractual de 150 unidades 
+                    de CD1 a M1 antes de aplicar el método de la esquina noroeste. Luego, ajuste el incremento del 25% 
+                    en la ruta CD3→M2.
+                </div>
+            </div>
+
+            <!-- SECCIÓN DE CLAVE -->
+            <div class="key-section">
+                <h3>🔐 Acceso a la Solución</h3>
+                <p style="margin-bottom: 20px;">
+                    Ingresa la clave proporcionada por tu instructor para revelar la solución:
+                </p>
+                <input type="password" id="keyCode" class="key-input" placeholder="Ingresa la clave aquí">
+                <br>
+                <button class="btn" onclick="verifyKey()">🔓 Verificar Clave</button>
+                <button class="btn" onclick="resetForm()" style="background: #95a5a6;">🔄 Reiniciar</button>
+                <p id="errorMsg" class="error-msg">❌ Clave incorrecta. Inténtalo de nuevo.</p>
+            </div>
+
+            <!-- SECCIÓN DE RESPUESTA (OCULTA) -->
+            <div id="answerSection" class="answer-section">
+                <h3>✅ Solución del Ejercicio</h3>
+                
+                <h4 style="margin: 20px 0 10px 0;">📊 Tabla de Asignación Óptima:</h4>
+                <table class="data-table" style="background: white; color: #333;">
+                    <thead>
+                        <tr style="background: #11998e; color: white;">
+                            <th>Origen \ Destino</th>
+                            <th>M1</th>
+                            <th>M2</th>
+                            <th>M3</th>
+                            <th>M4</th>
+                            <th>Total Enviado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CD1</strong></td>
+                            <td>150</td>
+                            <td>350</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>500/500</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CD2</strong></td>
+                            <td>150</td>
+                            <td>50</td>
+                            <td>350</td>
+                            <td>50</td>
+                            <td>600/600</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CD3</strong></td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>350</td>
+                            <td>350/450</td>
+                        </tr>
+                        <tr style="background: #fff3cd; font-weight: bold;">
+                            <td><strong>Total Recibido</strong></td>
+                            <td>300</td>
+                            <td>400</td>
+                            <td>350</td>
+                            <td>400</td>
+                            <td>1450</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4 style="margin: 20px 0 10px 0;">🧮 Cálculo del Costo Total:</h4>
+                <div style="background: white; color: #333; padding: 20px; border-radius: 8px; line-height: 2;">
+                    <p><strong>CD1 → M1:</strong> 150 unidades × $8 = $1,200</p>
+                    <p><strong>CD1 → M2:</strong> 350 unidades × $12 = $4,200</p>
+                    <p><strong>CD2 → M1:</strong> 150 unidades × $11 = $1,650</p>
+                    <p><strong>CD2 → M2:</strong> 50 unidades × $9 = $450</p>
+                    <p><strong>CD2 → M3:</strong> 350 unidades × $7 = $2,450</p>
+                    <p><strong>CD2 → M4:</strong> 50 unidades × $13 = $650</p>
+                    <p><strong>CD3 → M4:</strong> 350 unidades × $11 = $3,850</p>
+                    <hr style="margin: 15px 0; border: none; border-top: 2px solid #11998e;">
+                    <p style="font-size: 1.3em; font-weight: bold; color: #11998e;">
+                        <strong>Costo Total Mínimo = $14,450</strong>
+                    </p>
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0;">📝 Respuesta Final:</h4>
+                <select class="dropdown" id="answerDropdown">
+                    <option value="">-- Selecciona la respuesta correcta --</option>
+                    <option value="wrong1">$12,350</option>
+                    <option value="wrong2">$13,200</option>
+                    <option value="correct">✓ $14,450</option>
+                    <option value="wrong3">$15,800</option>
+                    <option value="wrong4">$16,250</option>
+                </select>
+
+                <div id="feedback" style="margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: bold;"></div>
+
+                <div style="margin-top: 20px; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 8px;">
+                    <strong>📌 Verificación de Restricciones:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                        <li>✓ Contrato CD1→M1: 150 unidades cumplidas</li>
+                        <li>✓ Capacidades: CD1 (500/500), CD2 (600/600), CD3 (350/450)</li>
+                        <li>✓ Demandas: M1 (300), M2 (400), M3 (350), M4 (400)</li>
+                        <li>✓ Incremento 25% en CD3→M2 aplicado (aunque no se usó esta ruta)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📚 Taller de Optimización Logística | Programación Lineal Avanzada</p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Clave de acceso: 1980</p>
+        </footer>
+    </div>
+
+    <script>
+        function verifyKey() {
+            const inputKey = document.getElementById('keyCode').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const answerSection = document.getElementById('answerSection');
+
+            if (inputKey === '1980') {
+                errorMsg.style.display = 'none';
+                answerSection.style.display = 'block';
+                answerSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } else {
+                errorMsg.style.display = 'block';
+                answerSection.style.display = 'none';
+                // Animación de error
+                document.querySelector('.key-input').style.borderColor = '#c0392b';
+                setTimeout(() => {
+                    document.querySelector('.key-input').style.borderColor = '#ddd';
+                }, 1000);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('keyCode').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('answerSection').style.display = 'none';
+            document.getElementById('answerDropdown').value = '';
+            document.getElementById('feedback').style.display = 'none';
+        <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desarrollo Completo: Método de Transporte - Fundamentación Teórica</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.7;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+    header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 35px;
+        text-align: center;
+    }
+    header h1 { font-size: 2em; margin-bottom: 10px; }
+    header p { opacity: 0.95; }
+    .badge {
+        display: inline-block;
+        background: #ffd700;
+        color: #1e3c72;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    .content { padding: 40px; }
+    .section {
+        background: #f8f9fa;
+        border-left: 5px solid #2a5298;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        transition: transform 0.3s;
+    }
+    .section:hover { transform: translateX(3px); }
+    .section h2 {
+        color: #1e3c72;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 1.1em;
+        flex-shrink: 0;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th {
+        background: #4a6fa5;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover { background: #f0f4f8; }
+    .formula {
+        background: #fff8e1;
+        border: 2px dashed #ffa000;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 8px;
+        overflow-x: auto;
+    }
+    .theory-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 5px solid #1976d2;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+    }
+    .theory-box h4 {
+        color: #0d47a1;
+        margin-bottom: 10px;
+        font-size: 1.15em;
+    }
+    .principle-box {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        border-left: 5px solid #7b1fa2;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 8px;
+    }
+    .principle-box h4 {
+        color: #4a148c;
+        margin-bottom: 10px;
+    }
+    .result-box {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        text-align: center;
+        font-size: 1.15em;
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(17,153,142,0.3);
+    }
+    .warning-box {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    .calc-box {
+        background: #263238;
+        color: #00e676;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        margin: 15px 0;
+        line-height: 1.8;
+        font-size: 0.95em;
+    }
+    .key-section {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        padding: 30px;
+        border-radius: 10px;
+        margin: 30px 0;
+        text-align: center;
+    }
+    .key-section h3 { color: #c0392b; margin-bottom: 20px; font-size: 1.5em; }
+    .key-input {
+        padding: 15px;
+        font-size: 1.2em;
+        border: 3px solid #ddd;
+        border-radius: 8px;
+        width: 250px;
+        text-align: center;
+        margin: 10px;
+    }
+    .btn {
+        padding: 15px 30px;
+        font-size: 1.1em;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 10px;
+        transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .answer-section { display: none; animation: slideDown 0.5s ease; }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown {
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1em;
+        border-radius: 8px;
+        border: 2px solid #2a5298;
+        background: white;
+        margin: 10px 0;
+    }
+    .error-msg { color: #c0392b; font-weight: bold; margin-top: 10px; display: none; }
+    .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; }
+    ul, ol { margin-left: 25px; line-height: 1.9; }
+    .highlight { background: #fff176; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .cycle-diagram {
+        background: white;
+        border: 2px solid #2a5298;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        text-align: center;
+        font-family: 'Courier New', monospace;
+        font-size: 1.05em;
+        line-height: 1.8;
+    }
+    footer {
+        background: #1e3c72;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📘 Desarrollo Completo: Método de Transporte</h1>
+        <p>Fundamentación Teórica Paso a Paso | Principios, Conceptos y Teoremas</p>
+        <span class="badge">🎓 Nivel Avanzado</span>
+    </header>
+
+    <div class="content">
+
+        <!-- FUNDAMENTO TEÓRICO -->
+        <div class="section">
+            <h2>🎯 Fundamento Teórico General</h2>
+            <p>El <strong>Problema de Transporte</strong> es un caso particular de <strong>Programación Lineal (PL)</strong> que busca minimizar el costo total de enviar un producto desde \(m\) orígenes hasta \(n\) destinos, satisfaciendo restricciones de oferta y demanda.</p>
+
+            <div class="theory-box">
+                <h4>📜 Principio Fundamental: Teorema de Optimalidad de Programación Lineal</h4>
+                <p>Si existe solución óptima para un problema de PL, entonces existe al menos una <strong>solución básica factible (SBF)</strong> que es óptima. Este teorema, demostrado por George Dantzig (1947), garantiza que podemos buscar la solución óptima explorando únicamente las soluciones básicas factibles, no todo el espacio de soluciones.</p>
+            </div>
+
+            <div class="principle-box">
+                <h4>⚖️ Principio de Complementariedad y Dualidad</h4>
+                <p>El <strong>Método MODI</strong> (también llamado método UV o de multiplicadores) se fundamenta en el <strong>Teorema de Holguras Complementarias</strong> de la dualidad en PL. Para cada par primal-dual óptimo \((x^*, y^*)\):</p>
+                <div class="formula">
+                    $$x_{ij}^* > 0 \Rightarrow \text{la restricción dual correspondiente es activa (holgura = 0)}$$
+                </div>
+                <p>Esto significa que si una ruta es utilizada (\(x_{ij} > 0\)), entonces su costo reducido debe ser cero: \(c_{ij} - u_i - v_j = 0\).</p>
+            </div>
+
+            <h3 style="color:#1e3c72;margin-top:20px;">🧮 Formulación Matemática del Problema</h3>
+            <div class="formula">
+                $$\min Z = \sum_{i=1}^{m}\sum_{j=1}^{n} c_{ij} \cdot x_{ij}$$
+                <p style="margin-top:10px;">Sujeto a:</p>
+                $$\sum_{j=1}^{n} x_{ij} \leq O_i \quad \forall\, i \in \{1,\ldots,m\} \quad \text{(restricciones de oferta)}$$
+                $$\sum_{i=1}^{m} x_{ij} \geq D_j \quad \forall\, j \in \{1,\ldots,n\} \quad \text{(restricciones de demanda)}$$
+                $$x_{ij} \geq 0 \quad \forall\, i,j$$
+            </div>
+            <p>Donde \(c_{ij}\) es el costo unitario, \(x_{ij}\) la cantidad enviada, \(O_i\) la oferta del origen \(i\), y \(D_j\) la demanda del destino \(j\).</p>
+        </div>
+
+        <!-- ENUNCIADO -->
+        <div class="section">
+            <h2>📋 Enunciado del Problema</h2>
+            <p>Una empresa debe optimizar el envío de productos desde 3 centros de distribución (CD) a 4 mercados (M), con restricciones contractuales y costos variables.</p>
+            <table>
+                <thead>
+                    <tr><th>Origen \ Destino</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>Oferta</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>CD1</strong></td><td>$8</td><td>$12</td><td>$10</td><td>$15</td><td>500</td></tr>
+                    <tr><td><strong>CD2</strong></td><td>$11</td><td>$9</td><td>$7</td><td>$13</td><td>600</td></tr>
+                    <tr><td><strong>CD3</strong></td><td>$14</td><td>$12.5</td><td>$9</td><td>$11</td><td>450</td></tr>
+                    <tr style="background:#e3f2fd;font-weight:bold;">
+                        <td><strong>Demanda</strong></td><td>300</td><td>400</td><td>350</td><td>400</td><td>1450</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="warning-box">
+                <strong>⚠️ Restricciones especiales:</strong>
+                <ul>
+                    <li>CD1 → M1: mínimo 150 unidades (contrato obligatorio)</li>
+                    <li>CD3 → M2: costo incrementado 25% por peajes (de $10 a $12.5)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- PASO 1: BALANCEO -->
+        <div class="section">
+            <h2><span class="step-number">1</span> Verificación y Balanceo del Problema</h2>
+
+            <div class="principle-box">
+                <h4>📐 Principio: Condición de Balance en el Problema de Transporte</h4>
+                <p>El método de transporte clásico requiere que <strong>oferta total = demanda total</strong>. Esto se debe a que el algoritmo opera sobre una matriz cerrada donde cada unidad ofrecida debe ser asignada a algún destino. Si no se cumple, el modelo es <strong>desbalanceado</strong> y requiere ajuste.</p>
+            </div>
+
+            <h3>🔍 Cálculo de verificación:</h3>
+            <div class="formula">
+                $$\sum_{i=1}^{3} O_i = 500 + 600 + 450 = 1550 \text{ unidades}$$
+                $$\sum_{j=1}^{4} D_j = 300 + 400 + 350 + 400 = 1450 \text{ unidades}$$
+                $$\text{Diferencia} = 1550 - 1450 = 100 \text{ unidades (excedente de oferta)}$$
+            </div>
+
+            <div class="theory-box">
+                <h4>🧠 Concepto: Nodo Ficticio o "Dummy"</h4>
+                <p>Cuando la oferta supera la demanda, se agrega un <strong>destino ficticio</strong> (llamémoslo M5) con demanda igual al excedente (100 unidades). Los costos de envío a este destino son <strong>todos cero</strong>, pues representan inventario no despachado (costo de oportunidad nulo en el modelo).</p>
+                <p><strong>¿Por qué costos cero?</strong> Porque el destino ficticio no existe realmente; las unidades "enviadas" allí permanecen en el origen sin generar costo de transporte.</p>
+            </div>
+
+            <h3>📊 Matriz balanceada resultante:</h3>
+            <table>
+                <thead>
+                    <tr><th>Origen \ Destino</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5 (Fict.)</th><th>Oferta</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>CD1</strong></td><td>$8</td><td>$12</td><td>$10</td><td>$15</td><td>$0</td><td>500</td></tr>
+                    <tr><td><strong>CD2</strong></td><td>$11</td><td>$9</td><td>$7</td><td>$13</td><td>$0</td><td>600</td></tr>
+                    <tr><td><strong>CD3</strong></td><td>$14</td><td>$12.5</td><td>$9</td><td>$11</td><td>$0</td><td>450</td></tr>
+                    <tr style="background:#e3f2fd;font-weight:bold;">
+                        <td><strong>Demanda</strong></td><td>300</td><td>400</td><td>350</td><td>400</td><td>100</td><td>1550</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="result-box">
+                ✅ Problema balanceado: Oferta Total = Demanda Total = 1550 unidades
+            </div>
+        </div>
+
+        <!-- PASO 2: RESTRICCIÓN CONTRACTUAL -->
+        <div class="section">
+            <h2><span class="step-number">2</span> Incorporación de Restricción Contractual</h2>
+
+            <div class="principle-box">
+                <h4>📜 Principio: Restricciones de Igualdad Forzadas</h4>
+                <p>Una restricción del tipo \(x_{ij} \geq k\) en un problema de transporte puede manejarse <strong>fijando directamente</strong> el valor de esa variable si es la forma más eficiente de satisfacerla. Esto reduce el tamaño del problema residual, manteniendo la optimalidad global siempre que el costo marginal de forzar esa asignación no sea superior al beneficio de reasignar.</p>
+            </div>
+
+            <h3>🔧 Aplicación: Contrato CD1 → M1 ≥ 150</h3>
+            <p>Fijamos \(x_{11} = 150\) unidades. Actualizamos capacidades y demandas residuales:</p>
+            <div class="formula">
+                $$O_1^{residual} = 500 - 150 = 350 \text{ unidades}$$
+                $$D_1^{residual} = 300 - 150 = 150 \text{ unidades}$$
+            </div>
+
+            <h3>📊 Matriz reducida (problema residual):</h3>
+            <table>
+                <thead>
+                    <tr><th>Origen \ Destino</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>Oferta</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>CD1</strong></td><td>$8</td><td>$12</td><td>$10</td><td>$15</td><td>$0</td><td><strong>350</strong></td></tr>
+                    <tr><td><strong>CD2</strong></td><td>$11</td><td>$9</td><td>$7</td><td>$13</td><td>$0</td><td>600</td></tr>
+                    <tr><td><strong>CD3</strong></td><td>$14</td><td>$12.5</td><td>$9</td><td>$11</td><td>$0</td><td>450</td></tr>
+                    <tr style="background:#e3f2fd;font-weight:bold;">
+                        <td><strong>Demanda</strong></td><td><strong>150</strong></td><td>400</td><td>350</td><td>400</td><td>100</td><td>1400</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="result-box">
+                💡 El contrato CD1→M1 = 150 ya está satisfecho. Costo asociado: 150 × $8 = $1,200
+            </div>
+        </div>
+
+        <!-- PASO 3: ESQUINA NOROESTE -->
+        <div class="section">
+            <h2><span class="step-number">3</span> Solución Inicial Factible: Método de la Esquina Noroeste</h2>
+
+            <div class="theory-box">
+                <h4>📜 Teorema: Existencia de Solución Básica Factible</h4>
+                <p>Todo problema de transporte balanceado con oferta y demanda enteras positivas tiene al menos una <strong>solución básica factible</strong>. Una SBF en transporte tiene exactamente \(m + n - 1\) <strong>celdas básicas</strong> (variables positivas o en nivel cero degenerado), donde \(m\) = orígenes y \(n\) = destinos.</p>
+                <p>En nuestro caso: \(m + n - 1 = 3 + 5 - 1 = 7\) celdas básicas.</p>
+            </div>
+
+            <div class="principle-box">
+                <h4>🧭 Principio del Método de la Esquina Noroeste (NWCM)</h4>
+                <p>Este método, propuesto por Dantzig, construye una SBF de manera <strong>greedy posicional</strong>: siempre asigna la máxima cantidad posible a la celda superior-izquierda disponible, sin considerar los costos. Aunque no garantiza cercanía al óptimo, garantiza factibilidad y es el punto de partida estándar para métodos de optimización posteriores.</p>
+                <p><strong>Regla de asignación:</strong> \(x_{ij} = \min(O_i^{res}, D_j^{res})\)</p>
+            </div>
+
+            <h3>🔄 Iteraciones del NWCM:</h3>
+            <table>
+                <thead>
+                    <tr><th>Iter.</th><th>Celda</th><th>Cálculo</th><th>Asignación</th><th>Estado Resultante</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>(CD1, M1)</td><td>min(350, 150)</td><td><strong>150</strong></td><td>M1 satisfecho, CD1 queda 200</td></tr>
+                    <tr><td>2</td><td>(CD1, M2)</td><td>min(200, 400)</td><td><strong>200</strong></td><td>CD1 agotado, M2 queda 200</td></tr>
+                    <tr><td>3</td><td>(CD2, M2)</td><td>min(600, 200)</td><td><strong>200</strong></td><td>M2 satisfecho, CD2 queda 400</td></tr>
+                    <tr><td>4</td><td>(CD2, M3)</td><td>min(400, 350)</td><td><strong>350</strong></td><td>M3 satisfecho, CD2 queda 50</td></tr>
+                    <tr><td>5</td><td>(CD2, M4)</td><td>min(50, 400)</td><td><strong>50</strong></td><td>CD2 agotado, M4 queda 350</td></tr>
+                    <tr><td>6</td><td>(CD3, M4)</td><td>min(450, 350)</td><td><strong>350</strong></td><td>M4 satisfecho, CD3 queda 100</td></tr>
+                    <tr><td>7</td><td>(CD3, M5)</td><td>min(100, 100)</td><td><strong>100</strong></td><td>CD3 agotado, M5 satisfecho</td></tr>
+                </tbody>
+            </table>
+
+            <h3>📊 Tabla de Asignación Inicial:</h3>
+            <table>
+                <thead>
+                    <tr><th>Origen \ Destino</th><th>M1</th><th>M2</th><th>M3</th><th>M4</th><th>M5</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>CD1</strong></td><td>150</td><td>200</td><td>0</td><td>0</td><td>0</td><td>350</td></tr>
+                    <tr><td><strong>CD2</strong></td><td>0</td><td>200</td><td>350</td><td>50</td><td>0</td><td>600</td></tr>
+                    <tr><td><strong>CD3</strong></td><td>0</td><td>0</td><td>0</td><td>350</td><td>100</td><td>450</td></tr>
+                </tbody>
+            </table>
+
+            <h3>💰 Cálculo del Costo Inicial \(Z_0\):</h3>
+            <div class="calc-box">
+Z₀ = 150·(8) + 200·(12) + 200·(9) + 350·(7) + 50·(13) + 350·(11) + 100·(0)
+Z₀ = 1200 + 2400 + 1800 + 2450 + 650 + 3850 + 0
+Z₀ = <strong>$12,350</strong> (costo residual)
+
+Costo total incluyendo contrato = $1,200 + $12,350 = <strong>$13,550</strong>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Importante:</strong> Esta solución es <strong>factible pero no necesariamente óptima</strong>. El NWCM no considera costos, por lo que se requiere un método de optimización.
+            </div>
+        </div>
+
+        <!-- PASO 4: MÉTODO MODI ITERACIÓN 1 -->
+        <div class="section">
+            <h2><span class="step-number">4</span> Optimización - Método MODI (Iteración 1)</h2>
+
+            <div class="theory-box">
+                <h4>📜 Teorema de Optimalidad del Método MODI</h4>
+                <p>Una solución básica factible es <strong>óptima</strong> si y solo si todos los <strong>costos reducidos</strong> de las celdas no básicas son no negativos:</p>
+                <div class="formula">
+                    $$\Delta_{ij} = c_{ij} - u_i - v_j \geq 0 \quad \forall \text{ celdas no básicas}$$
+                </div>
+                <p>Donde \(u_i\) y \(v_j\) son los <strong>multiplicadores duales</strong> que satisfacen \(u_i + v_j = c_{ij}\) para todas las celdas básicas. Este resultado se deriva directamente del <strong>Teorema de Holguras Complementarias</strong> de la dualidad en PL.</p>
+            </div>
+
+            <div class="principle-box">
+                <h4>⚙️ Interpretación del Costo Reducido</h4>
+                <p>El valor \(\Delta_{ij}\) representa el <strong>cambio marginal en el costo total</strong> si se introduce una unidad por la ruta \((i,j)\) que actualmente no se usa. Si \(\Delta_{ij} < 0\), usar esa ruta <strong>reduce</strong> el costo total → la solución puede mejorarse.</p>
+            </div>
+
+            <h3>🧮 Cálculo de Multiplicadores Duales \(u_i, v_j\):</h3>
+            <p>Resolvemos el sistema \(u_i + v_j = c_{ij}\) para las 7 celdas básicas. Como hay 8 incógnitas (3 \(u_i\) + 5 \(v_j\)) y 7 ecuaciones, fijamos <strong>\(u_1 = 0\)</strong> (variable libre del sistema dual):</p>
+
+            <div class="calc-box">
+Ecuaciones del sistema:
+(1) u₁ + v₁ = 8       [celda (1,1)]
+(2) u₁ + v₂ = 12      [celda (1,2)]
+(3) u₂ + v₂ = 9       [celda (2,2)]
+(4) u₂ + v₃ = 7       [celda (2,3)]
+(5) u₂ + v₄ = 13      [celda (2,4)]
+(6) u₃ + v₄ = 11      [celda (3,4)]
+(7) u₃ + v₅ = 0       [celda (3,5)]
+
+Resolución con u₁ = 0:
+De (1): v₁ = 8 - 0 = <strong>8</strong>
+De (2): v₂ = 12 - 0 = <strong>12</strong>
+De (3): u₂ = 9 - 12 = <strong>-3</strong>
+De (4): v₃ = 7 - (-3) = <strong>10</strong>
+De (5): v₄ = 13 - (-3) = <strong>16</strong>
+De (6): u₃ = 11 - 16 = <strong>-5</strong>
+De (7): v₅ = 0 - (-5) = <strong>5</strong>
+
+Resumen: u = [0, -3, -5]  |  v = [8, 12, 10, 16, 5]
+            </div>
+
+            <h3>📊 Cálculo de Costos Reducidos \(\Delta_{ij}\) para celdas no básicas:</h3>
+            <div class="calc-box">
+Δ₁₃ = c₁₃ - u₁ - v₃ = 10 - 0 - 10 = <strong>0</strong>
+Δ₁₄ = c₁₄ - u₁ - v₄ = 15 - 0 - 16 = <strong>-1</strong>
+Δ₁₅ = c₁₅ - u₁ - v₅ = 0 - 0 - 5  = <strong>-5</strong>  ← MÁS NEGATIVO (entra)
+Δ₂₁ = c₂₁ - u₂ - v₁ = 11 - (-3) - 8 = <strong>6</strong>
+Δ₂₅ = c₂₅ - u₂ - v₅ = 0 - (-3) - 5 = <strong>-2</strong>
+Δ₃₁ = c₃₁ - u₃ - v₁ = 14 - (-5) - 8 = <strong>11</strong>
+Δ₃₂ = c₃₂ - u₃ - v₂ = 12.5 - (-5) - 12 = <strong>5.5</strong>
+Δ₃₃ = c₃₃ - u₃ - v₃ = 9 - (-5) - 10 = <strong>4</strong>
+            </div>
+
+            <div class="theory-box">
+                <h4>🎯 Criterio de Entrada: Regla de Dantzig</h4>
+                <p>Seleccionamos la celda con el \(\Delta_{ij}\) <strong>más negativo</strong> (mayor potencial de mejora por unidad). En este caso: <strong>\(\Delta_{15} = -5\)</strong>, por lo que la celda (CD1, M5) entra a la base.</p>
+                <p><strong>Significado económico:</strong> cada unidad desviada por la ruta CD1→M5 reduce el costo total en $5.</p>
+            </div>
+
+            <h3>🔄 Construcción del Ciclo Cerrado:</h3>
+            <div class="principle-box">
+                <h4>📐 Teorema del Ciclo en Transporte</h4>
+                <p>Al introducir una nueva celda básica, debe formarse un <strong>ciclo cerrado único</strong> que alterne signos (+/-) entre celdas, manteniendo la factibilidad (ofertas y demandas). El ciclo debe tener un número par de celdas y moverse solo en direcciones horizontales y verticales.</p>
+            </div>
+
+            <div class="cycle-diagram">
+Ciclo para entrada de (1,5):<br>
+(1,5)⁺ → (3,5)⁻ → (3,4)⁺ → (2,4)⁻ → (2,2)⁺ → (1,2)⁻ → (1,5)⁺<br>
+<br>
+Valores actuales en celdas con signo -:
+(3,5) = 100 | (2,4) = 50 | (1,2) = 200
+            </div>
+
+            <h3>📏 Cálculo de \(\theta\) (cantidad a reasignar):</h3>
+            <div class="formula">
+                $$\theta = \min\{x_{ij} \mid \text{celdas con signo } -\} = \min\{100, 50, 200\} = 50$$
+            </div>
+            <p>La celda (CD2, M4) con valor 50 <strong>sale de la base</strong> (se convierte en no básica).</p>
+
+            <h3>🔄 Actualización de asignaciones:</h3>
+            <div class="calc-box">
+(1,5): 0 + 50 = 50
+(3,5): 100 - 50 = 50
+(3,4): 350 + 50 = 400
+(2,4): 50 - 50 = 0  ← SALE DE LA BASE
+(2,2): 200 + 50 = 250
+(1,2): 200 - 50 = 150
+
+Celdas básicas nuevas: (1,1), (1,2), (1,5), (2,2), (2,3), (3,4), (3,5)
+            </div>
+
+            <h3>💰 Nuevo costo \(Z_1\):</h3>
+            <div class="formula">
+                $$Z_1 = Z_0 + \theta \cdot \Delta_{15} = 12,350 + 50 \cdot (-5) = 12,350 - 250 = \$12,100$$
+            </div>
+            <div class="result-box">
+                💰 Costo residual tras Iteración 1: $12,100<br>
+                Costo total = $1,200 + $12,100 = $13,300
+            </div>
+        </div>
+
+        <!-- PASO 5: MODI ITERACIÓN 2 -->
+        <div class="section">
+            <h2><span class="step-number">5</span> Método MODI (Iteración 2)</h2>
+
+            <h3>🧮 Nuevos multiplicadores duales:</h3>
+            <p>Celdas básicas: (1,1), (1,2), (1,5), (2,2), (2,3), (3,4), (3,5)</p>
+            <div class="calc-box">
+Ecuaciones:
+(1) u₁ + v₁ = 8
+(2) u₁ + v₂ = 12
+(3) u₁ + v₅ = 0
+(4) u₂ + v₂ = 9
+(5) u₂ + v₃ = 7
+(6) u₃ + v₄ = 11
+(7) u₃ + v₅ = 0
+
+Con u₁ = 0:
+v₁ = 8, v₂ = 12, v₅ = 0
+u₂ = 9 - 12 = -3
+v₃ = 7 - (-3) = 10
+u₃ = 0 - 0 = 0
+v₄ = 11 - 0 = 11
+
+Resumen: u = [0, -3, 0]  |  v = [8, 12, 10, 11, 0]
+            </div>
+
+            <h3>📊 Nuevos costos reducidos:</h3>
+            <div class="calc-box">
+Δ₁₃ = 10 - 0 - 10 = <strong>0</strong>
+Δ₁₄ = 15 - 0 - 11 = <strong>4</strong>
+Δ₂₁ = 11 - (-3) - 8 = <strong>6</strong>
+Δ₂₄ = 13 - (-3) - 11 = <strong>5</strong>
+Δ₂₅ = 0 - (-3) - 0 = <strong>3</strong>
+Δ₃₁ = 14 - 0 - 8 = <strong>6</strong>
+Δ₃₂ = 12.5 - 0 - 12 = <strong>0.5</strong>
+Δ₃₃ = 9 - 0 - 10 = <strong>-1</strong>  ← MÁS NEGATIVO (entra)
+            </div>
+
+            <p>La celda (CD3, M3) entra a la base con \(\Delta_{33} = -1\).</p>
+
+            <h3>🔄 Ciclo cerrado:</h3>
+            <div class="cycle-diagram">
+Ciclo: (3,3)⁺ → (2,3)⁻ → (2,2)⁺ → (1,2)⁻ → (1,5)⁺ → (3,5)⁻ → (3,3)⁺<br>
+<br>
+Valores en celdas -:
+(2,3) = 350 | (1,2) = 150 | (3,5) = 50
+            </div>
+
+            <div class="formula">
+                $$\theta = \min\{350, 150, 50\} = 50$$
+            </div>
+            <p>La celda (CD3, M5) con valor 50 sale de la base.</p>
+
+            <h3>🔄 Actualización:</h3>
+            <div class="calc-box">
+(3,3): 0 + 50 = 50
+(2,3): 350 - 50 = 300
+(2,2): 250 + 50 = 300
+(1,2): 150 - 50 = 100
+(1,5): 50 + 50 = 100
+(3,5): 50 - 50 = 0  ← SALE DE LA BASE
+
+Celdas básicas: (1,1), (1,2), (1,5), (2,2), (2,3), (3,3), (3,4)
+            </div>
+
+            <h3>💰 Nuevo costo:</h3>
+            <div class="formula">
+                $$Z_2 = Z_1 + \theta \cdot \Delta_{33} = 12,100 + 50 \cdot (-1) = 12,100 - 50 = \$12,050$$
+            </div>
+            <div class="result-box">
+                💰 Costo residual tras Iteración 2: $12,050<br>
+                Costo total = $1,200 + $12,050 = <strong>$13,250</strong>
+            </div>
+        </div>
+
+        <!-- PASO 6: VERIFICACIÓN OPTIMALIDAD -->
+        <div class="section">
+            <h2><span class="step-number">6</span> Verificación de Optimalidad (Iteración 3)</h2>
+
+            <h3>🧮 Multiplicadores duales finales:</h3>
+            <p>Celdas básicas: (1,1), (1,2), (1,5), (2,2), (2,3), (3,3), (3,4)</p>
+            <div class="calc-box">
+Ecuaciones:
+(1) u₁ + v₁ = 8
+(2) u₁ + v₂ = 12
+(3) u₁ + v₅ = 0
+(4) u₂ + v₂ = 9
+(5) u₂ + v₃ = 7
+(6) u₃ + v₃ = 9
+(7) u₃ + v₄ = 11
+
+Con u₁ = 0:
+v₁ = 8, v₂ = 12, v₅ = 0
+u₂ = 9 - 12 = -3
+v₃ = 7 - (-3) = 10
+u₃ = 9 - 10 = -1
+v₄ = 11 - (-1) = 12
+
+Resumen: u = [0, -3, -1]  |  v = [8, 12, 10, 12, 0]
+            </div>
+
+            <h3>📊 Costos reducidos finales:</h3>
+            <div class="calc-box">
+Δ₁₃ = 10 - 0 - 10 = <strong>0</strong>
+Δ₁₄ = 15 - 0 - 12 = <strong>3</strong>
+Δ₂₁ = 11 - (-3) - 8 = <strong>6</strong>
+Δ₂₄ = 13 - (-3) - 12 = <strong>4</strong>
+Δ₂₅ = 0 - (-3) - 0 = <strong>3</strong>
+Δ₃₁ = 14 - (-1) - 8 = <strong>7</strong>
+Δ₃₂ = 12.5 - (-1) - 12 = <strong>1.5</strong>
+Δ₃₅ = 0 - (-1) - 0 = <strong>1</strong>
+            </div>
+
+            <div class="theory-box">
+                <h4>✅ Teorema de Optimalidad (Verificación)</h4>
+                <p>Como <strong>todos los \(\Delta_{ij} \geq 0\)</strong>, se cumple el Teorema de Optimalidad del Método MODI. La solución actual es <strong>óptima</strong>. No existe ninguna ruta no utilizada que pueda mejorar el costo total.</p>
+            </div>
+
+            <div class="result-box">
+                🏆 SOLUCIÓN ÓPTIMA ALCANZADA<br>
+                Costo residual óptimo: $12,050<br>
+                Costo total óptimo: $1,200 + $12,050 = <strong>$13,250</strong>
+            </div>
+        </div>
+
+        <!-- SOLUCIÓN FINAL -->
+        <div class="section">
+            <h2>🏆 Solución Óptima Final</h2>
+            <h3>📊 Tabla de Asignaciones Óptimas:</h3>
+            <table>
+                <thead>
+                    <tr><th>Ruta</th><th>Unidades</th><th>Costo Unit.</th><th>Subtotal</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>CD1 → M1 (contrato)</td><td>150</td><td>$8</td><td>$1,200</td></tr>
+                    <tr><td>CD1 → M2</td><td>100</td><td>$12</td><td>$1,200</td></tr>
+                    <tr><td>CD1 → M5 (no enviado)</td><td>100</td><td>$0</td><td>$0</td></tr>
+                    <tr><td>CD2 → M2</td><td>300</td><td>$9</td><td>$2,700</td></tr>
+                    <tr><td>CD2 → M3</td><td>300</td><td>$7</td><td>$2,100</td></tr>
+                    <tr><td>CD3 → M3</td><td>50</td><td>$9</td><td>$450</td></tr>
+                    <tr><td>CD3 → M4</td><td>400</td><td>$11</td><td>$4,400</td></tr>
+                </tbody>
+            </table>
+
+            <h3>✅ Verificación de Factibilidad:</h3>
+            <div class="calc-box">
+OFERTAS:
+CD1: 150 + 100 + 100 = 350 ✓ (capacidad residual)
+CD2: 300 + 300 = 600 ✓
+CD3: 50 + 400 = 450 ✓
+
+DEMANDAS:
+M1: 150 ✓
+M2: 100 + 300 = 400 ✓
+M3: 300 + 50 = 350 ✓
+M4: 400 ✓
+M5: 100 ✓
+
+COSTO TOTAL:
+Z = 1200 + 1200 + 0 + 2700 + 2100 + 450 + 4400 = <strong>$12,050</strong> (residual)
+Z_total = $1,200 + $12,050 = <strong>$13,250</strong>
+            </div>
+
+            <div class="result-box">
+                💰 COSTO TOTAL MÍNIMO ÓPTIMO = <strong>$13,250</strong>
+            </div>
+        </div>
+
+        <!-- PREGUNTA MATRICES -->
+        <div class="section" style="border-left-color:#c0392b;">
+            <h2>🧮 Pregunta Adicional: ¿Se puede resolver por Matrices o Sistema de Ecuaciones?</h2>
+            <p><strong>Respuesta: SÍ.</strong> El problema de transporte es un caso particular de PL y puede formularse completamente en notación matricial.</p>
+
+            <div class="theory-box">
+                <h4>📐 Fundamento: Forma Estándar de Programación Lineal</h4>
+                <p>Todo problema de PL puede expresarse como:</p>
+                <div class="formula">
+                    $$\min \mathbf{c}^T \mathbf{x} \quad \text{sujeto a} \quad A\mathbf{x} = \mathbf{b}, \quad \mathbf{x} \geq 0$$
+                </div>
+                <p>Donde \(\mathbf{c}\) es el vector de costos, \(A\) la matriz de restricciones, \(\mathbf{b}\) el vector de RHS y \(\mathbf{x}\) el vector de variables de decisión.</p>
+            </div>
+
+            <h3>🔢 Formulación del problema en matrices:</h3>
+            <p>Con 3 orígenes × 5 destinos = <strong>15 variables de decisión</strong> \(x_{ij}\):</p>
+
+            <div class="calc-box">
+Vector de costos c (15×1):
+c = [8, 12, 10, 15, 0, 11, 9, 7, 13, 0, 14, 12.5, 9, 11, 0]ᵀ
+
+Vector de RHS b (8×1):
+b = [500, 600, 450, 300, 400, 350, 400, 100]ᵀ
+(3 ofertas + 5 demandas)
+            </div>
+
+            <h3>📊 Matriz de Restricciones A (8 × 15):</h3>
+            <div class="calc-box">
+         x₁₁ x₁₂ x₁₃ x₁₄ x₁₅ x₂₁ x₂₂ x₂₃ x₂₄ x₂₅ x₃₁ x₃₂ x₃₃ x₃₄ x₃₅
+CD1  [ 1   1   1   1   1   0   0   0   0   0   0   0   0   0   0 ] = 500
+CD2  [ 0   0   0   0   0   1   1   1   1   1   0   0   0   0   0 ] = 600
+CD3  [ 0   0   0   0   0   0   0   0   0   0   1   1   1   1   1 ] = 450
+M1   [ 1   0   0   0   0   1   0   0   0   0   1   0   0   0   0 ] = 300
+M2   [ 0   1   0   0   0   0   1   0   0   0   0   1   0   0   0 ] = 400
+M3   [ 0   0   1   0   0   0   0   1   0   0   0   0   1   0   0 ] = 350
+M4   [ 0   0   0   1   0   0   0   0   1   0   0   0   0   1   0 ] = 400
+M5   [ 0   0   0   0   1   0   0   0   0   1   0   0   0   0   1 ] = 100
+            </div>
+
+            <div class="principle-box">
+                <h4>🔍 Propiedad Especial: Matriz Totalmente Unimodular</h4>
+                <p>La matriz \(A\) del problema de transporte tiene una propiedad matemática especial: es <strong>totalmente unimodular</strong> (todos sus menores tienen determinante 0, +1 o -1). Esto garantiza que, si el vector \(\mathbf{b}\) es entero, <strong>toda solución básica factible será entera</strong>, sin necesidad de programación entera.</p>
+                <p>Este teorema, demostrado por <strong>Hoffman y Kruskal (1956)</strong>, es la razón por la cual el método de transporte es tan eficiente: explota esta estructura especial.</p>
+            </div>
+
+            <h3>⚖️ Comparación de Métodos:</h3>
+            <table>
+                <thead>
+                    <tr><th>Aspecto</th><th>Método Transporte</th><th>Simplex Matricial</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Variables en tabla</td><td>m × n = 15</td><td>m × n + (m+n+1) = 23</td></tr>
+                    <tr><td>Estructura de A</td><td>Aprovecha 0/1</td><td>Matriz completa</td></tr>
+                    <tr><td>Velocidad</td><td>Mucho más rápido</td><td>Más lento</td></tr>
+                    <tr><td>Memoria</td><td>Menor</td><td>Mayor</td></tr>
+                    <tr><td>Flexibilidad</td><td>Solo transporte</td><td>Cualquier PL</td></tr>
+                    <tr><td>Herramientas</td><td>Tablas manuales</td><td>Excel Solver, LINGO, PuLP</td></tr>
+                </tbody>
+            </table>
+
+            <div class="result-box">
+                🎯 Ambos métodos llegan al mismo óptimo ($13,250), pero el Método de Transporte es computacionalmente superior para este tipo específico de problemas.
+            </div>
+        </div>
+
+        <!-- CLAVE -->
+        <div class="key-section">
+            <h3>🔐 Acceso a la Verificación Interactiva</h3>
+            <p>Ingresa la clave proporcionada por tu instructor:</p>
+            <input type="password" id="keyCode" class="key-input" placeholder="Ingresa la clave">
+            <br>
+            <button class="btn" onclick="verifyKey()">🔓 Verificar</button>
+            <button class="btn" onclick="resetForm()" style="background:#95a5a6;">🔄 Reiniciar</button>
+            <p id="errorMsg" class="error-msg">❌ Clave incorrecta.</p>
+        </div>
+
+        <!-- RESPUESTA OCULTA -->
+        <div id="answerSection" class="answer-section">
+            <div class="section" style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);color:white;">
+                <h2 style="color:white;">📝 Cuestionario de Verificación</h2>
+
+                <h3 style="margin-top:20px;">1. ¿Cuál es el costo total óptimo?</h3>
+                <select class="dropdown" id="q1">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">$12,350</option>
+                    <option value="b">$13,550</option>
+                    <option value="c">$13,250</option>
+                    <option value="d">$14,450</option>
+                </select>
+
+                <h3 style="margin-top:20px;">2. ¿Cuántas celdas básicas debe tener toda SBF?</h3>
+                <select class="dropdown" id="q2">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">m × n</option>
+                    <option value="b">m + n - 1</option>
+                    <option value="c">m + n</option>
+                    <option value="d">m × n - 1</option>
+                </select>
+
+                <h3 style="margin-top:20px;">3. ¿Cuántas iteraciones MODI fueron necesarias?</h3>
+                <select class="dropdown" id="q3">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">1</option>
+                    <option value="b">2</option>
+                    <option value="c">3</option>
+                    <option value="d">4</option>
+                </select>
+
+                <h3 style="margin-top:20px;">4. ¿Qué teorema garantiza que las soluciones sean enteras?</h3>
+                <select class="dropdown" id="q4">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">Teorema Fundamental del Álgebra</option>
+                    <option value="b">Teorema de Unimodularidad (Hoffman-Kruskal)</option>
+                    <option value="c">Teorema de Pitágoras</option>
+                    <option value="d">Teorema de Bolzano-Weierstrass</option>
+                </select>
+
+                <h3 style="margin-top:20px;">5. ¿Qué representa \(\Delta_{ij} < 0\)?</h3>
+                <select class="dropdown" id="q5">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">La solución es óptima</option>
+                    <option value="b">El costo aumentaría al usar esa ruta</option>
+                    <option value="c">El costo total disminuiría al introducir esa ruta</option>
+                    <option value="d">La ruta está prohibida</option>
+                </select>
+
+                <button class="btn" onclick="checkAnswers()" style="margin-top:20px;">✅ Evaluar Respuestas</button>
+                <div id="finalFeedback" class="feedback"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>📚 Desarrollo Completo: Método de Transporte | Fundamentación Teórica</p>
+    </footer>
+</div>
+
+<script>
+    function verifyKey() {
+        const inputKey = document.getElementById('keyCode').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const answerSection = document.getElementById('answerSection');
+        if (inputKey === '1980') {
+            errorMsg.style.display = 'none';
+            answerSection.style.display = 'block';
+            answerSection.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            errorMsg.style.display = 'block';
+            answerSection.style.display = 'none';
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('keyCode').value = '';
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('answerSection').style.display = 'none';
+        document.getElementById('finalFeedback').style.display = 'none';
+        ['q1','q2','q3','q4','q5'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function checkAnswers() {
+        const correct = { q1: 'c', q2: 'b', q3: 'b', q4: 'b', q5: 'c' };
+        let score = 0;
+        Object.keys(correct).forEach(id => {
+            if (document.getElementById(id).value === correct[id]) score++;
+        });
+        const fb = document.getElementById('finalFeedback');
+        fb.style.display = 'block';
+        if (score === 5) {
+            fb.style.background = '#2ecc71';
+            fb.style.color = 'white';
+            fb.innerHTML = `🏆 ¡Excelente! Puntaje: ${score}/5 — Dominio completo del método y fundamentos teóricos.`;
+        } else if (score >= 3) {
+            fb.style.background = '#f39c12';
+            fb.style.color = 'white';
+            fb.innerHTML = `⚠️ Puntaje: ${score}/5 — Repasa las iteraciones MODI y los teoremas.`;
+        } else {
+            fb.style.background = '#e74c3c';
+            fb.style.color = 'white';
+            fb.innerHTML = `❌ Puntaje: ${score}/5 — Revisa el desarrollo completo paso a paso.`;
+        }
+    }
+
+    document.getElementById('keyCode').addEventListener('keypress', e => {
+        if (e.key === 'Enter') verifyKey();
+    });
+</script>
+</body>
+</html>
