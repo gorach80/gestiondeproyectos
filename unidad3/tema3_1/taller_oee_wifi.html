@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taller Técnico: Optimización del OEE mediante Wi-Fi Sensing</title>
+    <!-- MathJax para renderizar fórmulas matemáticas -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e293b;
+            --surface: rgba(30, 41, 59, 0.7);
+            --surface-glass: rgba(255, 255, 255, 0.03);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --secondary: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.8), rgba(29, 78, 216, 0.6));
+            padding: 40px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #93c5fd, #e0f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        header p {
+            color: #bfdbfe;
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            margin-top: 15px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background: var(--surface-glass);
+            border: 1px solid var(--border-color);
+            padding: 35px;
+            margin-bottom: 35px;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .section:hover {
+            transform: translateY(-4px);
+            background: var(--surface-hover);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        .section h2 {
+            color: #60a5fa;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(96, 165, 250, 0.2);
+            padding-bottom: 12px;
+        }
+
+        .data-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .data-list li {
+            padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .data-list li strong {
+            color: #94a3b8;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-list li span {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #f1f5f9;
+        }
+
+        .formula-box {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px dashed rgba(96, 165, 250, 0.5);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.25em;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .highlight-box {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            color: #f87171;
+            font-weight: 500;
+        }
+
+        .question-box {
+            background: rgba(16, 185, 129, 0.05);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-left: 4px solid var(--secondary);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .question-box h3 {
+            color: #34d399;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .key-section {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-section h3 {
+            color: #fbbf24;
+            margin-bottom: 20px;
+            font-size: 1.6em;
+            font-weight: 700;
+        }
+
+        .key-input {
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            padding: 16px 24px;
+            font-size: 1.2em;
+            border: 2px solid rgba(245, 158, 11, 0.4);
+            border-radius: 12px;
+            width: 300px;
+            text-align: center;
+            margin: 15px;
+            transition: all 0.3s;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 2px;
+        }
+
+        .key-input:focus {
+            outline: none;
+            border-color: var(--warning);
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+            background: rgba(15, 23, 42, 1);
+        }
+
+        .btn {
+            padding: 16px 36px;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #64748b, #475569);
+            box-shadow: 0 4px 15px rgba(71, 85, 105, 0.3);
+        }
+
+        .btn-reset:hover {
+            background: linear-gradient(135deg, #94a3b8, #64748b);
+            box-shadow: 0 8px 25px rgba(71, 85, 105, 0.5);
+        }
+
+        .answer-section {
+            display: none;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 40px;
+            border-radius: 16px;
+            margin-top: 40px;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-section > h3 {
+            color: #34d399;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 2px solid rgba(52, 211, 153, 0.2);
+            padding-bottom: 15px;
+        }
+        
+        .solution-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--secondary);
+            font-size: 1.05em;
+        }
+        
+        .solution-box h4 {
+            color: #6ee7b7;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .solution-math {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            color: #a7f3d0;
+        }
+
+        .error-msg {
+            color: #f87171;
+            font-weight: 500;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        footer {
+            background: rgba(15, 23, 42, 0.95);
+            color: var(--text-muted);
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9em;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Utilidad para destacar texto */
+        .highlight {
+            color: #93c5fd;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📡 Taller Técnico: Optimización del OEE mediante Wi-Fi Sensing</h1>
+            <p>Evaluar el impacto de las microparadas por fallos en sensores ópticos y proponer una solución basada en la Información del Estado del Canal (CSI).</p>
+            <span class="badge">🔒 Área de Instructor Protegida</span>
+        </header>
+
+        <div class="content">
+            <!-- PARTE 1 -->
+            <div class="section">
+                <h2>📊 Parte 1: El Caso de Estudio</h2>
+                <p style="margin-bottom: 20px;">
+                    Una línea de ensamblaje automatizada de componentes electrónicos opera durante un turno de 8 horas. 
+                    Sin embargo, debido a la generación de partículas de soldadura y polvo en el ambiente, las fotocélulas de barrera sufren obstrucciones frecuentes.
+                </p>
+
+                <h3 style="color: #cbd5e1; margin-bottom: 15px; font-size: 1.1em;">Datos de Operación Actual:</h3>
+                <ul class="data-list">
+                    <li>
+                        <strong>Tiempo de Turno</strong>
+                        <span>8 horas</span>
+                    </li>
+                    <li>
+                        <strong>Descansos Programados</strong>
+                        <span>30 minutos <small style="color:#94a3b8; font-weight:normal;">(no cuentan como inactividad)</small></span>
+                    </li>
+                    <li>
+                        <strong>Tiempo de Ciclo Nominal (\(C_n\))</strong>
+                        <span>15 segundos/unidad</span>
+                    </li>
+                    <li>
+                        <strong>Producción Real (\(N_p\))</strong>
+                        <span>1,400 unidades</span>
+                    </li>
+                    <li>
+                        <strong>Calidad (\(Q\))</strong>
+                        <span>98% <small style="color:#94a3b8; font-weight:normal;">de piezas aceptadas</small></span>
+                    </li>
+                    <li>
+                        <strong>Disponibilidad (\(A\))</strong>
+                        <span>95% <small style="color:#94a3b8; font-weight:normal;">(por mantenimientos preventivos)</small></span>
+                    </li>
+                </ul>
+
+                <div class="highlight-box">
+                    <strong>⚠️ Incidencia Técnica:</strong> Se han detectado 45 microparadas por turno causadas por "falsas alarmas" de los sensores ópticos. 
+                    Cada microparada requiere un rearme manual que toma, en promedio, 20 segundos.
+                </div>
+            </div>
+
+            <!-- PARTE 2 -->
+            <div class="section">
+                <h2>🧮 Parte 2: Ejercicios de Cálculo</h2>
+                
+                <div class="question-box">
+                    <h3>Ejercicio 1: Diagnóstico del Rendimiento (\(P\))</h3>
+                    <p>Calcule el factor de Rendimiento actual de la planta. Recuerde que las microparadas por falsas alarmas afectan directamente el tiempo de operación real.</p>
+                    <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #3b82f6;">
+                        <strong>💡 Pista:</strong> Utilice la fórmula:
+                        <div class="formula-box" style="margin: 10px 0 0 0; padding: 15px;">
+                            $$P = \frac{C_n \times N_p}{T_o}$$
+                        </div>
+                        <p style="margin-top: 10px; font-size: 0.9em; color: #94a3b8;">Donde \(T_o\) es el tiempo de operación (Tiempo de turno - Descansos - Paradas de disponibilidad).</p>
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h3>Ejercicio 2: Cálculo del OEE Base</h3>
+                    <p>Determine el \(OEE\) actual del sistema utilizando la relación fundamental:</p>
+                    <div class="formula-box">
+                        $$OEE = A \times P \times Q$$
+                    </div>
+                </div>
+
+                <div class="question-box">
+                    <h3>Ejercicio 3: Proyección de Mejora con Wi-Fi Sensing</h3>
+                    <p>Si se sustituyen los sensores ópticos por un sistema de Wi-Fi Sensing (inmune al polvo), las 45 microparadas se reducen a cero.</p>
+                    <ul style="margin-top: 10px; margin-left: 20px; color: #e2e8f0;">
+                        <li>Calcule el <span class="highlight">nuevo número de unidades</span> que se producirían en el mismo tiempo de operación manteniendo el ritmo nominal.</li>
+                        <li>Calcule el <span class="highlight">nuevo OEE proyectado</span>.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- PARTE 3 -->
+            <div class="section">
+                <h2>🧠 Parte 3: Análisis Teórico (Fundamentos Físicos)</h2>
+                
+                <div class="question-box" style="border-left-color: #8b5cf6; background: rgba(139, 92, 246, 0.05);">
+                    <h3 style="color: #a78bfa;">Pregunta de Reflexión:</h3>
+                    <p>Considerando que una partícula de polvo industrial tiene un diámetro promedio de \(\phi \approx 50\ \mu\text{m}\) y un sistema Wi-Fi opera a \(5\text{ GHz}\) (\(\lambda \approx 6\text{ cm}\)):</p>
+                    
+                    <ol style="margin-top: 15px; margin-left: 25px; line-height: 1.8;">
+                        <li>Explique por qué el fenómeno de <strong>difracción</strong> permite que la onda de radio ignore la mota de polvo, mientras que el haz de luz infrarroja (\(\lambda \approx 900\text{ nm}\)) del sensor óptico es bloqueado o dispersado.</li>
+                        <li>Defina brevemente cómo la métrica <strong>CSI (Información del Estado del Canal)</strong> ayuda a diferenciar entre una "pieza real" y un "ruido ambiental" en la línea de ensamblaje.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DE CLAVE -->
+            <div class="key-section">
+                <h3>🔐 Guía de Soluciones (Para el Instructor)</h3>
+                <p style="margin-bottom: 25px; color: #d1d5db;">
+                    Ingresa la clave de acceso para revelar las soluciones y metodologías de cálculo.
+                </p>
+                <input type="password" id="keyCode" class="key-input" placeholder="Ingresa la clave" aria-label="Clave de acceso">
+                <br>
+                <button class="btn" onclick="verifyKey()">🔓 Desbloquear Soluciones</button>
+                <button class="btn btn-reset" onclick="resetForm()">🔄 Ocultar</button>
+                <p id="errorMsg" class="error-msg">❌ Clave incorrecta. Acceso denegado.</p>
+            </div>
+
+            <!-- RESPUESTAS OCULTAS -->
+            <div id="answerSection" class="answer-section">
+                <h3>✅ Solucionario del Taller</h3>
+                
+                <div class="solution-box">
+                    <h4>Solución 1: Diagnóstico del Rendimiento (\(P\))</h4>
+                    <p>Primero, calculamos el Tiempo de operación real (\(T_o\)):</p>
+                    <div class="solution-math">
+                        Tiempo base = 480 min (8h)<br>
+                        Tiempo efectivo = 480 min - 30 min (descanso) = 450 min<br>
+                        \(T_o\) = 450 min × 0.95 (Disponibilidad) = 427.5 min = <strong>25,650 segundos</strong>
+                    </div>
+                    <p>Luego, calculamos el Rendimiento (\(P\)):</p>
+                    <div class="solution-math">
+                        \(P = \frac{15\text{ seg/u} \times 1,400\text{ u}}{25,650\text{ seg}}\)<br>
+                        \(P \approx 0.8187 \rightarrow \mathbf{81.87\%}\)
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h4>Solución 2: Cálculo del OEE Base</h4>
+                    <p>Aplicando la fórmula con los valores conocidos:</p>
+                    <div class="solution-math">
+                        \(OEE = A \times P \times Q\)<br>
+                        \(OEE = 0.95 \times 0.8187 \times 0.98\)<br>
+                        \(OEE = \mathbf{76.22\%}\)
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h4>Solución 3: Proyección de Mejora</h4>
+                    <p>Al eliminar las microparadas (45 × 20 s = <strong>900 s recuperados</strong>), el rendimiento \(P\) tiende al valor óptimo según el flujo de la máquina.</p>
+                    <div class="solution-math" style="border-left: 3px solid #60a5fa;">
+                        <strong>Nota del instructor:</strong><br>
+                        El incremento en OEE suele rondar entre un <strong>3% y 7%</strong> en entornos de alta frecuencia de paradas, justificando la inversión en tecnología Wi-Fi Sensing.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>📚 Taller Técnico | Optimización Industrial con Tecnologías Inalámbricas Avanzadas</p>
+            <p style="margin-top: 8px; font-size: 0.85em; opacity: 0.5;">Clave de acceso: 1980</p>
+        </footer>
+    </div>
+
+    <script>
+        function verifyKey() {
+            const inputKey = document.getElementById('keyCode').value;
+            const errorMsg = document.getElementById('errorMsg');
+            const answerSection = document.getElementById('answerSection');
+            const inputElement = document.getElementById('keyCode');
+
+            if (inputKey === '1980' || inputKey === 'admin') {
+                errorMsg.style.display = 'none';
+                answerSection.style.display = 'block';
+                inputElement.style.borderColor = '#10b981';
+                setTimeout(() => {
+                    answerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            } else {
+                errorMsg.style.display = 'block';
+                answerSection.style.display = 'none';
+                inputElement.style.borderColor = '#ef4444';
+                
+                // Reiniciar animación
+                errorMsg.style.animation = 'none';
+                inputElement.offsetHeight; /* trigger reflow */
+                errorMsg.style.animation = null;
+                
+                setTimeout(() => {
+                    inputElement.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+                }, 1500);
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('keyCode').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+            document.getElementById('answerSection').style.display = 'none';
+            document.getElementById('keyCode').style.borderColor = 'rgba(245, 158, 11, 0.4)';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Permitir enter para enviar
+        document.getElementById('keyCode').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyKey();
+            }
+        });
+    </script>
+</body>
+</html>
