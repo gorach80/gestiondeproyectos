@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planteamiento del Caso: Línea de Envasado de Pulpa de Frutas</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.7;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+    header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 40px 35px;
+        text-align: center;
+    }
+    header h1 { font-size: 2.1em; margin-bottom: 12px; }
+    header p { opacity: 0.95; font-size: 1.05em; }
+    .badge {
+        display: inline-block;
+        background: #ffd700;
+        color: #1e3c72;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-top: 12px;
+    }
+    .badge-secondary {
+        display: inline-block;
+        background: rgba(255,255,255,0.15);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        margin: 5px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .content { padding: 40px; }
+
+    .section {
+        background: #f8f9fa;
+        border-left: 5px solid #2a5298;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        transition: transform 0.3s;
+    }
+    .section:hover { transform: translateX(3px); }
+    .section h2 {
+        color: #1e3c72;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .section h3 {
+        color: #2a5298;
+        margin: 22px 0 10px 0;
+        font-size: 1.25em;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #e3f2fd;
+    }
+    .section p { margin-bottom: 12px; text-align: justify; }
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 1.1em;
+        flex-shrink: 0;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th {
+        background: #4a6fa5;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover { background: #f0f4f8; }
+    .data-card {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 5px solid #1976d2;
+        padding: 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .data-card h4 {
+        color: #0d47a1;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    .theory-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 5px solid #1976d2;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .theory-box h4 {
+        color: #0d47a1;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    .principle-box {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        border-left: 5px solid #7b1fa2;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .principle-box h4 {
+        color: #4a148c;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    .warning-box {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    .hint-box {
+        background: #e8f5e9;
+        border-left: 5px solid #43a047;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .hint-box h4 {
+        color: #1b5e20;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+    .objectives-box {
+        background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+        border-left: 5px solid #fb8c00;
+        padding: 22px;
+        margin: 25px 0;
+        border-radius: 8px;
+    }
+    .objectives-box h3 {
+        color: #e65100;
+        margin: 0 0 15px 0;
+        font-size: 1.4em;
+        border: none;
+        padding: 0;
+    }
+    .objectives-box ol {
+        margin-left: 25px;
+        line-height: 2;
+    }
+    .objectives-box ol li {
+        padding: 8px 0;
+    }
+    ul, ol { margin-left: 25px; line-height: 1.9; margin-bottom: 12px; }
+    .highlight { background: #fff176; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+    .key-section {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        padding: 30px;
+        border-radius: 10px;
+        margin: 30px 0;
+        text-align: center;
+    }
+    .key-section h3 { color: #c0392b; margin-bottom: 20px; font-size: 1.5em; }
+    .key-input {
+        padding: 15px;
+        font-size: 1.2em;
+        border: 3px solid #ddd;
+        border-radius: 8px;
+        width: 250px;
+        text-align: center;
+        margin: 10px;
+    }
+    .key-input:focus { outline: none; border-color: #667eea; }
+    .btn {
+        padding: 14px 28px;
+        font-size: 1.05em;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .answer-section { display: none; animation: slideDown 0.5s ease; }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .error-msg { color: #c0392b; font-weight: bold; margin-top: 10px; display: none; }
+    footer {
+        background: #1e3c72;
+        color: white;
+        text-align: center;
+        padding: 22px;
+    }
+    footer p { margin: 3px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📋 Planteamiento del Caso de Estudio</h1>
+        <p>Análisis Técnico-Económico de una Línea de Envasado de Pulpa de Frutas</p>
+        <div>
+            <span class="badge">🎓 Caso de Estudio</span>
+            <span class="badge-secondary">📚 Gestión de Operaciones</span>
+            <span class="badge-secondary">🏭 Ingeniería Industrial</span>
+        </div>
+    </header>
+
+    <div class="content">
+
+        <!-- CONTEXTO GENERAL -->
+        <div class="section">
+            <h2>🎯 Contexto del Problema</h2>
+            <p>Una empresa del sector agroalimentario se dedica a la transformación de frutas frescas en productos con valor agregado, específicamente <strong>pulpa de frutas envasada</strong> y <strong>miel de frutas</strong>. La empresa cuenta con una línea de envasado automatizada que ha sido recientemente instalada y necesita realizar un <strong>análisis técnico-económico integral</strong> para evaluar su desempeño operativo, la conveniencia de la inversión realizada, la distribución física de las áreas de proceso, la eficiencia del aprovechamiento de la materia prima y la planificación adecuada de la mano de obra directa.</p>
+
+            <p>El análisis debe integrar múltiples disciplinas de la <strong>ingeniería industrial</strong>: evaluación de desempeño de equipos mediante indicadores de eficiencia (OEE, MTTR), evaluación económica de la inversión (FRC, CAE), distribución en planta mediante el método Guerchet, balance de masa del proceso productivo y planificación de la mano de obra directa. Cada uno de estos aspectos aporta información complementaria para tomar decisiones informadas sobre la operación y el futuro de la línea de envasado.</p>
+
+            <div class="theory-box">
+                <h4>🏭 Descripción del Proceso Productivo</h4>
+                <p>El proceso inicia con la recepción de <strong>pulpa de fruta fresca</strong> como materia prima, la cual es sometida a un proceso de limpieza donde se generan mermas y residuos. La pulpa útil obtenida se mezcla con azúcar en proporción 1:1 para formar una mezcla que posteriormente es sometida a un proceso de evaporación. El producto final (miel de frutas) es envasado en frascos mediante una envasadora automatizada, la cual representa el equipo principal de la línea y el foco del análisis técnico-económico.</p>
+            </div>
+        </div>
+
+        <!-- DATOS DE LA ENVASADORA -->
+        <div class="section">
+            <h2><span class="step-number">1</span> Datos de la Envasadora</h2>
+            <p>La envasadora es el equipo principal de la línea de producción. A continuación se presentan los datos operativos registrados durante un turno estándar de trabajo:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro Operativo</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiempo total planificado (turno de 8 h)</td>
+                        <td><strong>480 minutos</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Tiempo de parada registradas</td>
+                        <td><strong>30 minutos</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Número de fallos del equipo</td>
+                        <td><strong>5 fallos</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Tiempo total de reparación</td>
+                        <td><strong>10 horas</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Producción diaria requerida</td>
+                        <td><strong>6,000 frascos/día</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Rendimiento estándar por operario</td>
+                        <td><strong>500 frascos/operario</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="data-card">
+                <h4>📊 Presentaciones de Producto</h4>
+                <p>La envasadora maneja <strong>dos presentaciones</strong> de frascos con distintas velocidades de procesamiento. Las participaciones relativas en la mezcla de producción son las siguientes:</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Presentación</th>
+                            <th>Participación en la Producción (w<sub>i</sub>)</th>
+                            <th>Rendimiento (R<sub>i</sub>)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Presentación 1</strong></td>
+                            <td>40%</td>
+                            <td>8 unidades</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Presentación 2</strong></td>
+                            <td>60%</td>
+                            <td>9 unidades</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="principle-box">
+                <h4>📐 Dimensiones Físicas del Equipo</h4>
+                <p>La envasadora tiene una longitud de <strong>3.1 m</strong> y un ancho de <strong>1.4 m</strong>. Las dimensiones físicas del equipo son relevantes tanto para el cálculo del área estática como para la planificación ergonómica de los puestos de trabajo de los operarios que la atienden.</p>
+            </div>
+        </div>
+
+        <!-- DATOS DE CALIDAD -->
+        <div class="section">
+            <h2><span class="step-number">2</span> Datos de Calidad del Producto</h2>
+            <p>El control de calidad es un aspecto crítico en la industria alimentaria debido a las regulaciones sanitarias y a las expectativas del consumidor. Se han registrado los siguientes datos sobre las unidades producidas en el turno estándar:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro de Calidad</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Unidades totales producidas</td>
+                        <td><strong>6,000 frascos</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Unidades defectuosas (sellado, llenado, etiquetado)</td>
+                        <td><strong>60 frascos</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Unidades que cumplen especificaciones</td>
+                        <td><strong>5,940 frascos</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <strong>⚠️ Causas posibles de defectos a considerar:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Fallos en el sellado de envases</li>
+                    <li>Llenado incompleto o excesivo</li>
+                    <li>Contaminación cruzada</li>
+                    <li>Problemas de etiquetado</li>
+                    <li>Alteraciones en las características organolépticas</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- DATOS ECONÓMICOS -->
+        <div class="section">
+            <h2><span class="step-number">3</span> Datos Económicos de la Inversión</h2>
+            <p>Para evaluar la conveniencia económica de la inversión en la envasadora, se dispone de la siguiente información financiera:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Parámetro Económico</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Inversión inicial en la envasadora</td>
+                        <td><strong>$32,000</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Costo anual de operación y mantenimiento</td>
+                        <td><strong>$5,000</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Tasa de interés (TMAR)</td>
+                        <td><strong>8% anual (i = 0.08)</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Vida útil del equipo</td>
+                        <td><strong>8 años</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="theory-box">
+                <h4>💰 Justificación del Análisis Económico</h4>
+                <p>La inversión en la envasadora representa un desembolso significativo de capital que debe ser justificado mediante un análisis que considere el valor del dinero en el tiempo. La empresa necesita determinar si el costo anual equivalente de poseer y operar el equipo es coherente con los beneficios productivos esperados, así como comparar esta alternativa con otras posibles opciones de inversión en equipos similares del mercado.</p>
+            </div>
+        </div>
+
+        <!-- DATOS DE DISTRIBUCIÓN EN PLANTA -->
+        <div class="section">
+            <h2><span class="step-number">4</span> Datos de Distribución en Planta</h2>
+            <p>El análisis de la distribución física de las áreas de proceso se realiza mediante el <strong>método Guerchet</strong>, el cual clasifica las áreas según su función en tres categorías: producción/transformación, almacenamiento/depósito y servicios/apoyo. Los datos recogidos sobre las áreas planificadas son:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Categoría de Área (Guerchet)</th>
+                        <th>Superficie (unidades de área)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Área de almacenamiento (S<sub>a</sub>)</td>
+                        <td><strong>2.5</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Área de producción / procesamiento (S<sub>g</sub>)</td>
+                        <td><strong>4.2</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Área complementaria de servicios (S<sub>c</sub>)</td>
+                        <td><strong>1.7</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="data-card">
+                <h4>📐 Estaciones de Trabajo</h4>
+                <p>El análisis preliminar identificó inicialmente <strong>7 estaciones de trabajo</strong> en la línea de envasado. Tras aplicar el método Guerchet y consolidar áreas según las relaciones de flujo entre actividades, se proyecta una <strong>reducción a 4 estaciones</strong> consolidadas. La diferencia entre estos valores representa la <strong>densificación</strong> alcanzada con el rediseño del layout.</p>
+            </div>
+        </div>
+
+        <!-- DATOS DE BALANCE DE MASA -->
+        <div class="section">
+            <h2><span class="step-number">5</span> Datos del Balance de Masa</h2>
+            <p>El proceso de transformación de pulpa de fruta en miel de frutas involucra varias etapas sucesivas. Se dispone de los siguientes datos de materia prima y rendimientos:</p>
+
+            <h3>Etapa 1: Obtención de Pulpa Útil</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Lote</th>
+                        <th>Masa Total de Pulpa (kg)</th>
+                        <th>Merma / Ineficiencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Lote A</strong></td>
+                        <td>350 kg</td>
+                        <td>10% de merma</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Lote B</strong></td>
+                        <td>300 kg</td>
+                        <td>90% de eficiencia</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Etapa 2: Mezcla con Azúcar</h3>
+            <div class="data-card">
+                <h4>🍯 Mezcla Pulpa–Azúcar</h4>
+                <p>La pulpa útil obtenida en la etapa anterior se mezcla con azúcar en una <strong>proporción 1:1</strong> en peso. Esta mezcla es la base para la posterior evaporación que concentre el producto en la miel de frutas final.</p>
+            </div>
+
+            <h3>Etapa 3: Evaporación</h3>
+            <div class="data-card">
+                <h4>🔥 Proceso de Evaporación</h4>
+                <p>La mezcla pulpa-azúcar se somete a un proceso de evaporación térmica que reduce la masa total hasta alcanzar aproximadamente el <strong>65% del peso inicial</strong> de la mezcla, obteniéndose el producto final (miel de frutas).</p>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Consideraciones para el balance de masa:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>Aplicar el principio de conservación de la materia en cada etapa</li>
+                    <li>Documentar rendimientos y pérdidas por requisitos de inocuidad alimentaria</li>
+                    <li>Identificar oportunidades de mejora en cada etapa del proceso</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- OBJETIVOS Y PREGUNTAS -->
+        <div class="objectives-box">
+            <h3>🎯 Objetivos del Análisis</h3>
+            <p>Con base en los datos presentados, se requiere desarrollar un análisis técnico-económico integral que responda a los siguientes planteamientos:</p>
+            <ol>
+                <li><strong>Indicadores de eficiencia de equipos:</strong> Calcular la <strong>Disponibilidad</strong>, el <strong>Rendimiento (ponderado)</strong>, el <strong>Índice de Calidad</strong>, la <strong>Eficiencia General de los Equipos (OEE)</strong> y el <strong>MTTR</strong> de la envasadora.</li>
+                <li><strong>Análisis económico de la inversión:</strong> Determinar el <strong>Factor de Recuperación de Capital (FRC)</strong> y el <strong>Costo Anual Equivalente (CAE)</strong> de la envasadora.</li>
+                <li><strong>Distribución en planta:</strong> Calcular la <strong>Superficie Total Guerchet (S<sub>t</sub>)</strong> y la <strong>densificación</strong> alcanzada con el rediseño del layout.</li>
+                <li><strong>Balance de masa:</strong> Determinar el <strong>peso útil</strong>, la <strong>masa de la mezcla</strong> y el <strong>producto final</strong> obtenido a partir de los lotes de pulpa.</li>
+                <li><strong>Planificación de mano de obra directa:</strong> Calcular el <strong>número de operarios requeridos</strong> para atender la producción diaria y el <strong>área estática</strong> de la envasadora.</li>
+                <li><strong>Conclusiones y recomendaciones:</strong> Identificar oportunidades de mejora en cada aspecto analizado y proponer acciones concretas para optimizar el desempeño global de la línea de envasado.</li>
+            </ol>
+        </div>
+
+        <!-- PISTA / NOTA -->
+        <div class="hint-box">
+            <h4>💡 Nota Metodológica</h4>
+            <p>El presente planteamiento describe exclusivamente el caso de estudio y los datos disponibles. <strong>La resolución, fórmulas, cálculos paso a paso y resultados corresponden a un documento complementario</strong> que el instructor proporcionará una vez completado el análisis por parte de los estudiantes. Se recomienda aplicar cada concepto del marco teórico a los datos aquí presentados siguiendo la metodología correspondiente.</p>
+        </div>
+
+        <!-- CLAVE DE ACCESO (OPCIONAL, SIN RESOLUCIÓN) -->
+        <div class="key-section">
+            <h3>🔐 Acceso a la Versión con Resolución</h3>
+            <p style="margin-bottom: 20px;">
+                Si cuentas con la clave proporcionada por el instructor, puedes acceder al desarrollo completo del caso (fórmulas, cálculos y resultados):
+            </p>
+            <input type="password" id="keyCode" class="key-input" placeholder="Ingresa la clave aquí">
+            <br>
+            <button class="btn" onclick="verifyKey()">🔓 Verificar Clave</button>
+            <button class="btn" onclick="resetForm()" style="background:#95a5a6;">🔄 Reiniciar</button>
+            <p id="errorMsg" class="error-msg">❌ Clave incorrecta. Inténtalo de nuevo.</p>
+            <p id="successMsg" style="display:none; color:#1b5e20; font-weight: bold; margin-top: 15px;">
+                ✅ Clave verificada. La versión con resolución se entregará como documento complementario.
+            </p>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>📋 Planteamiento del Caso de Estudio | Línea de Envasado de Pulpa de Frutas</p>
+        <p style="margin-top: 5px; font-size: 0.9em; opacity: 0.85;">Gestión de Operaciones | Ingeniería Industrial</p>
+    </footer>
+</div>
+
+<script>
+    function verifyKey() {
+        const inputKey = document.getElementById('keyCode').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const successMsg = document.getElementById('successMsg');
+
+        if (inputKey === '1980') {
+            errorMsg.style.display = 'none';
+            successMsg.style.display = 'block';
+        } else {
+            errorMsg.style.display = 'block';
+            successMsg.style.display = 'none';
+            const keyInput = document.querySelector('.key-input');
+            keyInput.style.borderColor = '#c0392b';
+            setTimeout(() => {
+                keyInput.style.borderColor = '#ddd';
+            }, 1000);
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('keyCode').value = '';
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'none';
+    }
+
+    document.getElementById('keyCode').addEventListener('keypress', e => {
+        if (e.key === 'Enter') verifyKey();
+    });
+</script>
+</body>
+</html>

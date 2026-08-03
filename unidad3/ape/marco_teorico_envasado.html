@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marco Teórico: Análisis Técnico-Económico de Línea de Envasado de Pulpa de Frutas</title>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.7;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
+    header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 40px 35px;
+        text-align: center;
+    }
+    header h1 { font-size: 2.1em; margin-bottom: 12px; }
+    header p { opacity: 0.95; font-size: 1.05em; }
+    .badge {
+        display: inline-block;
+        background: #ffd700;
+        color: #1e3c72;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        margin-top: 12px;
+    }
+    .badge-secondary {
+        display: inline-block;
+        background: rgba(255,255,255,0.15);
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: 500;
+        margin: 5px;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    .content { padding: 40px; }
+
+    /* Card de información del trabajo */
+    .info-card {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 5px solid #1976d2;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+    }
+    .info-card h3 {
+        color: #0d47a1;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+    .info-grid {
+        display: grid;
+        grid-template-columns: 160px 1fr;
+        gap: 10px 20px;
+        font-size: 1em;
+    }
+    .info-grid dt { font-weight: bold; color: #1565c0; }
+    .info-grid dd { color: #333; }
+
+    .section {
+        background: #f8f9fa;
+        border-left: 5px solid #2a5298;
+        padding: 25px;
+        margin-bottom: 30px;
+        border-radius: 8px;
+        transition: transform 0.3s;
+    }
+    .section:hover { transform: translateX(3px); }
+    .section h2 {
+        color: #1e3c72;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .section h3 {
+        color: #2a5298;
+        margin: 22px 0 10px 0;
+        font-size: 1.25em;
+        padding-bottom: 5px;
+        border-bottom: 2px solid #e3f2fd;
+    }
+    .section p { margin-bottom: 12px; text-align: justify; }
+    .step-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 1.1em;
+        flex-shrink: 0;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    th {
+        background: #4a6fa5;
+        color: white;
+        padding: 12px;
+        text-align: center;
+    }
+    td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    tr:hover { background: #f0f4f8; }
+    .formula {
+        background: #fff8e1;
+        border: 2px dashed #ffa000;
+        padding: 18px;
+        margin: 15px 0;
+        border-radius: 8px;
+        overflow-x: auto;
+        text-align: center;
+    }
+    .theory-box {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border-left: 5px solid #1976d2;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .theory-box h4 {
+        color: #0d47a1;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    .principle-box {
+        background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+        border-left: 5px solid #7b1fa2;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .principle-box h4 {
+        color: #4a148c;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    .result-box {
+        background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        color: white;
+        padding: 18px 20px;
+        border-radius: 10px;
+        margin: 15px 0;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(17,153,142,0.3);
+    }
+    .warning-box {
+        background: #fff3cd;
+        border-left: 5px solid #ffc107;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+    }
+    .calc-box {
+        background: #263238;
+        color: #00e676;
+        padding: 18px 20px;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        overflow-x: auto;
+        margin: 15px 0;
+        line-height: 1.8;
+        font-size: 0.95em;
+    }
+    .example-box {
+        background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+        border-left: 5px solid #c2185b;
+        padding: 18px 20px;
+        margin: 18px 0;
+        border-radius: 8px;
+    }
+    .example-box h4 {
+        color: #880e4f;
+        margin-bottom: 8px;
+        font-size: 1.1em;
+    }
+    ul, ol { margin-left: 25px; line-height: 1.9; margin-bottom: 12px; }
+    .highlight { background: #fff176; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+    .references-list {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+    .references-list li {
+        padding: 12px 15px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+        border-left: 4px solid #7b1fa2;
+        border-radius: 5px;
+        line-height: 1.6;
+    }
+    .references-list li strong { color: #4a148c; }
+
+    .key-section {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        padding: 30px;
+        border-radius: 10px;
+        margin: 30px 0;
+        text-align: center;
+    }
+    .key-section h3 { color: #c0392b; margin-bottom: 20px; font-size: 1.5em; }
+    .key-input {
+        padding: 15px;
+        font-size: 1.2em;
+        border: 3px solid #ddd;
+        border-radius: 8px;
+        width: 250px;
+        text-align: center;
+        margin: 10px;
+    }
+    .key-input:focus { outline: none; border-color: #667eea; }
+    .btn {
+        padding: 14px 28px;
+        font-size: 1.05em;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 10px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+    .answer-section { display: none; animation: slideDown 0.5s ease; }
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.05em;
+        border-radius: 8px;
+        border: 2px solid #2a5298;
+        background: white;
+        color: #333;
+        margin: 8px 0;
+    }
+    .error-msg { color: #c0392b; font-weight: bold; margin-top: 10px; display: none; }
+    .feedback { margin-top: 15px; padding: 15px; border-radius: 8px; display: none; font-weight: bold; }
+    footer {
+        background: #1e3c72;
+        color: white;
+        text-align: center;
+        padding: 22px;
+    }
+    footer p { margin: 3px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>📘 Marco Teórico: Análisis Técnico-Económico</h1>
+        <p>Línea de Envasado de Pulpa de Frutas | Gestión de Operaciones</p>
+        <div>
+            <span class="badge">🎓 Ingeniería Industrial</span>
+            <span class="badge-secondary">📚 Gestión de Operaciones</span>
+        </div>
+    </header>
+
+    <div class="content">
+
+        <!-- INFORMACIÓN DEL TRABAJO -->
+        <div class="info-card">
+            <h3>📋 Información del Documento</h3>
+            <dl class="info-grid">
+                <dt>Materia:</dt>
+                <dd>Gestión de Operaciones</dd>
+                <dt>Carrera:</dt>
+                <dd>Ingeniería Industrial</dd>
+                <dt>Integrantes:</dt>
+                <dd>Bryan Villegas, Hernán Bobecca, Jason Zambrano, Lluvy Villan</dd>
+                <dt>Documento:</dt>
+                <dd>Marco Teórico del Análisis Técnico-Económico de una Línea de Envasado de Pulpa de Frutas</dd>
+            </dl>
+        </div>
+
+        <!-- SECCIÓN 1: INTRODUCCIÓN -->
+        <div class="section">
+            <h2><span class="step-number">1</span> Introducción al Estudio de Operaciones en la Industria Alimentaria</h2>
+
+            <p>La <strong>gestión de operaciones</strong> constituye uno de los pilares fundamentales de la ingeniería industrial, especialmente en el sector agroalimentario, donde la eficiencia de los procesos productivos determina tanto la rentabilidad empresarial como la calidad del producto final. En el contexto de una línea de envasado de pulpa de frutas, el análisis técnico-económico integra múltiples disciplinas: la evaluación de desempeño de equipos, la economía de la ingeniería, la distribución en planta y el balance de masa, conformando un enfoque holístico que permite identificar oportunidades de mejora continua.</p>
+
+            <p>El presente marco teórico desarrolla los conceptos fundamentales que sustentan el análisis realizado en el trabajo grupal, abarcando desde los indicadores clave de eficiencia de equipos (<strong>OEE, disponibilidad, MTTR</strong>) hasta las herramientas de evaluación económica (<strong>FRC, CAE</strong>), pasando por metodologías de distribución en planta (<strong>layout Guerchet</strong>) y el balance de masa aplicado a la elaboración de pulpa y miel de frutas. Cada concepto se presenta con su definición formal, fundamentación matemática y, cuando es pertinente, su aplicación concreta al caso de estudio.</p>
+
+            <div class="theory-box">
+                <h4>🌍 Contexto del Sector Agroalimentario</h4>
+                <p>La industria de procesamiento de frutas representa un sector de gran relevancia económica en muchos países latinoamericanos, donde la transformación de materias primas frescas en productos con valor agregado requiere de una gestión operativa rigurosa. Los procesos de envasado, en particular, involucran equipos automatizados cuyo desempeño debe ser monitoreado mediante indicadores estandarizados a nivel internacional, como la <strong>Eficiencia General de los Equipos (OEE)</strong>, desarrollada originalmente por <strong>Seiichi Nakajima</strong> en el marco del Mantenimiento Productivo Total (TPM).</p>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: INDICADORES DE EFICIENCIA -->
+        <div class="section">
+            <h2><span class="step-number">2</span> Indicadores de Eficiencia de Equipos</h2>
+
+            <p>Los <strong>indicadores de eficiencia de equipos</strong> constituyen un conjunto de métricas cuantitativas que permiten evaluar de manera sistemática el desempeño de los activos productivos en una planta industrial. Estos indicadores son esenciales para la toma de decisiones basada en datos, ya que proporcionan información objetiva sobre la utilización real de la maquinaria, las pérdidas por paradas no planificadas y la calidad del producto manufacturado.</p>
+
+            <div class="principle-box">
+                <h4>📍 Origen Histórico</h4>
+                <p>Su origen se remonta a las prácticas del <strong>Mantenimiento Productivo Total (TPM)</strong> desarrolladas en Japón durante la década de 1970, y desde entonces se han convertido en estándares de la gestión de mantenimiento a nivel mundial. Los principales indicadores incluyen disponibilidad, rendimiento, calidad, OEE y MTTR.</p>
+            </div>
+
+            <!-- 2.1 Disponibilidad -->
+            <h3>2.1 Disponibilidad</h3>
+            <p>La <strong>disponibilidad</strong> es un indicador que mide la proporción de tiempo durante la cual un equipo se encuentra en condiciones operativas para realizar su función productiva, en relación con el tiempo total programado de producción. Este indicador refleja directamente el impacto de las paradas no planificadas (fallas, averías, ajustes imprevistos) y las paradas planificadas (mantenimiento preventivo, cambios de turno) sobre la capacidad productiva de la línea.</p>
+
+            <p>Según <strong>Nakajima (1988)</strong>, la disponibilidad es el primer componente del OEE y se calcula como la razón entre el tiempo neto de operación y el tiempo total planificado de producción.</p>
+
+            <div class="formula">
+                $$\text{Disponibilidad (\%)} = \frac{T_{\text{Total Planificado}} - T_{\text{Parada}}}{T_{\text{Total Planificado}}} \times 100$$
+            </div>
+
+            <p>Donde el tiempo total planificado corresponde al horario de producción programado (por ejemplo, <strong>480 minutos en un turno de 8 horas</strong>), y el tiempo de parada incluye todas las interrupciones no productivas, ya sean por fallas del equipo, falta de materia prima o cualquier otra causa que impida la operación.</p>
+
+            <div class="example-box">
+                <h4>🔬 Aplicación al Caso de Estudio</h4>
+                <p>Una disponibilidad del <span class="highlight">93.75%</span>, como la obtenida en el caso de estudio, indica que el equipo opera durante el 93.75% del turno programado, lo cual se considera un nivel aceptable en la industria alimentaria, aunque existen oportunidades de mejora hacia el benchmark internacional del <strong>90% o superior</strong>.</p>
+            </div>
+
+            <div class="theory-box">
+                <h4>🔁 Disponibilidad Intrínseca vs. Operativa</h4>
+                <p>Es importante distinguir entre la <strong>disponibilidad intrínseca</strong> del equipo (determinada por su diseño y estado de mantenimiento) y la <strong>disponibilidad operativa</strong> (que incluye factores externos como la logística de materias primas y la disponibilidad de personal). La primera se mejora mediante estrategias de mantenimiento preventivo y predictivo, mientras que la segunda requiere optimización de la cadena de suministro y la planificación de la producción. Ambas perspectivas son necesarias para lograr una gestión integral de la disponibilidad en la línea de envasado.</p>
+            </div>
+
+            <!-- 2.2 Rendimiento -->
+            <h3>2.2 Rendimiento</h3>
+            <p>El <strong>rendimiento</strong>, también denominado eficiencia de operación o <em>performance rate</em>, mide la relación entre la cantidad real producida y la cantidad teórica que debería haberse producido durante el tiempo efectivo de operación. Este indicador captura las pérdidas por velocidad reducida, paradas menores y arrancadas lentas del equipo.</p>
+
+            <p>En el contexto de una envasadora, el rendimiento refleja si la máquina está operando a su velocidad nominal de diseño o si, por el contrario, factores como el desgaste de componentes, la variabilidad en la consistencia del producto o las regulaciones manuales reducen la velocidad efectiva de producción.</p>
+
+            <p>El rendimiento puede calcularse de forma directa como la razón entre la producción real y la producción teórica, o mediante el concepto de <strong>rendimiento ponderado</strong> cuando se manejan diferentes productos o presentaciones con distintas velocidades de procesamiento.</p>
+
+            <div class="formula">
+                $$R_{\text{Ponderado}} = \sum_{i=1}^{n} w_i \cdot R_i = w_1 \cdot R_1 + w_2 \cdot R_2 + \cdots + w_n \cdot R_n$$
+            </div>
+
+            <p>Donde \(w_i\) representa la proporción o peso relativo del producto \(i\) en la mezcla de producción, y \(R_i\) es el rendimiento del producto \(i\) expresado en la misma unidad.</p>
+
+            <div class="calc-box">
+Ejemplo del caso de estudio:
+- Presentación 1: w₁ = 40%, R₁ = 8 unidades
+- Presentación 2: w₂ = 60%, R₂ = 9 unidades
+
+R_ponderado = (0.40 × 8) + (0.60 × 9)
+R_ponderado = 3.2 + 5.4
+R_ponderado = <strong>8.6 unidades</strong>
+            </div>
+
+            <p>Este enfoque resulta particularmente útil en líneas de envasado flexibles que manejan múltiples formatos o tamaños de envase.</p>
+
+            <!-- 2.3 Calidad -->
+            <h3>2.3 Calidad</h3>
+            <p>El <strong>índice de calidad</strong> mide la proporción de unidades producidas que cumplen con las especificaciones técnicas establecidas, en relación con el total de unidades procesadas. Este indicador captura las pérdidas por defectos de fabricación, rechazos de calidad, reprocesos y unidades fuera de tolerancia.</p>
+
+            <p>En la industria alimentaria, la calidad es un parámetro crítico tanto por las regulaciones sanitarias como por la expectativa del consumidor final, por lo que un alto índice de calidad es indispensable para la viabilidad comercial del producto.</p>
+
+            <div class="formula">
+                $$\text{Índice de Calidad (\%)} = \frac{\text{Unidades Buenas}}{\text{Unidades Totales Producidas}} \times 100$$
+            </div>
+
+            <div class="example-box">
+                <h4>🔬 Aplicación al Caso de Estudio</h4>
+                <p>Un índice de calidad del <span class="highlight">99%</span>, como el del caso de estudio, indica un nivel de control de calidad excelente, consistente con las prácticas de manufactura alimentaria que requieren niveles de defectos muy bajos.</p>
+            </div>
+
+            <p>Las causas de defectos en una línea de envasado pueden incluir:</p>
+            <ul>
+                <li>Fallos en el sellado de envases</li>
+                <li>Llenado incompleto o excesivo</li>
+                <li>Contaminación cruzada</li>
+                <li>Problemas de etiquetado</li>
+                <li>Alteraciones en las características organolépticas del producto</li>
+            </ul>
+
+            <p>La implementación de sistemas de <strong>Control Estadístico de Procesos (CEP)</strong> y el análisis de causas raíz son herramientas complementarias que permiten mantener y mejorar el índice de calidad a lo largo del tiempo.</p>
+
+            <!-- 2.4 OEE -->
+            <h3>2.4 Eficiencia General de los Equipos (OEE)</h3>
+            <p>La <strong>Eficiencia General de los Equipos</strong>, conocida globalmente por sus siglas en inglés <strong>OEE (Overall Equipment Effectiveness)</strong>, es un indicador compuesto que integra los tres factores anteriores en una métrica única. Desarrollada originalmente por <strong>Seiichi Nakajima</strong> como parte del programa TPM en Japón y popularizada mundialmente a través del libro <em>Introduction to TPM (1988)</em>, la OEE se ha convertido en el estándar <em>de facto</em> para la medición de la productividad manufacturera.</p>
+
+            <p>La OEE proporciona una visión completa del desempeño del equipo al considerar simultáneamente las pérdidas por disponibilidad, rendimiento y calidad.</p>
+
+            <div class="formula">
+                $$\text{OEE (\%)} = \text{Disponibilidad} \times \text{Rendimiento} \times \text{Calidad} \times 100$$
+            </div>
+
+            <div class="example-box">
+                <h4>🏆 Clasificación Mundial (Nakajima)</h4>
+                <p>Un equipo se considera <strong>clase mundial</strong> cuando alcanza un OEE superior al <strong>85%</strong>. Un valor del <span class="highlight">83.53%</span>, como el obtenido en el caso de estudio, se encuentra muy cercano a este benchmark, lo que indica un desempeño sobresaliente de la envasadora.</p>
+            </div>
+
+            <div class="principle-box">
+                <h4>📊 Las Seis Grandes Pérdidas del TPM</h4>
+                <p>La OEE no es un objetivo en sí mismo, sino un indicador de diagnóstico que permite identificar cuál de los tres componentes contribuye en mayor medida a las pérdidas. Las llamadas <strong>seis grandes pérdidas</strong> del TPM se agrupan en tres categorías:</p>
+                <ul>
+                    <li><strong>Pérdidas que afectan la Disponibilidad:</strong> (1) fallas del equipo y (2) preparación/ajustes</li>
+                    <li><strong>Pérdidas que afectan el Rendimiento:</strong> (3) reducción de velocidad y (4) paradas menores</li>
+                    <li><strong>Pérdidas que afectan la Calidad:</strong> (5) defectos de proceso y (6) arranque reducido</li>
+                </ul>
+                <p>La eliminación sistemática de estas pérdidas es el objetivo central del TPM y constituye la base para la mejora continua en cualquier operación manufacturera.</p>
+            </div>
+
+            <!-- 2.5 MTTR -->
+            <h3>2.5 Tiempo Medio de Reparación (MTTR)</h3>
+            <p>El <strong>Tiempo Medio de Reparación (MTTR, Mean Time To Repair)</strong> es un indicador de mantenibilidad que mide el tiempo promedio necesario para restaurar un equipo a su condición operativa después de una falla. Este indicador es fundamental para la gestión del mantenimiento, ya que permite evaluar la capacidad del equipo de mantenimiento para responder ante las averías y, en consecuencia, minimizar el tiempo de inactividad del equipo productivo.</p>
+
+            <p>Un MTTR bajo indica que el equipo de mantenimiento es eficiente en el diagnóstico y reparación de fallas, lo cual contribuye directamente a mejorar la disponibilidad del equipo.</p>
+
+            <div class="formula">
+                $$\text{MTTR} = \frac{\text{Tiempo Total de Reparación}}{\text{Número de Fallos}}$$
+            </div>
+
+            <div class="calc-box">
+Cálculo del caso de estudio:
+- Tiempo total de reparación = 10 horas
+- Número de fallos = 5
+
+MTTR = 10 horas / 5 fallos = <strong>2 horas por fallo</strong>
+            </div>
+
+            <p>Este valor debe analizarse en función de la complejidad del equipo, la disponibilidad de repuestos y la capacitación del personal técnico. Según la literatura especializada en mantenimiento industrial (<strong>Moubray, 1997</strong>), la reducción del MTTR se logra mediante estrategias como:</p>
+            <ul>
+                <li>Formación continua del personal de mantenimiento</li>
+                <li>Establecimiento de procedimientos estandarizados de reparación</li>
+                <li>Disponibilidad de repuestos críticos</li>
+                <li>Implementación de sistemas de diagnóstico predictivo</li>
+            </ul>
+        </div>
+
+        <!-- SECCIÓN 3: ANÁLISIS ECONÓMICO -->
+        <div class="section">
+            <h2><span class="step-number">3</span> Análisis Económico de Inversiones</h2>
+
+            <p>El <strong>análisis económico de inversiones</strong> proporciona los fundamentos para la toma de decisiones racionales respecto a la adquisición, renovación o reemplazo de equipos industriales. En el contexto de una línea de envasado, donde las inversiones de capital suelen ser significativas, es imprescindible contar con herramientas que permitan evaluar la conveniencia económica de las alternativas disponibles.</p>
+
+            <p>Las dos principales métricas utilizadas en el caso de estudio son el <strong>Factor de Recuperación de Capital (FRC)</strong> y el <strong>Costo Anual Equivalente (CAE)</strong>, ambas fundamentales en la ingeniería económica.</p>
+
+            <!-- 3.1 FRC -->
+            <h3>3.1 Factor de Recuperación de Capital (FRC)</h3>
+            <p>El <strong>Factor de Recuperación de Capital (FRC)</strong>, también conocido como factor de anualización o factor de capitalización, es un coeficiente que permite convertir un monto único de inversión en una serie uniforme de pagos periódicos a lo largo de la vida útil del activo.</p>
+
+            <p>Este concepto es esencial en la ingeniería económica, ya que facilita la comparación de alternativas de inversión con diferentes vidas útiles y estructuras de costos al expresar todos los flujos en términos anuales equivalentes. Según <strong>Blank y Tarquin (2018)</strong>, el FRC se basa en el principio del valor del dinero en el tiempo y se calcula a partir de la tasa de interés y el número de períodos.</p>
+
+            <div class="formula">
+                $$\text{FRC} = \frac{i \cdot (1+i)^{n}}{(1+i)^{n} - 1}$$
+            </div>
+
+            <p>Donde \(i\) representa la tasa de interés o <strong>Tasa Mínima Aceptable de Retorno (TMAR)</strong>, y \(n\) es el número de períodos (generalmente años) que corresponde a la vida útil del equipo.</p>
+
+            <div class="calc-box">
+Aplicación al caso de estudio:
+- Tasa de interés (i) = 8% = 0.08
+- Vida útil (n) = 8 años
+
+FRC = [0.08 × (1.08)^8] / [(1.08)^8 - 1]
+FRC = [0.08 × 1.85093] / [1.85093 - 1]
+FRC = 0.148075 / 0.85093
+FRC = <strong>0.17401</strong>
+
+Interpretación: Por cada $1 invertido, se debe recuperar anualmente $0.17401
+            </div>
+
+            <p>El FRC también se denomina <strong>factor de amortización uniforme</strong> y es ampliamente utilizado en cálculos de depreciación y en la evaluación de proyectos de inversión a través del método de costo anual equivalente.</p>
+
+            <!-- 3.2 CAE -->
+            <h3>3.2 Costo Anual Equivalente (CAE)</h3>
+            <p>El <strong>Costo Anual Equivalente (CAE)</strong> es una métrica de evaluación económica que expresa el costo total de posesión y operación de un equipo como una anualidad uniforme a lo largo de su vida útil. Esta métrica permite comparar alternativas de inversión con diferentes vidas útiles, costos iniciales y perfiles de gastos operativos, al convertir todos los flujos de caja a una base anual común.</p>
+
+            <p>El CAE es particularmente útil en decisiones de reemplazo de equipos, donde se compara el costo anual del equipo existente con el costo anual de un equipo nuevo. Según <strong>Sullivan, Wicks y Koelling (2015)</strong>, el CAE es el criterio más apropiado cuando la duración del servicio requerida es indefinida o cuando no se conocen las vidas útiles futuras de las alternativas.</p>
+
+            <div class="formula">
+                $$\text{CAE} = (\text{Inversión Inicial} \times \text{FRC}) + \text{Costo Anual de Operación}$$
+            </div>
+
+            <div class="calc-box">
+Cálculo del CAE para la envasadora:
+- Inversión inicial = $32,000
+- FRC = 0.17401 (calculado previamente)
+- Costo anual de operación = $5,000
+
+CAE = ($32,000 × 0.17401) + $5,000
+CAE = $5,568.32 + $5,000
+CAE = <strong>$10,568.32 anuales</strong>
+            </div>
+
+            <div class="result-box">
+                💡 El CAE representa el costo uniforme anual que la empresa debe cubrir para justificar económicamente la inversión en el equipo de envasado.
+            </div>
+
+            <p>El CAE incorpora dos componentes principales: la <strong>porción de recuperación de capital</strong> (que distribuye la inversión inicial a lo largo de la vida útil mediante el FRC) y los <strong>costos anuales recurrentes</strong> de operación y mantenimiento. La comparación del CAE entre diferentes alternativas de equipos permite seleccionar la opción de menor costo anualizado, lo cual constituye la base para la toma de decisiones de inversión informada y racional.</p>
+        </div>
+
+        <!-- SECCIÓN 4: DISTRIBUCIÓN EN PLANTA -->
+        <div class="section">
+            <h2><span class="step-number">4</span> Distribución en Planta</h2>
+
+            <p>La <strong>distribución en planta</strong>, también conocida como <em>layout</em> o distribución física, es el arreglo espacial de los centros de producción, áreas de almacenamiento, zonas de servicios y rutas de circulación dentro de una instalación industrial. Una distribución adecuada es fundamental para la eficiencia operativa, ya que afecta directamente los tiempos de ciclo, los costos de manipulación de materiales, la seguridad laboral y la flexibilidad para adaptarse a cambios en la demanda.</p>
+
+            <div class="theory-box">
+                <h4>📐 Fundamento: Systematic Layout Planning (SLP)</h4>
+                <p>Según <strong>Muther (1968)</strong>, pionero en la metodología SLP (<em>Systematic Layout Planning</em>), la distribución en planta debe ser el resultado de un proceso sistemático que considere las relaciones entre actividades, los flujos de materiales y las restricciones espaciales.</p>
+            </div>
+
+            <!-- 4.1 Método de Layout Guerchet -->
+            <h3>4.1 Método de Layout Guerchet</h3>
+            <p>El <strong>método de Guerchet</strong> es una técnica de análisis de distribución en planta que clasifica las áreas de la instalación según su función y calcula una superficie total optimizada. Este método divide las áreas en tres categorías principales:</p>
+
+            <ul>
+                <li><strong>Áreas de producción o transformación</strong> (St)</li>
+                <li><strong>Áreas de almacenamiento o depósito</strong> (Sd)</li>
+                <li><strong>Áreas de servicio o apoyo</strong> (Ss)</li>
+            </ul>
+
+            <p>La superficie total resultante proporciona una base cuantitativa para el diseño de la distribución, permitiendo asignar espacios proporcionales a las necesidades de cada actividad. El método Guerchet es especialmente útil en industrias de proceso continuo o por lotes, como la industria alimentaria, donde las relaciones entre áreas de proceso y almacenamiento son críticas para la eficiencia global.</p>
+
+            <div class="formula">
+                $$S_t \text{ (Superficie Total Guerchet)} = S_a + S_g + S_c$$
+            </div>
+
+            <p>Donde:</p>
+            <ul>
+                <li>\(S_a\) = área de almacenamiento</li>
+                <li>\(S_g\) = área de producción o procesamiento (Guerchet propio)</li>
+                <li>\(S_c\) = área complementaria de servicios (oficinas, laboratorios, vestuarios, entre otros)</li>
+            </ul>
+
+            <div class="example-box">
+                <h4>🔬 Aplicación al Caso de Estudio</h4>
+                <p>La superficie total calculada mediante el método Guerchet es de <span class="highlight">8.4 unidades de área</span>, lo cual proporciona una referencia para la planificación espacial de la línea de envasado.</p>
+            </div>
+
+            <div class="principle-box">
+                <h4>🔄 Concepto de Densificación</h4>
+                <p>El método también contempla el concepto de <strong>densificación</strong>, que mide la diferencia entre el número de áreas o estaciones inicialmente planificadas y el número optimizado tras el análisis de layout, reflejando la eficiencia en la utilización del espacio disponible.</p>
+                <div class="formula" style="background: rgba(255,255,255,0.6); border-color: #7b1fa2;">
+                    $$\text{Densificación} = \text{Estaciones Iniciales} - \text{Estaciones Finales Consolidadas}$$
+                </div>
+            </div>
+
+            <div class="calc-box">
+Cálculo de densificación en el caso de estudio:
+- Estaciones iniciales = 7
+- Estaciones finales consolidadas = 4
+
+Densificación = 7 - 4 = <strong>3 estaciones</strong>
+
+Beneficios:
+- Menores recorridos de materiales
+- Reducción de tiempos de transporte
+- Optimización del espacio físico
+- Reducción de costos fijos
+- Simplificación de la supervisión operativa
+            </div>
+
+            <p>Esta consolidación de áreas es un objetivo clave en el diseño de layouts eficientes, ya que permite mantener la producción con menos infraestructura, reduciendo costos fijos y simplificando la supervisión operativa.</p>
+        </div>
+
+        <!-- SECCIÓN 5: BALANCE DE MASA -->
+        <div class="section">
+            <h2><span class="step-number">5</span> Balance de Masa en Procesos Alimentarios</h2>
+
+            <p>El <strong>balance de masa</strong> es una herramienta fundamental de la ingeniería de procesos que aplica el principio de conservación de la materia para cuantificar los flujos de materiales que entran, se transforman y salen de un sistema productivo. En la industria alimentaria, el balance de masa permite determinar los rendimientos de cada etapa del proceso, identificar las pérdidas y calcular las cantidades de materia prima necesarias para obtener un volumen determinado de producto final.</p>
+
+            <div class="theory-box">
+                <h4>📚 Fundamento Teórico</h4>
+                <p>Según <strong>Singh y Heldman (2014)</strong>, el balance de masa es el primer paso en el diseño y evaluación de cualquier proceso de manufactura de alimentos. Se basa en el principio físico de que <strong>la masa no se crea ni se destruye</strong>, solo se transforma.</p>
+            </div>
+
+            <p>En el caso específico de la producción de <strong>miel de frutas a partir de pulpa</strong>, el proceso involucra múltiples etapas de transformación:</p>
+
+            <ol>
+                <li>Obtención del peso útil a partir de la materia prima fresca (pulpa), eliminando mermas y residuos.</li>
+                <li>Mezcla de la pulpa útil con azúcar en proporción típica de 1:1.</li>
+                <li>Evaporación que reduce la mezcla a aproximadamente el 65% de su peso.</li>
+            </ol>
+
+            <div class="formula">
+                $$\text{Peso Útil} = \text{Masa Total} \times (1 - \text{Porcentaje de Merma})$$
+            </div>
+
+            <div class="formula">
+                $$\text{Masa Mezcla} = \text{Peso Útil Pulpa} + \text{Peso Azúcar} \quad (\text{proporción } 1:1)$$
+            </div>
+
+            <div class="formula">
+                $$\text{Producto Final} = \text{Masa Mezcla} \times \text{Rendimiento Evaporación}$$
+            </div>
+
+            <div class="calc-box">
+Ejemplo de cálculo - Caso 1:
+- Pulpa inicial = 350 kg, merma = 10%
+- Peso útil = 350 × (1 - 0.10) = 350 × 0.90 = <strong>315 kg</strong>
+
+Ejemplo de cálculo - Caso 2:
+- Pulpa inicial = 300 kg, eficiencia = 90%
+- Peso útil = 300 × 0.90 = <strong>270 kg</strong>
+
+Mezcla (proporción 1:1):
+- Pulpa útil = 270 kg
+- Azúcar = 270 kg
+- Masa Mezcla = 270 + 270 = <strong>540 kg</strong>
+
+Producto final tras evaporación (65%):
+- Producto Final = 540 × 0.65 = <strong>351 kg</strong>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Importante:</strong> El balance de masa no solo es importante para la planificación de la producción y el cálculo de costos de materia prima, sino que también es un <strong>requisito regulatorio</strong> en la industria alimentaria. Las normativas de inocuidad alimentaria exigen documentar los rendimientos y pérdidas en cada etapa del proceso como parte de los sistemas de trazabilidad.
+            </div>
+
+            <p>Además, el análisis de balance de masa permite identificar oportunidades de mejora en la eficiencia del proceso, tales como:</p>
+            <ul>
+                <li>Reducción de mermas en la etapa de limpieza de la fruta</li>
+                <li>Optimización de la relación azúcar-pulpa</li>
+                <li>Mejora de la eficiencia térmica en la evaporación</li>
+            </ul>
+            <p>Estas mejoras contribuyen a la sostenibilidad económica y ambiental de la operación productiva.</p>
+        </div>
+
+        <!-- SECCIÓN 6: PLANIFICACIÓN MOD -->
+        <div class="section">
+            <h2><span class="step-number">6</span> Planificación de la Mano de Obra Directa</h2>
+
+            <p>La <strong>planificación de la mano de obra directa (MOD)</strong> es un componente esencial de la gestión de operaciones, ya que el personal operativo representa tanto un factor crítico para la productividad como uno de los costos más significativos en la manufactura. La determinación del número óptimo de operarios necesarios para atender una línea de producción se basa en la relación entre la demanda de producción y la capacidad individual de cada trabajador, expresada en términos de unidades producidas por operario por turno.</p>
+
+            <div class="theory-box">
+                <h4>📚 Fundamento Teórico</h4>
+                <p>Según <strong>Chase, Jacobs y Aquilano (2004)</strong>, la planificación de la fuerza laboral debe equilibrar la capacidad productiva con la demanda, minimizando los costos laborales mientras se asegura el cumplimiento de los objetivos de producción.</p>
+            </div>
+
+            <div class="formula">
+                $$\text{Número de Operarios} = \frac{\text{Producción Requerida}}{\text{Producción por Operario}}$$
+            </div>
+
+            <div class="calc-box">
+Cálculo del caso de estudio - Línea de envasado:
+- Producción diaria requerida = 6,000 frascos
+- Rendimiento estándar = 500 frascos por operario
+
+Número de Operarios = 6,000 / 500 = <strong>12 operarios</strong>
+            </div>
+
+            <p>Este cálculo supone condiciones ideales de trabajo y una distribución equitativa de las tareas. Sin embargo, en la práctica, es necesario considerar factores adicionales como:</p>
+            <ul>
+                <li>Polivalencia de los trabajadores</li>
+                <li>Cobertura de turnos</li>
+                <li>Permisos y ausencias</li>
+                <li>Curva de aprendizaje</li>
+            </ul>
+
+            <div class="principle-box">
+                <h4>📐 Concepto de Área Estática</h4>
+                <p>El concepto de <strong>área estática</strong> de la envasadora también es relevante para la planificación de la mano de obra, ya que define el espacio físico disponible y las condiciones ergonómicas bajo las cuales los operarios realizan sus tareas.</p>
+                <div class="formula" style="background: rgba(255,255,255,0.6); border-color: #7b1fa2;">
+                    $$A_{\text{estática}} = \text{largo} \times \text{ancho} = 3.1 \, \text{m} \times 1.4 \, \text{m} = 4.34 \, \text{m}^2$$
+                </div>
+                <p><em>Nota: En el caso de estudio se trabaja con un área estática de referencia de 1.96 m², considerando el espacio efectivo de operación.</em></p>
+            </div>
+
+            <p>La optimización de la mano de obra directa no se limita a la determinación del número de operarios, sino que incluye:</p>
+            <ul>
+                <li>Asignación eficiente de tareas</li>
+                <li>Diseño de puestos de trabajo ergonómicos</li>
+                <li>Capacitación continua</li>
+                <li>Implementación de sistemas de incentivos que alineen los objetivos individuales con los organizacionales</li>
+            </ul>
+
+            <p>En el marco de la <strong>manufactura esbelta (Lean Manufacturing)</strong>, la planificación de la mano de obra está íntimamente ligada al concepto de <em>cells</em> de manufactura y al <strong>balanceo de líneas de producción</strong>, donde se busca distribuir uniformemente la carga de trabajo entre todos los operarios para minimizar los tiempos de espera y maximizar la utilización del recurso humano disponible.</p>
+        </div>
+
+        <!-- REFERENCIAS -->
+        <div class="section" style="border-left-color:#7b1fa2;">
+            <h2>📚 Referencias Bibliográficas</h2>
+            <p>Las siguientes referencias sustentan teóricamente los conceptos presentados en este marco teórico:</p>
+            <ul class="references-list">
+                <li><strong>Blank, L. T., &amp; Tarquin, A. J.</strong> (2018). <em>Ingeniería económica</em> (7ma ed.). McGraw-Hill Interamericana.</li>
+                <li><strong>Chase, R. B., Jacobs, F. R., &amp; Aquilano, N. J.</strong> (2004). <em>Administración de operaciones: producción y cadena de suministros</em> (10ma ed.). McGraw-Hill.</li>
+                <li><strong>Moubray, J.</strong> (1997). <em>Reliability-Centered Maintenance</em> (2nd ed.). Industrial Press Inc.</li>
+                <li><strong>Muther, R.</strong> (1968). <em>Systematic Layout Planning</em> (2nd ed.). Cahners Books.</li>
+                <li><strong>Nakajima, S.</strong> (1988). <em>Introduction to TPM: Total Productive Maintenance</em>. Productivity Press.</li>
+                <li><strong>Singh, R. P., &amp; Heldman, D. R.</strong> (2014). <em>Introduction to Food Engineering</em> (5th ed.). Academic Press.</li>
+                <li><strong>Sullivan, W. G., Wicks, E. M., &amp; Koelling, C. P.</strong> (2015). <em>Engineering Economy</em> (16th ed.). Pearson.</li>
+            </ul>
+        </div>
+
+        <!-- CLAVE DE ACCESO -->
+        <div class="key-section">
+            <h3>🔐 Acceso al Cuestionario de Verificación</h3>
+            <p style="margin-bottom: 20px;">
+                Ingresa la clave proporcionada por tu instructor para acceder al cuestionario de autoevaluación:
+            </p>
+            <input type="password" id="keyCode" class="key-input" placeholder="Ingresa la clave aquí">
+            <br>
+            <button class="btn" onclick="verifyKey()">🔓 Verificar Clave</button>
+            <button class="btn" onclick="resetForm()" style="background:#95a5a6;">🔄 Reiniciar</button>
+            <p id="errorMsg" class="error-msg">❌ Clave incorrecta. Inténtalo de nuevo.</p>
+        </div>
+
+        <!-- CUESTIONARIO OCULTO -->
+        <div id="answerSection" class="answer-section">
+            <div class="section" style="background:linear-gradient(135deg,#11998e 0%,#38ef7d 100%);color:white;">
+                <h2 style="color:white;">📝 Cuestionario de Verificación</h2>
+                <p style="margin-bottom: 15px;">Selecciona la respuesta correcta para cada pregunta. Al finalizar, presiona "Evaluar Respuestas" para conocer tu puntaje.</p>
+
+                <h3 style="margin-top:20px; color:white;">1. ¿Cuál es la fórmula correcta del OEE?</h3>
+                <select class="dropdown" id="q1">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">Disponibilidad + Rendimiento + Calidad</option>
+                    <option value="b">Disponibilidad × Rendimiento × Calidad × 100</option>
+                    <option value="c">(Disponibilidad + Rendimiento) / Calidad</option>
+                    <option value="d">Disponibilidad × Rendimiento / Calidad</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">2. ¿Qué benchmark de OEE define Nakajima como "clase mundial"?</h3>
+                <select class="dropdown" id="q2">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">70%</option>
+                    <option value="b">75%</option>
+                    <option value="c">85%</option>
+                    <option value="d">95%</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">3. En el caso de estudio, ¿cuál fue el valor del FRC calculado?</h3>
+                <select class="dropdown" id="q3">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">0.08401</option>
+                    <option value="b">0.17401</option>
+                    <option value="c">0.27401</option>
+                    <option value="d">0.85093</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">4. ¿Cuáles son las tres categorías de áreas en el método Guerchet?</h3>
+                <select class="dropdown" id="q4">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">Producción, Ventas, Marketing</option>
+                    <option value="b">Almacenamiento (Sa), Producción (Sg), Servicios (Sc)</option>
+                    <option value="c">Entrada, Proceso, Salida</option>
+                    <option value="d">Operativas, Administrativas, Comerciales</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">5. ¿Qué indica un MTTR bajo?</h3>
+                <select class="dropdown" id="q5">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">Que el equipo falla frecuentemente</option>
+                    <option value="b">Que el equipo de mantenimiento es eficiente diagnosticando y reparando</option>
+                    <option value="c">Que la disponibilidad del equipo es baja</option>
+                    <option value="d">Que no hay fallas en el equipo</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">6. ¿Cuántos operarios se requieren para producir 6,000 frascos/día a 500 frascos/operario?</h3>
+                <select class="dropdown" id="q6">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">10 operarios</option>
+                    <option value="b">12 operarios</option>
+                    <option value="c">15 operarios</option>
+                    <option value="d">20 operarios</option>
+                </select>
+
+                <h3 style="margin-top:20px; color:white;">7. ¿En qué proporción se mezcla pulpa útil con azúcar para elaborar miel de frutas?</h3>
+                <select class="dropdown" id="q7">
+                    <option value="">-- Selecciona --</option>
+                    <option value="a">2:1</option>
+                    <option value="b">1:2</option>
+                    <option value="c">1:1</option>
+                    <option value="d">3:1</option>
+                </select>
+
+                <button class="btn" onclick="checkAnswers()" style="margin-top:20px;">✅ Evaluar Respuestas</button>
+                <div id="finalFeedback" class="feedback"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>📚 Marco Teórico — Análisis Técnico-Económico de Línea de Envasado de Pulpa de Frutas</p>
+        <p style="margin-top: 5px; font-size: 0.9em; opacity: 0.85;">Gestión de Operaciones | Ingeniería Industrial</p>
+        <p style="margin-top: 5px; font-size: 0.85em; opacity: 0.7;">Clave de acceso al cuestionario: 1980</p>
+    </footer>
+</div>
+
+<script>
+    function verifyKey() {
+        const inputKey = document.getElementById('keyCode').value;
+        const errorMsg = document.getElementById('errorMsg');
+        const answerSection = document.getElementById('answerSection');
+
+        if (inputKey === '1980') {
+            errorMsg.style.display = 'none';
+            answerSection.style.display = 'block';
+            answerSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+            errorMsg.style.display = 'block';
+            answerSection.style.display = 'none';
+            const keyInput = document.querySelector('.key-input');
+            keyInput.style.borderColor = '#c0392b';
+            setTimeout(() => {
+                keyInput.style.borderColor = '#ddd';
+            }, 1000);
+        }
+    }
+
+    function resetForm() {
+        document.getElementById('keyCode').value = '';
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('answerSection').style.display = 'none';
+        document.getElementById('finalFeedback').style.display = 'none';
+        ['q1','q2','q3','q4','q5','q6','q7'].forEach(id => document.getElementById(id).value = '');
+    }
+
+    function checkAnswers() {
+        const correct = { q1: 'b', q2: 'c', q3: 'b', q4: 'b', q5: 'b', q6: 'b', q7: 'c' };
+        let score = 0;
+        const total = Object.keys(correct).length;
+        Object.keys(correct).forEach(id => {
+            if (document.getElementById(id).value === correct[id]) score++;
+        });
+        const fb = document.getElementById('finalFeedback');
+        fb.style.display = 'block';
+        const pct = Math.round((score / total) * 100);
+        if (score === total) {
+            fb.style.background = '#2ecc71';
+            fb.style.color = 'white';
+            fb.innerHTML = `🏆 ¡Excelente! Puntaje: ${score}/${total} (${pct}%) — Dominio completo del marco teórico. ¡Felicidades!`;
+        } else if (score >= Math.ceil(total * 0.6)) {
+            fb.style.background = '#f39c12';
+            fb.style.color = 'white';
+            fb.innerHTML = `⚠️ Puntaje: ${score}/${total} (${pct}%) — Buen desempeño, pero repasa los conceptos no contestados correctamente.`;
+        } else {
+            fb.style.background = '#e74c3c';
+            fb.style.color = 'white';
+            fb.innerHTML = `❌ Puntaje: ${score}/${total} (${pct}%) — Te recomendamos revisar nuevamente el marco teórico completo.`;
+        }
+    }
+
+    document.getElementById('keyCode').addEventListener('keypress', e => {
+        if (e.key === 'Enter') verifyKey();
+    });
+</script>
+</body>
+</html>
